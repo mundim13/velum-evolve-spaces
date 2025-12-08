@@ -1,0 +1,26 @@
+<!-- velum.svg — fundo transparente, responsivo -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" role="img" aria-label="VELUM">
+  <defs>
+    <!-- Degradê azul→ciano aplicado no "UM" -->
+    <linearGradient id="velumGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e90ff"/>
+      <stop offset="100%" stop-color="#12d6d6"/>
+    </linearGradient>
+    <!-- Cor padrão do wordmark (herdável via CSS, se quiser) -->
+    <style>
+      .v-dark { fill: #0e1b2c; } /* azul marinho */
+      /* Se quiser herdar a cor do pai, troque a linha acima para: .v-dark { fill: currentColor; } */
+    </style>
+  </defs>
+
+  <!-- V -->
+  <path class="v-dark" d="M18.7,63 0,17.5h14.9l9.5,26.2L34,17.5h14.7L30.9,63Z"/>
+  <!-- E -->
+  <path class="v-dark" d="M57.6,63V17.5H96v10.8H71.6v6.4H94v10.4H71.6V52H96V63Z"/>
+  <!-- L -->
+  <path class="v-dark" d="M107.2,63V17.5h14.4V52h21V63Z"/>
+  <!-- U (degradê) -->
+  <path fill="url(#velumGrad)" d="M170.9,63c-12.9,0-22.3-8.3-22.3-22.8V17.5h14.4V39.9c0,7,3.4,11.2,9.7,11.2s9.6-4.2,9.6-11.2V17.5h14.4V40.2C196.7,54.7,183.8,63,170.9,63Z"/>
+  <!-- M (degradê) -->
+  <path fill="url(#velumGrad)" d="M209.2,63V17.5h14l10.7,18.3 10.6-18.3h13.9V63H244.6V41.9l-10.7,17.2h-0.4L222.8,41.9V63Z"/>
+</svg>

@@ -1,0 +1,17 @@
+<!-- velum-white.svg — fundo transparente, responsivo, tudo branco -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" role="img" aria-label="VELUM">
+  <defs>
+    <style>.w{fill:#ffffff}</style>
+  </defs>
+
+  <!-- V -->
+  <path class="w" d="M18.7,63 0,17.5h14.9l9.5,26.2L34,17.5h14.7L30.9,63Z"/>
+  <!-- E -->
+  <path class="w" d="M57.6,63V17.5H96v10.8H71.6v6.4H94v10.4H71.6V52H96V63Z"/>
+  <!-- L -->
+  <path class="w" d="M107.2,63V17.5h14.4V52h21V63Z"/>
+  <!-- U -->
+  <path class="w" d="M170.9,63c-12.9,0-22.3-8.3-22.3-22.8V17.5h14.4V39.9c0,7,3.4,11.2,9.7,11.2s9.6-4.2,9.6-11.2V17.5h14.4V40.2C196.7,54.7,183.8,63,170.9,63Z"/>
+  <!-- M -->
+  <path class="w" d="M209.2,63V17.5h14l10.7,18.3 10.6-18.3h13.9V63H244.6V41.9l-10.7,17.2h-0.4L222.8,41.9V63Z"/>
+</svg>
