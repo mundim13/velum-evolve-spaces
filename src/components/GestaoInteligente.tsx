@@ -37,12 +37,14 @@ const GestaoInteligente = () => {
 
           {/* Content */}
           <div>
-            <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-6">
+            <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-6 tracking-wider">
               GESTÃO DE OBRAS INTELIGENTE
             </h2>
 
             <p className="font-montserrat text-lg text-muted-foreground leading-relaxed mb-8">
-              Utilizamos um software de gestão com inteligência artificial integrada, emitindo relatórios em tempo real de tudo o que acontece na obra. Você acompanha cada etapa com clareza e total transparência.
+              Utilizamos um software de gestão com IA integrada, emitindo relatórios em tempo real de tudo o que acontece na obra.
+              <br /><br />
+              Você acompanha cada etapa com clareza e total transparência.
             </p>
 
             <ul className="space-y-4">

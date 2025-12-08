@@ -5,13 +5,13 @@ const ModeloIntegrado = () => {
     {
       Icon: FileText,
       title: "PROJETO (PRÉ-OBRA)",
-      description: "Planejamento completo antes da obra começar:",
+      description: "",
       items: [
-        "Arquitetura e Interiores",
-        "Estrutural, elétrico e hidráulico",
-        "Compatibilização",
+        "Arquitetura e interiores",
+        "Complementares estruturais, elétricos e hidráulicos",
+        "Compatibilização técnica",
         "Cronograma",
-        "Orçamento final",
+        "Orçamento fechado",
         "Fluxo de desembolso",
       ],
       footer: "Tudo pensado para garantir previsibilidade.",
@@ -19,10 +19,10 @@ const ModeloIntegrado = () => {
     {
       Icon: Settings,
       title: "GESTÃO",
-      description: "Você vive. A gente cuida de tudo.",
+      description: "",
       items: [
         "Software próprio",
-        "IA integrada na gestão",
+        "IA auxiliando decisões",
         "Relatórios em tempo real",
         "Diário de obra digital",
         "Indicadores previstos vs. realizados",
@@ -33,8 +33,9 @@ const ModeloIntegrado = () => {
     {
       Icon: Hammer,
       title: "OBRA / EXECUÇÃO",
-      description: "Montagem rápida, limpa e industrializada:",
+      description: "",
       items: [
+        "Montagem rápida, limpa e industrializada",
         "Precisão milimétrica",
         "Menos interferências",
         "Mais qualidade",
@@ -47,7 +48,7 @@ const ModeloIntegrado = () => {
   return (
     <section id="modelo" className="py-20 md:py-28 px-4 bg-background-alt">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16">
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16 tracking-wider">
           NOSSO MODELO INTEGRADO
         </h2>
 
@@ -62,9 +63,11 @@ const ModeloIntegrado = () => {
                 {title}
               </h3>
 
-              <p className="font-montserrat text-muted-foreground mb-4">
-                {description}
-              </p>
+              {description && (
+                <p className="font-montserrat text-muted-foreground mb-4">
+                  {description}
+                </p>
+              )}
 
               <ul className="space-y-2 mb-4">
                 {items.map((item) => (

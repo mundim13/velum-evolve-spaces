@@ -22,13 +22,13 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="max-w-4xl">
           {/* Title */}
-          <h1 className="font-syncopate text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
-            ARQUITETURA INTELIGENTE PARA UMA VIDA MAIS LEVE
+          <h1 className="font-syncopate text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 tracking-wider">
+            OBRA INTELIGENTE PARA UMA VIDA MAIS LEVE
           </h1>
 
           {/* Subtitle */}
           <p className="font-montserrat text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mb-10 leading-relaxed">
-            Criamos espaços com precisão, design e previsibilidade — unindo engenharia, arquitetura e tecnologia para transformar sua forma de viver.
+            Criamos espaços com precisão e design, unindo engenharia, arquitetura e tecnologia para transformar sua forma de viver, com leveza e previsibilidade.
           </p>
 
           {/* CTAs */}

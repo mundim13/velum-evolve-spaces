@@ -31,7 +31,7 @@ const JornadaCliente = () => {
   return (
     <section id="jornada" className="py-20 md:py-28 px-4 bg-background">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16">
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16 tracking-wider">
           JORNADA DO CLIENTE VELUM
         </h2>
 

@@ -2,7 +2,7 @@ const CTAFinal = () => {
   return (
     <section id="cta-final" className="py-24 md:py-32 px-4 bg-background diagonal-texture">
       <div className="container mx-auto max-w-4xl text-center relative z-10">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 tracking-wider">
           PROJETO, GESTÃO E OBRA EM UM ÚNICO LUGAR
         </h2>
 

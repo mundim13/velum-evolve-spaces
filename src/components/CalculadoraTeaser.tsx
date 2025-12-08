@@ -9,7 +9,7 @@ const CalculadoraTeaser = () => {
             <Bell className="w-8 h-8 text-primary" />
           </div>
 
-          <h2 className="font-syncopate text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4">
+          <h2 className="font-syncopate text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-wider">
             CALCULADORA INTELIGENTE DE OBRAS (EM BREVE)
           </h2>
 
