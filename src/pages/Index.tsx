@@ -1,12 +1,20 @@
 import { useEffect } from "react";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Manifesto from "@/components/Manifesto";
-import ProductsSection from "@/components/ProductsSection";
-import ColecaoLum from "@/components/ColecaoLum";
-import Timeline from "@/components/Timeline";
-import TeamSection from "@/components/TeamSection";
-import Footer from "@/components/Footer";
+import HeaderNew from "@/components/HeaderNew";
+import HeroSection from "@/components/HeroSection";
+import QuemSomos from "@/components/QuemSomos";
+import SolucoesSection from "@/components/SolucoesSection";
+import ModeloIntegrado from "@/components/ModeloIntegrado";
+import DiferenciaisSection from "@/components/DiferenciaisSection";
+import GestaoInteligente from "@/components/GestaoInteligente";
+import JornadaCliente from "@/components/JornadaCliente";
+import ColetaneaLumIntro from "@/components/ColetaneaLumIntro";
+import ProdutosLum from "@/components/ProdutosLum";
+import ProjetosPersonalizados from "@/components/ProjetosPersonalizados";
+import PortfolioSection from "@/components/PortfolioSection";
+import EquipeSection from "@/components/EquipeSection";
+import CalculadoraTeaser from "@/components/CalculadoraTeaser";
+import CTAFinal from "@/components/CTAFinal";
+import FooterSection from "@/components/FooterSection";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import "@/lib/whatsapp";
 
@@ -30,17 +38,25 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main className="pt-24 md:pt-28 lg:pt-32">
-        <Hero />
-        <Manifesto />
-        <ProductsSection />
-        <ColecaoLum />
-        <Timeline />
-        <TeamSection />
+    <div className="min-h-screen bg-background">
+      <HeaderNew />
+      <main>
+        <HeroSection />
+        <QuemSomos />
+        <SolucoesSection />
+        <ModeloIntegrado />
+        <DiferenciaisSection />
+        <GestaoInteligente />
+        <JornadaCliente />
+        <ColetaneaLumIntro />
+        <ProdutosLum />
+        <ProjetosPersonalizados />
+        <PortfolioSection />
+        <EquipeSection />
+        <CalculadoraTeaser />
+        <CTAFinal />
       </main>
-      <Footer />
+      <FooterSection />
       <WhatsAppButton />
     </div>
   );
