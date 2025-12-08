@@ -2,103 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Velum Design System - Dark Petrol Theme
+   Primary Colors:
+   - Background: #062C30 (dark petrol)
+   - Accent: #36C4CF (light blue)
+   - White: #FFFFFF
+   - Gray Light: #E6E6E6
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 90% 10%;
+    /* Core petrol/teal palette - converted to HSL */
+    --background: 185 75% 10%; /* #062C30 */
+    --background-alt: 185 65% 14%; /* #0A3B40 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 90% 10%;
+    --card: 185 65% 12%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 90% 10%;
+    --popover: 185 65% 12%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 220 90% 10%;
-    --primary-foreground: 0 0% 100%;
-    --primary-variant: 190 95% 45%;
+    --primary: 185 60% 51%; /* #36C4CF - accent blue */
+    --primary-foreground: 185 75% 10%;
 
-    --secondary: 220 15% 96%;
-    --secondary-foreground: 220 90% 10%;
+    --secondary: 185 40% 18%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 185 30% 20%;
+    --muted-foreground: 0 0% 90%; /* #E6E6E6 */
 
-    --accent: 35 95% 50%;
-    --accent-foreground: 0 0% 100%;
-    --accent-warm: 20 95% 55%;
+    --accent: 185 60% 51%; /* #36C4CF */
+    --accent-foreground: 185 75% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 220 90% 10%;
+    --border: 185 40% 25%;
+    --input: 185 40% 25%;
+    --ring: 185 60% 51%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(220 90% 10%), hsl(190 95% 45%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 90% 10% / 0.95), hsl(190 80% 20% / 0.9));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 15% 98%));
-    
-    --shadow-card: 0 4px 20px hsl(220 90% 10% / 0.08);
-    --shadow-elevated: 0 10px 40px hsl(220 90% 10% / 0.12);
+    /* Velum specific tokens */
+    --velum-petrol: 185 75% 10%;
+    --velum-petrol-light: 185 65% 14%;
+    --velum-cyan: 185 60% 51%;
+    --velum-white: 0 0% 100%;
+    --velum-gray: 0 0% 90%;
 
-    /* Velum Design System */
-    --velum-white: #FFFFFF;
-    --velum-black: #0D1522;
-    --velum-gray-700: #233042;
-    --velum-gray-500: #6A7B8E;
-    --velum-gray-200: #E9EEF3;
-
-    --velum-cyan: #02FFFF;
-    --velum-apure: #5CC6D0;
-    --velum-cyan-30: rgba(2,255,255,.30);
-    --velum-apure-20: rgba(92,198,208,.20);
-
-    --radius-card: 20px;
-    --radius-btn: 14px;
-    --shadow-btn: 0 6px 18px rgba(13,21,34,.12);
-    
-    /* Spacing tokens */
-    --space-200: 16px;
-    --space-250: 20px;
-    --space-400: 32px;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(185 60% 51%), hsl(185 70% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(185 75% 10%), hsl(185 65% 14%));
+    --gradient-diagonal: linear-gradient(135deg, hsl(185 75% 10%) 0%, hsl(185 65% 14%) 100%);
   }
 
   .dark {
-    --background: 220 90% 10%;
-    --foreground: 0 0% 98%;
-
-    --card: 220 80% 12%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 220 80% 12%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 220 90% 10%;
-    --primary-variant: 190 95% 45%;
-
-    --secondary: 220 30% 18%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 220 30% 18%;
-    --muted-foreground: 220 10% 65%;
-
-    --accent: 35 95% 50%;
-    --accent-foreground: 0 0% 100%;
-    --accent-warm: 20 95% 55%;
-
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 220 30% 18%;
-    --input: 220 30% 18%;
-    --ring: 190 95% 45%;
+    --background: 185 75% 10%;
+    --foreground: 0 0% 100%;
   }
 }
 
@@ -116,6 +77,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Montserrat', sans-serif;
     overflow-x: hidden;
     width: 100%;
     position: relative;
@@ -124,266 +86,111 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  /* Velum gradient for text */
+  /* Syncopate title styling */
+  .font-syncopate {
+    font-family: 'Syncopate', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Velum gradient text */
   .text-gradient {
-    background: linear-gradient(90deg, var(--velum-apure) 0%, var(--velum-cyan) 85%);
+    background: linear-gradient(90deg, hsl(185 60% 51%) 0%, hsl(185 70% 65%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    filter: saturate(0.85) brightness(1.02);
   }
 
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary to-primary-variant bg-clip-text text-transparent;
+  /* Velum buttons */
+  .btn-velum-primary {
+    @apply inline-flex items-center justify-center font-semibold transition-all duration-300;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
   }
 
-  .gradient-bg-primary {
-    background: var(--gradient-primary);
+  .btn-velum-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px hsl(185 60% 51% / 0.3);
   }
 
-  .gradient-bg-hero {
-    background: var(--gradient-hero);
+  .btn-velum-outline {
+    @apply inline-flex items-center justify-center font-semibold transition-all duration-300;
+    background: transparent;
+    color: hsl(var(--foreground));
+    border: 2px solid hsl(var(--foreground));
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
   }
 
-  .shadow-card {
-    box-shadow: var(--shadow-card);
+  .btn-velum-outline:hover {
+    background: hsl(var(--foreground) / 0.1);
+    transform: translateY(-2px);
   }
 
-  .shadow-elevated {
-    box-shadow: var(--shadow-elevated);
+  /* Section backgrounds */
+  .bg-velum-dark {
+    background: hsl(var(--background));
   }
 
+  .bg-velum-alt {
+    background: hsl(var(--background-alt));
+  }
+
+  .bg-velum-light {
+    background: hsl(0 0% 98%);
+  }
+
+  /* Card styles */
+  .velum-card {
+    @apply rounded-xl p-6 transition-all duration-300;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .velum-card:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: 0 10px 40px hsl(185 60% 51% / 0.1);
+  }
+
+  /* Diagonal texture overlay */
+  .diagonal-texture {
+    position: relative;
+  }
+
+  .diagonal-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 50px,
+      hsl(185 60% 51% / 0.02) 50px,
+      hsl(185 60% 51% / 0.02) 100px
+    );
+    pointer-events: none;
+  }
+
+  /* Scroll reveal animation */
   .scroll-mt-28 {
     scroll-margin-top: 7rem;
   }
 
-  /* Velum Hero Buttons */
-  .btn-hero-primary {
-    background: linear-gradient(90deg, #4FBCC7 0%, #02FFFF 100%);
-    color: var(--velum-black);
-    font-weight: 700;
-    border: none;
-    border-radius: var(--radius-btn);
-    box-shadow: var(--shadow-btn);
-    transition: filter 0.15s ease, transform 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  /* Shadow utilities */
+  .shadow-velum {
+    box-shadow: 0 4px 20px hsl(185 75% 10% / 0.2);
   }
 
-  .btn-hero-primary:hover {
-    filter: saturate(0.95) brightness(0.98);
-  }
-
-  .btn-hero-primary:active {
-    transform: translateY(1px);
-  }
-
-  .btn-hero-primary:focus-visible {
-    outline: 2px solid var(--velum-cyan);
-    outline-offset: 2px;
-  }
-
-  .btn-hero-secondary {
-    background: var(--velum-black);
-    color: var(--velum-white);
-    font-weight: 700;
-    border: 1px solid var(--velum-cyan-30);
-    border-radius: var(--radius-btn);
-    box-shadow: var(--shadow-btn);
-    transition: background 0.15s ease, border-color 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .btn-hero-secondary:hover {
-    background: #162033;
-    border-color: var(--velum-apure-20);
-  }
-
-  .btn-hero-secondary:focus-visible {
-    outline: 2px solid var(--velum-cyan);
-    outline-offset: 2px;
-  }
-
-  /* Lum Card Styling */
-  .lum-card {
-    background: linear-gradient(180deg, #0E1726 0%, #0B1421 100%);
-    color: var(--velum-white);
-    border-radius: var(--radius-card);
-    box-shadow: 0 16px 40px rgba(13,21,34,.16);
-    padding: 18px 20px;
-  }
-
-  .lum-card .lum-meta {
-    color: rgba(255,255,255,.85);
-    font-weight: 600;
-  }
-
-  .lum-card .lum-label {
-    color: rgba(255,255,255,.70);
-  }
-
-  .lum-card .progress-bar {
-    background: rgba(255,255,255,.06);
-    height: 10px;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .lum-card .progress-bar > span {
-    display: block;
-    height: 100%;
-    background: linear-gradient(90deg, var(--velum-apure) 0%, var(--velum-cyan) 100%);
-    box-shadow: 0 0 16px rgba(2,255,255,.35);
-    transition: width .6s ease;
-  }
-
-  .lum-card .countdown .num {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    color: var(--velum-white);
-  }
-
-  .lum-card .countdown .unit {
-    font-size: 12px;
-    color: rgba(255,255,255,.65);
-  }
-
-  /* Hero white background */
-  .hero {
-    background: var(--velum-white);
-    padding: 20px 16px 0;
-  }
-
-  .hero .subtitle {
-    margin-top: 8px;
-    color: var(--velum-gray-700);
-  }
-
-  .hero .ctas {
-    margin-top: 20px;
-    display: grid;
-    gap: 12px;
-  }
-
-  /* Seção Unificada (Manifesto + Benefits) - Spacing e Tipografia */
-  .section-unified {
-    margin-top: 12px;
-  }
-
-  @media (min-width: 1024px) {
-    .section-unified {
-      margin-top: 24px;
-    }
-  }
-
-  .unified-title {
-    text-align: center;
-    letter-spacing: -0.2px;
-    line-height: 1.12;
-    max-width: 32ch;
-    margin: 0 auto 12px;
-    text-wrap: balance;
-  }
-
-  /* Cards unificados */
-  .unified-card {
-    border-radius: 20px;
-    box-shadow: 0 12px 32px rgba(13,21,34,.06);
-    padding: 24px;
-    background: #FFFFFF;
-    transition: all 0.3s ease;
-  }
-
-  @media (min-width: 1024px) {
-    .unified-card {
-      padding: 28px;
-    }
-    
-    .unified-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px rgba(2,255,255,.12), 0 8px 24px rgba(92,198,208,.08);
-    }
-  }
-
-  /* Ícones unificados com gradiente Velum */
-  .unified-icon {
-    width: 48px;
-    height: 48px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-    position: relative;
-  }
-
-  .unified-icon svg {
-    width: 36px;
-    height: 36px;
-    stroke-width: 2;
-    stroke: url(#velumIconGrad);
-    fill: none;
-    filter: drop-shadow(0 2px 10px rgba(2,255,255,.08));
-    transition: all 0.3s ease;
-  }
-
-  @media (min-width: 1024px) {
-    .unified-icon svg {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  .unified-card:hover .unified-icon svg {
-    filter: drop-shadow(0 4px 16px rgba(2,255,255,.16));
-  }
-
-  /* Subtítulo unificado */
-  .unified-subtitle {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: hsl(var(--muted-foreground));
-    margin-top: 8px;
-  }
-
-  /* Navegação do carrossel unificado */
-  .unified-dots {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .unified-dots button {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(92,198,208,.35);
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .unified-dots button[aria-current="true"] {
-    background: #5CC6D0;
-    width: 24px;
-    border-radius: 999px;
-  }
-
-  @media (min-width: 768px) {
-    .unified-dots button {
-      width: 8px;
-      height: 8px;
-    }
-    
-    .unified-dots button[aria-current="true"] {
-      width: 32px;
-    }
+  .shadow-velum-glow {
+    box-shadow: 0 0 40px hsl(185 60% 51% / 0.2);
   }
 }
 
@@ -409,14 +216,12 @@ All colors MUST be HSL.
   }
 }
 
-@keyframes smooth-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
+@keyframes float {
+  0%, 100% {
     transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
 
@@ -428,11 +233,8 @@ All colors MUST be HSL.
   animation: slide-in 0.5s ease-out forwards;
 }
 
-/* Scroll reveal animation for sections */
-section {
-  animation: smooth-reveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
 /* Mobile responsiveness */
@@ -444,27 +246,6 @@ section {
 
   * {
     max-width: 100%;
-  }
-
-  .hero {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .hero .stack {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .hero .btn-hero-primary,
-  .hero .btn-hero-secondary {
-    width: 100%;
-    height: 52px;
-  }
-
-  .lum-card {
-    margin-top: 16px;
   }
 
   .container {
