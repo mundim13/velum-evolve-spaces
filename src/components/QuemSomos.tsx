@@ -10,12 +10,14 @@ const QuemSomos = () => {
   return (
     <section id="quem-somos" className="py-20 md:py-28 px-4 bg-background-alt">
       <div className="container mx-auto max-w-4xl text-center">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-8">
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-8 tracking-wider">
           QUEM SOMOS
         </h2>
 
         <p className="font-montserrat text-lg md:text-xl text-muted-foreground leading-relaxed mb-12">
-          A Velum nasceu para simplificar a construção civil. Unimos arquitetura autoral, engenharia de precisão e gestão inteligente para que você construa com tranquilidade — sem atrasos, sem surpresas e sem estresse.
+          A Velum nasceu para simplificar a construção civil.
+          <br /><br />
+          Unimos arquitetura autoral, engenharia de precisão e gestão inteligente para que você construa com tranquilidade, sem atrasos, sem imprevistos e sem estresse.
           <br /><br />
           Nossa missão é entregar espaços que transformam vidas, priorizando leveza, tempo e bem-estar.
         </p>

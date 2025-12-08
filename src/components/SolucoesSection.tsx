@@ -5,14 +5,14 @@ const SolucoesSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div>
-            <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-6">
+            <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-6 tracking-wider">
               O QUE SOLUCIONAMOS PARA SUA VIDA
             </h2>
 
             <p className="font-montserrat text-lg text-muted-foreground leading-relaxed">
-              Através da nossa inteligência multiconstrutiva, não ficamos presos a um único sistema construtivo. Buscamos sempre a solução ideal entre tecnologia, custo-benefício e eficiência.
+              Através da nossa inteligência multiconstrutiva, encontramos sempre a solução mais eficiente entre tecnologia, custo-benefício e qualidade.
               <br /><br />
-              O resultado? Obras previsíveis, rápidas e com preço garantido.
+              O resultado: obras previsíveis, rápidas e com preço fechado de verdade.
             </p>
           </div>
 

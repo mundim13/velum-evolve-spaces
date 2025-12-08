@@ -5,7 +5,7 @@ const EquipeSection = () => {
   return (
     <section id="equipe" className="py-20 md:py-28 px-4 bg-foreground text-background">
       <div className="container mx-auto max-w-4xl">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 tracking-wider">
           QUEM ESTÁ POR TRÁS DA VELUM
         </h2>
 

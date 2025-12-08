@@ -15,7 +15,7 @@ const DiferenciaisSection = () => {
   return (
     <section id="diferenciais" className="py-20 md:py-28 px-4 bg-background">
       <div className="container mx-auto max-w-5xl">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16">
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16 tracking-wider">
           POR QUE A VELUM É DIFERENTE
         </h2>
 
