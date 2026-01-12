@@ -32,9 +32,9 @@ const portfolioItems = [
   {
     id: 3,
     name: "Residência Moderna",
-    location: "Jardins Valência, Goiânia - GO",
-    area: "250 m²",
-    methodology: "Steel Frame + Fachada Ventilada",
+    location: "Condomínio Aldeia do Parque, Goiânia - GO",
+    area: "232 m²",
+    methodology: "100% Light Steel Frame",
     status: "Em execução",
     images: [portfolioComercial1a],
     imagePosition: "object-[center_35%]",
