@@ -1,29 +1,35 @@
-import { Search, FileCheck, Factory, CheckCircle } from "lucide-react";
+import { Search, PenTool, Calculator, HardHat, CheckCircle } from "lucide-react";
 
 const JornadaCliente = () => {
   const steps = [
     {
       Icon: Search,
       number: "1",
-      title: "Entendimento",
-      description: "Diagnóstico completo das suas necessidades.",
+      title: "Entendimento e Diagnóstico",
+      description: "Compreensão completa das suas necessidades e objetivos.",
     },
     {
-      Icon: FileCheck,
+      Icon: PenTool,
       number: "2",
-      title: "Projeto & Planejamento",
-      description: "Pré-obra completa com orçamento, cronograma e compatibilizações.",
+      title: "Projetos e Compatibilização",
+      description: "Desenvolvimento e integração de todos os projetos.",
     },
     {
-      Icon: Factory,
+      Icon: Calculator,
       number: "3",
-      title: "Produção & Obra",
-      description: "Montagem industrializada + gestão inteligente.",
+      title: "Planejamento e Orçamento",
+      description: "Cronograma físico-financeiro detalhado.",
+    },
+    {
+      Icon: HardHat,
+      number: "4",
+      title: "Obra",
+      description: "Execução com gestão inteligente e qualidade.",
     },
     {
       Icon: CheckCircle,
-      number: "4",
-      title: "Entrega & Acompanhamento",
+      number: "5",
+      title: "Acompanhamento e Entrega",
       description: "Finalização técnica e suporte pós-obra.",
     },
   ];
@@ -37,15 +43,17 @@ const JornadaCliente = () => {
 
         {/* Desktop: Horizontal timeline */}
         <div className="hidden md:block relative">
-          {/* Connecting line */}
-          <div className="absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-primary to-primary/30" />
-
-          <div className="grid grid-cols-4 gap-6 relative">
-            {steps.map(({ Icon, number, title, description }) => (
-              <div key={number} className="text-center">
+          <div className="grid grid-cols-5 gap-4 relative">
+            {steps.map(({ Icon, number, title, description }, index) => (
+              <div key={number} className="text-center relative">
+                {/* Connecting line segment - only between icons */}
+                {index < steps.length - 1 && (
+                  <div className="absolute top-12 left-[calc(50%+48px)] right-[calc(-50%+48px)] h-0.5 bg-gradient-to-r from-primary to-primary/50" />
+                )}
+                
                 {/* Icon circle */}
-                <div className="relative w-24 h-24 mx-auto mb-6">
-                  <div className="absolute inset-0 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
+                <div className="relative w-24 h-24 mx-auto mb-6 z-10">
+                  <div className="absolute inset-0 rounded-full bg-background border-4 border-primary flex items-center justify-center shadow-lg">
                     <Icon className="w-10 h-10 text-primary" />
                   </div>
                   <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-syncopate text-sm font-bold">
@@ -53,10 +61,10 @@ const JornadaCliente = () => {
                   </div>
                 </div>
 
-                <h3 className="font-syncopate text-xs font-bold text-foreground mb-2">
-                  {title}
+                <h3 className="font-syncopate text-[10px] font-bold text-foreground mb-2 leading-tight">
+                  {title.toUpperCase()}
                 </h3>
-                <p className="font-montserrat text-sm text-muted-foreground">
+                <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
                   {description}
                 </p>
               </div>
@@ -65,25 +73,32 @@ const JornadaCliente = () => {
         </div>
 
         {/* Mobile: Vertical timeline */}
-        <div className="md:hidden space-y-8">
-          {steps.map(({ Icon, number, title, description }) => (
-            <div key={number} className="flex gap-4">
-              <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
-                  <Icon className="w-8 h-8 text-primary" />
+        <div className="md:hidden space-y-6">
+          {steps.map(({ Icon, number, title, description }, index) => (
+            <div key={number} className="relative">
+              {/* Vertical line segment - only between icons */}
+              {index < steps.length - 1 && (
+                <div className="absolute left-8 top-[72px] h-6 w-0.5 bg-gradient-to-b from-primary to-primary/50" />
+              )}
+              
+              <div className="flex gap-4">
+                <div className="relative flex-shrink-0 z-10">
+                  <div className="w-16 h-16 rounded-full bg-background border-4 border-primary flex items-center justify-center shadow-lg">
+                    <Icon className="w-8 h-8 text-primary" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-syncopate text-xs font-bold">
+                    {number}
+                  </div>
                 </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-syncopate text-xs font-bold">
-                  {number}
-                </div>
-              </div>
 
-              <div className="flex-1 pt-2">
-                <h3 className="font-syncopate text-xs font-bold text-foreground mb-1">
-                  {title}
-                </h3>
-                <p className="font-montserrat text-sm text-muted-foreground">
-                  {description}
-                </p>
+                <div className="flex-1 pt-2">
+                  <h3 className="font-syncopate text-[10px] font-bold text-foreground mb-1 leading-tight">
+                    {title.toUpperCase()}
+                  </h3>
+                  <p className="font-montserrat text-sm text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
