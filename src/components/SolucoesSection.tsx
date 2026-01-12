@@ -100,13 +100,13 @@ const SolucoesSection = () => {
                 />
               </svg>
 
-              {/* Top vertex - Preço Fechado */}
+              {/* Top vertex - Preço Fechado de Verdade */}
               <div 
                 className={`absolute top-[8%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
                 style={{ transitionDelay: '0.3s' }}
               >
-                <span className="font-syncopate text-[10px] sm:text-xs text-foreground tracking-wider text-center">
-                  PREÇO FECHADO
+                <span className="font-syncopate text-[10px] sm:text-xs text-foreground tracking-wider text-center leading-tight">
+                  PREÇO FECHADO<br />DE VERDADE
                 </span>
                 <div className="relative">
                   <div className={`absolute inset-0 bg-primary/40 rounded-full blur-md transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.8s' }} />
@@ -116,7 +116,7 @@ const SolucoesSection = () => {
                 </div>
               </div>
 
-              {/* Bottom left vertex - Obra no Prazo */}
+              {/* Bottom left vertex - Prazo Assumido */}
               <div 
                 className={`absolute bottom-[8%] left-[5%] flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: '0.5s' }}
@@ -128,11 +128,11 @@ const SolucoesSection = () => {
                   </div>
                 </div>
                 <span className="font-syncopate text-[10px] sm:text-xs text-foreground tracking-wider text-center">
-                  OBRA NO PRAZO
+                  PRAZO ASSUMIDO
                 </span>
               </div>
 
-              {/* Bottom right vertex - Tempo Reduzido */}
+              {/* Bottom right vertex - Tempo Otimizado */}
               <div 
                 className={`absolute bottom-[8%] right-[5%] flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: '0.7s' }}
@@ -144,19 +144,21 @@ const SolucoesSection = () => {
                   </div>
                 </div>
                 <span className="font-syncopate text-[10px] sm:text-xs text-foreground tracking-wider text-center">
-                  TEMPO REDUZIDO
+                  TEMPO OTIMIZADO
                 </span>
               </div>
 
-              {/* Center checkmark - Solution */}
+              {/* Center - Responsabilidade Total */}
               <div 
                 className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                 style={{ transitionDelay: '1.5s' }}
               >
                 <div className="relative">
                   <div className={`absolute inset-0 bg-primary/50 rounded-full blur-xl transition-opacity duration-700 ${isVisible ? 'opacity-100 animate-pulse' : 'opacity-0'}`} style={{ transitionDelay: '1.8s' }} />
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary border-2 border-primary flex items-center justify-center shadow-lg">
-                    <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-primary border-2 border-primary flex items-center justify-center shadow-lg p-2">
+                    <span className="font-syncopate text-[8px] sm:text-[10px] text-primary-foreground tracking-wider text-center leading-tight font-bold">
+                      RESPONSABILIDADE<br />TOTAL
+                    </span>
                   </div>
                 </div>
               </div>
