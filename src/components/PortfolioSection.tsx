@@ -11,9 +11,9 @@ const PortfolioSection = () => {
   const portfolioItems = [
     { 
       id: 1, 
-      title: "Projeto Residencial 1", 
+      title: "", 
       status: "Em execução",
-      images: [portfolioResidencial1a, portfolioResidencial1b, portfolioResidencial1c]
+      images: [portfolioResidencial1c, portfolioResidencial1a, portfolioResidencial1b]
     },
     { id: 2, title: "Projeto Residencial 2", status: null, images: [] },
     { id: 3, title: "Projeto Comercial 1", status: null, images: [] },
@@ -72,12 +72,14 @@ const PortfolioSection = () => {
                       </div>
                     )}
 
-                    {/* Title overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-3">
-                      <span className="font-montserrat text-foreground text-sm font-medium">
-                        {item.title}
-                      </span>
-                    </div>
+                    {/* Title overlay - only show if title exists */}
+                    {item.title && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-3">
+                        <span className="font-montserrat text-foreground text-sm font-medium">
+                          {item.title}
+                        </span>
+                      </div>
+                    )}
 
                     {/* Navigation arrows */}
                     {item.images.length > 1 && (
