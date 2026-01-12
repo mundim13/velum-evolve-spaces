@@ -184,6 +184,13 @@ const JornadaCliente = () => {
             </div>
           ))}
         </div>
+
+        {/* Final statement */}
+        <div className="mt-12 md:mt-16 text-center">
+          <p className="font-syncopate text-sm md:text-base lg:text-lg font-bold text-primary tracking-wider">
+            VOCÊ ENTRA EM QUALQUER ETAPA. A RESPONSABILIDADE É SEMPRE TOTAL.
+          </p>
+        </div>
       </div>
     </section>
   );
