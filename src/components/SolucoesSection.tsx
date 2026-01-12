@@ -167,8 +167,8 @@ const SolucoesSection = () => {
                   {/* Inner subtle pulse */}
                   <div className={`absolute -inset-1 bg-primary/40 rounded-full blur-md transition-opacity duration-700 ${isVisible ? 'opacity-100 animate-pulse' : 'opacity-0'}`} style={{ transitionDelay: '2s' }} />
                   {/* Main circle */}
-                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/30">
-                    <span className="font-syncopate text-[9px] sm:text-[11px] text-primary-foreground tracking-wider text-center leading-snug font-bold drop-shadow-sm">
+                  <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/30 p-4">
+                    <span className="font-syncopate text-[10px] sm:text-xs text-primary-foreground tracking-wider text-center leading-tight font-bold">
                       RESPONSABILIDADE<br />TOTAL
                     </span>
                   </div>
