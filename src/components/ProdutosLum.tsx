@@ -8,6 +8,7 @@ import lumFamilyTerreoCover from "@/assets/lum-family-terreo-cover.png";
 import lumFamilyTerreo1 from "@/assets/lum-family-terreo-1.png";
 import ultrapocket1 from "@/assets/ultrapocket-new-1.png";
 import ultrapocket2 from "@/assets/ultrapocket-new-2.png";
+import lumZenCover from "@/assets/lum-zen-cover.png";
 import lumZen1 from "@/assets/lum-zen-1.png";
 import lumZen2 from "@/assets/lum-zen-2.png";
 import lumZen3 from "@/assets/lum-zen-3.png";
@@ -58,7 +59,7 @@ const ProdutosLum = () => {
       name: "LÛM ZEN",
       tagline: "Bem-estar e reconexão com o que importa.",
       features: ["Sauna e academia", "Integração com a natureza"],
-      images: [lumZen1, lumZen2, lumZen3],
+      images: [lumZenCover, lumZen1, lumZen2, lumZen3],
       ctaText: "Conhecer o Zen",
       ctaMsg: "Olá! Quero conhecer o LÛM Zen.",
     },
