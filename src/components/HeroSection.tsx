@@ -24,7 +24,7 @@ const HeroSection = () => {
 
           {/* Subtitle */}
           <p className="font-montserrat text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mb-10 leading-relaxed">
-            Criamos espaços com precisão e design, unindo engenharia, arquitetura e tecnologia para transformar sua forma de viver, com leveza e previsibilidade.
+            Criamos espaços com precisão e design, integrando engenharia, arquitetura e tecnologia para que viver e construir sejam leves, previsíveis e sem traumas.
           </p>
 
           {/* CTAs */}
