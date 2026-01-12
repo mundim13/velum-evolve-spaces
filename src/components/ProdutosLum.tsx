@@ -8,6 +8,9 @@ import lumFamilyTerreoCover from "@/assets/lum-family-terreo-cover.png";
 import lumFamilyTerreo1 from "@/assets/lum-family-terreo-1.png";
 import ultrapocket1 from "@/assets/ultrapocket-new-1.png";
 import ultrapocket2 from "@/assets/ultrapocket-new-2.png";
+import lumZen1 from "@/assets/lum-zen-1.png";
+import lumZen2 from "@/assets/lum-zen-2.png";
+import lumZen3 from "@/assets/lum-zen-3.png";
 
 interface Product {
   id: string;
@@ -27,12 +30,7 @@ const ProdutosLum = () => {
       id: "lum-essencial",
       name: "LÛM ESSENCIAL",
       tagline: "O essencial para viver com propósito.",
-      features: [
-        "Área total",
-        "Design minimalista",
-        "Estrutura leve",
-        "Montagem rápida",
-      ],
+      features: ["Design minimalista", "Montagem rápida"],
       images: [lumEssential1, lumEssential2],
       ctaText: "Quero conhecer",
       ctaMsg: "Olá! Quero conhecer o LÛM Essencial.",
@@ -41,11 +39,7 @@ const ProdutosLum = () => {
       id: "lum-confort",
       name: "LÛM CONFORT",
       tagline: "Começar com espaço para crescer.",
-      features: [
-        "Espaços integrados",
-        "Conforto térmico",
-        "Acabamentos premium",
-      ],
+      features: ["Espaços integrados", "Acabamentos premium"],
       images: [lumConfortCover, lumConfort1],
       ctaText: "Ver detalhes",
       ctaMsg: "Olá! Quero saber mais sobre o LÛM Confort.",
@@ -54,24 +48,25 @@ const ProdutosLum = () => {
       id: "lum-family",
       name: "LÛM FAMILY",
       tagline: "Construir um lar onde a vida cresce junto.",
-      features: [
-        "Área ampla",
-        "Perfeito para famílias",
-        "Modularidade expansível",
-      ],
+      features: ["Área ampla", "Modularidade expansível"],
       images: [lumFamilyTerreoCover, lumFamilyTerreo1],
       ctaText: "Explorar módulo",
       ctaMsg: "Olá! Quero explorar o LÛM Family.",
     },
     {
+      id: "lum-zen",
+      name: "LÛM ZEN",
+      tagline: "Bem-estar e reconexão com o que importa.",
+      features: ["Sauna e academia", "Integração com a natureza"],
+      images: [lumZen1, lumZen2, lumZen3],
+      ctaText: "Conhecer o Zen",
+      ctaMsg: "Olá! Quero conhecer o LÛM Zen.",
+    },
+    {
       id: "ultrapocket",
       name: "ULTRAPOCKET GOURMET",
-      tagline: "Seu jardim transformado em um refúgio de encontros.",
-      features: [
-        "Espaço gourmet completo",
-        "Entrega em semanas",
-        "Plug and play",
-      ],
+      tagline: "Seu jardim em um refúgio de encontros.",
+      features: ["Espaço gourmet completo", "Plug and play"],
       images: [ultrapocket1, ultrapocket2],
       ctaText: "Conhecer o Ultrapocket",
       ctaMsg: "Olá! Quero conhecer o Ultrapocket Gourmet.",
@@ -93,16 +88,16 @@ const ProdutosLum = () => {
   };
 
   return (
-    <section id="produtos-lum" className="py-20 md:py-28 px-4 bg-background">
+    <section id="produtos-lum" className="py-16 md:py-20 px-4 bg-background">
       <div className="container mx-auto max-w-6xl">
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {products.map((product) => {
             const currentIndex = activeImageIndex[product.id] || 0;
 
             return (
               <div key={product.id} className="velum-card overflow-hidden p-0">
                 {/* Image Slider */}
-                <div className="relative aspect-video bg-background group">
+                <div className="relative aspect-[4/3] bg-background group">
                   <img
                     src={product.images[currentIndex]}
                     alt={product.name}
@@ -144,17 +139,17 @@ const ProdutosLum = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
-                  <h3 className="font-syncopate text-lg font-bold text-foreground mb-2">
+                <div className="p-4">
+                  <h3 className="font-syncopate text-xs sm:text-sm font-bold text-foreground mb-1">
                     {product.name}
                   </h3>
-                  <p className="font-montserrat text-muted-foreground italic mb-4">
+                  <p className="font-montserrat text-xs text-muted-foreground italic mb-3 line-clamp-2">
                     "{product.tagline}"
                   </p>
 
-                  <ul className="space-y-1 mb-6">
+                  <ul className="space-y-0.5 mb-4 hidden sm:block">
                     {product.features.map((feature) => (
-                      <li key={feature} className="font-montserrat text-sm text-muted-foreground flex items-center gap-2">
+                      <li key={feature} className="font-montserrat text-xs text-muted-foreground flex items-center gap-1">
                         <span className="text-primary">•</span>
                         {feature}
                       </li>
@@ -164,7 +159,7 @@ const ProdutosLum = () => {
                   <button
                     data-whatsapp="true"
                     data-msg={product.ctaMsg}
-                    className="btn-velum-primary w-full text-center text-sm py-3"
+                    className="btn-velum-primary w-full text-center text-xs py-2"
                   >
                     {product.ctaText}
                   </button>
