@@ -39,8 +39,8 @@ const ColecaoLum = () => {
       id: 5,
       name: "Lûm Zen",
       subtitle: "Bem-estar e reconexão.",
-      description: "Espaços pensados para desacelerar, respirar e se reconectar com o que realmente importa.",
-      available: false,
+      description: "Espaços pensados para desacelerar, respirar e se reconectar com o que realmente importa. Sauna, academia e ambientes de relaxamento integrados à natureza.",
+      available: true,
     },
     {
       id: 6,
