@@ -9,10 +9,24 @@ import portfolioResidencial1b from "@/assets/portfolio-residencial-1b.png";
 import portfolioResidencial1c from "@/assets/portfolio-residencial-1c.png";
 import portfolioResidencial2a from "@/assets/portfolio-residencial-2a.png";
 import portfolioComercial1a from "@/assets/portfolio-comercial-1a.jpeg";
+import portfolioTerrasAlpha1 from "@/assets/portfolio-terras-alpha-1.jpg";
+import portfolioTerrasAlpha2 from "@/assets/portfolio-terras-alpha-2.jpg";
+import portfolioTerrasAlpha3 from "@/assets/portfolio-terras-alpha-3.jpg";
+import portfolioTerrasAlpha4 from "@/assets/portfolio-terras-alpha-4.jpg";
+import portfolioTerrasAlpha5 from "@/assets/portfolio-terras-alpha-5.jpg";
 
 const portfolioItems = [
   {
     id: 1,
+    name: "Residência Terras Alpha",
+    location: "Condomínio Terras Alpha 2, Senador Canedo - GO",
+    area: "220 m²",
+    methodology: "100% Light Steel Frame",
+    status: "Entregue",
+    images: [portfolioTerrasAlpha1, portfolioTerrasAlpha2, portfolioTerrasAlpha3, portfolioTerrasAlpha4, portfolioTerrasAlpha5],
+  },
+  {
+    id: 2,
     name: "Residência Alto Padrão",
     location: "Condomínio Portal do Sol Green, Goiânia - GO",
     area: "650 m²",
@@ -21,7 +35,7 @@ const portfolioItems = [
     images: [portfolioResidencial1c, portfolioResidencial1a, portfolioResidencial1b],
   },
   {
-    id: 2,
+    id: 3,
     name: "Casa Contemporânea",
     location: "Condomínio Jardins Porto, Senador Canedo - GO",
     area: "235 m²",
@@ -30,7 +44,7 @@ const portfolioItems = [
     images: [portfolioResidencial2a],
   },
   {
-    id: 3,
+    id: 4,
     name: "Residência Moderna",
     location: "Condomínio Aldeia do Parque, Aparecida de Goiânia - GO",
     area: "232 m²",
