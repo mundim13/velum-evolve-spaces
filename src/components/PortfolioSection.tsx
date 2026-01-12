@@ -20,7 +20,7 @@ const portfolioItems = [
   {
     id: 2,
     name: "Casa Contemporânea",
-    location: "Condomínio Jardins Porto, Goiânia - GO",
+    location: "Condomínio Jardins Porto, Senador Canedo - GO",
     area: "235 m²",
     methodology: "100% Light Steel Frame",
     status: "Em execução",
