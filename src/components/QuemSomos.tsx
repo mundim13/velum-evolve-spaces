@@ -15,11 +15,11 @@ const QuemSomos = () => {
         </h2>
 
         <p className="font-montserrat text-lg md:text-xl text-muted-foreground leading-relaxed mb-12">
-          A Velum nasceu para simplificar a construção civil.
+          A Velum nasceu para assumir a responsabilidade e entregar o seu projeto.
           <br /><br />
-          Unimos arquitetura autoral, engenharia de precisão e gestão inteligente para que você construa com tranquilidade, sem atrasos, sem imprevistos e sem estresse.
+          Unimos arquitetura autoral, engenharia de precisão e gestão inteligente para coordenar e executar construções com método, previsibilidade e controle.
           <br /><br />
-          Nossa missão é entregar espaços que transformam vidas, priorizando leveza, tempo e bem-estar.
+          Nossa missão é transformar a experiência de construir em algo leve e sem traumas, garantindo decisões claras, prazos definidos e tranquilidade em cada etapa.
         </p>
 
         {/* Icons */}
