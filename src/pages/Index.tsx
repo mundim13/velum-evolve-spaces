@@ -3,10 +3,9 @@ import HeaderNew from "@/components/HeaderNew";
 import HeroSection from "@/components/HeroSection";
 import QuemSomos from "@/components/QuemSomos";
 import SolucoesSection from "@/components/SolucoesSection";
-import ModeloIntegrado from "@/components/ModeloIntegrado";
 import DiferenciaisSection from "@/components/DiferenciaisSection";
 import GestaoInteligente from "@/components/GestaoInteligente";
-import JornadaCliente from "@/components/JornadaCliente";
+import JornadaVelum from "@/components/JornadaVelum";
 import ColetaneaLumIntro from "@/components/ColetaneaLumIntro";
 import ProdutosLum from "@/components/ProdutosLum";
 import ProjetosPersonalizados from "@/components/ProjetosPersonalizados";
@@ -44,10 +43,9 @@ const Index = () => {
         <HeroSection />
         <QuemSomos />
         <SolucoesSection />
-        <ModeloIntegrado />
         <DiferenciaisSection />
         <GestaoInteligente />
-        <JornadaCliente />
+        <JornadaVelum />
         <ColetaneaLumIntro />
         <ProdutosLum />
         <ProjetosPersonalizados />
