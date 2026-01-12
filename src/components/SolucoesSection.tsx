@@ -44,65 +44,70 @@ const SolucoesSection = () => {
             <div className="relative w-full max-w-sm sm:max-w-md aspect-square">
               {/* SVG Circle with arrows */}
               <svg viewBox="0 0 300 300" className="w-full h-full" fill="none">
+                {/* Main circle connecting all elements */}
+                <circle
+                  cx="150"
+                  cy="150"
+                  r="100"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="2"
+                  fill="none"
+                  className={`transition-all duration-1500 ${isVisible ? 'opacity-70' : 'opacity-0'}`}
+                  style={{
+                    strokeDasharray: 628,
+                    strokeDashoffset: isVisible ? 0 : 628,
+                    transition: 'stroke-dashoffset 1.5s ease-out 0.2s, opacity 0.5s ease-out'
+                  }}
+                />
+
+                {/* Arrow indicators on the circle */}
                 <defs>
                   <marker 
                     id="arrowhead" 
-                    markerWidth="10" 
-                    markerHeight="7" 
-                    refX="9" 
-                    refY="3.5" 
+                    markerWidth="8" 
+                    markerHeight="6" 
+                    refX="4" 
+                    refY="3" 
                     orient="auto"
                   >
                     <polygon 
-                      points="0 0, 10 3.5, 0 7" 
+                      points="0 0, 8 3, 0 6" 
                       fill="hsl(var(--primary))"
                     />
                   </marker>
                 </defs>
 
-                {/* Arc from Preço to Prazo (top-right to left) */}
+                {/* Arrow on top-left arc */}
                 <path
-                  d="M 215 65 A 100 100 0 0 1 55 150"
+                  d="M 85 80 L 75 70"
                   stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   fill="none"
                   markerEnd="url(#arrowhead)"
-                  className={`transition-all duration-1000 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
-                  style={{
-                    strokeDasharray: 220,
-                    strokeDashoffset: isVisible ? 0 : 220,
-                    transition: 'stroke-dashoffset 1s ease-out 0.3s, opacity 0.5s ease-out 0.3s'
-                  }}
+                  className={`transition-opacity duration-500 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
+                  style={{ transitionDelay: '1s' }}
                 />
 
-                {/* Arc from Prazo to Tempo (left to bottom-right) */}
+                {/* Arrow on bottom arc */}
                 <path
-                  d="M 70 195 A 100 100 0 0 1 230 195"
+                  d="M 200 230 L 210 235"
                   stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   fill="none"
                   markerEnd="url(#arrowhead)"
-                  className={`transition-all duration-1000 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
-                  style={{
-                    strokeDasharray: 220,
-                    strokeDashoffset: isVisible ? 0 : 220,
-                    transition: 'stroke-dashoffset 1s ease-out 0.6s, opacity 0.5s ease-out 0.6s'
-                  }}
+                  className={`transition-opacity duration-500 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
+                  style={{ transitionDelay: '1.2s' }}
                 />
 
-                {/* Arc from Tempo to Preço (bottom-right to top) */}
+                {/* Arrow on right arc */}
                 <path
-                  d="M 245 150 A 100 100 0 0 1 185 55"
+                  d="M 240 100 L 245 90"
                   stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   fill="none"
                   markerEnd="url(#arrowhead)"
-                  className={`transition-all duration-1000 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
-                  style={{
-                    strokeDasharray: 180,
-                    strokeDashoffset: isVisible ? 0 : 180,
-                    transition: 'stroke-dashoffset 1s ease-out 0.9s, opacity 0.5s ease-out 0.9s'
-                  }}
+                  className={`transition-opacity duration-500 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
+                  style={{ transitionDelay: '1.4s' }}
                 />
               </svg>
 
