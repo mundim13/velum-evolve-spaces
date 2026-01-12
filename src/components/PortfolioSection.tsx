@@ -14,6 +14,7 @@ import portfolioTerrasAlpha5 from "@/assets/portfolio-terras-alpha-5.jpg";
 import portfolioJardinsPorto1 from "@/assets/portfolio-jardins-porto-1.jpg";
 import portfolioJardinsPorto2 from "@/assets/portfolio-jardins-porto-2.jpg";
 import portfolioJardinsPorto3 from "@/assets/portfolio-jardins-porto-3.jpg";
+import portfolioJardinsFgr1 from "@/assets/portfolio-jardins-fgr-1.jpg";
 
 const portfolioItems = [
   {
@@ -36,6 +37,15 @@ const portfolioItems = [
   },
   {
     id: 3,
+    name: "Viabilidade FGR",
+    location: "Condomínio Jardins FGR, Goiânia - GO",
+    area: "-",
+    methodology: "Bloco de Concreto + Light Steel Frame",
+    status: "Entregue",
+    images: [portfolioJardinsFgr1],
+  },
+  {
+    id: 4,
     name: "Residência Alto Padrão",
     location: "Condomínio Portal do Sol Green, Goiânia - GO",
     area: "650 m²",
@@ -44,7 +54,7 @@ const portfolioItems = [
     images: [portfolioResidencial1c, portfolioResidencial1a, portfolioResidencial1b],
   },
   {
-    id: 4,
+    id: 5,
     name: "Casa Contemporânea",
     location: "Condomínio Jardins Porto, Senador Canedo - GO",
     area: "235 m²",
@@ -53,7 +63,7 @@ const portfolioItems = [
     images: [portfolioResidencial2a],
   },
   {
-    id: 5,
+    id: 6,
     name: "Residência Moderna",
     location: "Condomínio Aldeia do Parque, Aparecida de Goiânia - GO",
     area: "232 m²",
