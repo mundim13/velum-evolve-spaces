@@ -20,9 +20,9 @@ const portfolioItems = [
   {
     id: 2,
     name: "Casa Contemporânea",
-    location: "Alphaville Flamboyant, Goiânia - GO",
-    area: "220 m²",
-    methodology: "Steel Frame",
+    location: "Condomínio Jardins Porto, Goiânia - GO",
+    area: "235 m²",
+    methodology: "100% Light Steel Frame",
     status: "Em execução",
     images: [portfolioResidencial2a],
   },
