@@ -5,6 +5,7 @@ import portfolioResidencial1a from "@/assets/portfolio-residencial-1a.png";
 import portfolioResidencial1b from "@/assets/portfolio-residencial-1b.png";
 import portfolioResidencial1c from "@/assets/portfolio-residencial-1c.png";
 import portfolioResidencial2a from "@/assets/portfolio-residencial-2a.png";
+import portfolioComercial1a from "@/assets/portfolio-comercial-1a.jpeg";
 
 const PortfolioSection = () => {
   const [activeImageIndex, setActiveImageIndex] = useState<{ [key: number]: number }>({});
@@ -17,7 +18,7 @@ const PortfolioSection = () => {
       images: [portfolioResidencial1c, portfolioResidencial1a, portfolioResidencial1b]
     },
     { id: 2, title: "", status: "Em execução", images: [portfolioResidencial2a] },
-    { id: 3, title: "Projeto Comercial 1", status: null, images: [] },
+    { id: 3, title: "", status: "Em execução", images: [portfolioComercial1a] },
     { id: 4, title: "Projeto Modular 1", status: null, images: [] },
     { id: 5, title: "Projeto Modular 2", status: null, images: [] },
     { id: 6, title: "Projeto Gourmet 1", status: null, images: [] },
