@@ -9,7 +9,7 @@ const ProjetosPersonalizados = () => {
         <p className="font-montserrat text-lg md:text-xl text-muted-foreground leading-relaxed mb-10">
           Para quem busca exclusividade total.
           <br /><br />
-          Criamos projetos personalizados do zero, unindo arquitetura autoral, engenharia inteligente e gestão integrada — tudo para transformar seu terreno em um espaço único.
+          Criamos projetos personalizados do zero, unindo arquitetura autoral, engenharia inteligente e gestão integrada, tudo para transformar seu terreno em um espaço único.
         </p>
 
         <button
