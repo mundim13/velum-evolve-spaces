@@ -29,7 +29,7 @@ const portfolioItems = [
   {
     id: 3,
     name: "Residência Moderna",
-    location: "Condomínio Aldeia do Parque, Goiânia - GO",
+    location: "Condomínio Aldeia do Parque, Aparecida de Goiânia - GO",
     area: "232 m²",
     methodology: "100% Light Steel Frame",
     status: "Em execução",
