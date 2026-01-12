@@ -33,9 +33,9 @@ const SolucoesSection = () => {
             </h2>
 
             <p className="font-montserrat text-lg text-muted-foreground leading-relaxed">
-              Através da nossa inteligência multiconstrutiva, encontramos sempre a solução mais eficiente entre tecnologia, custo-benefício e qualidade.
+              Utilizamos nossa inteligência multiconstrutiva para assumir decisões técnicas e executar obras com método, previsibilidade e controle.
               <br /><br />
-              O resultado: obras previsíveis, rápidas e com preço fechado de verdade.
+              O resultado: prazo cumprido, tempo reduzido e preço fechado de verdade.
             </p>
           </div>
 
