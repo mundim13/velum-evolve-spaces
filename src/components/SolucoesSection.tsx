@@ -23,7 +23,7 @@ const SolucoesSection = () => {
   }, []);
 
   return (
-    <section id="solucoes" className="py-20 md:py-28 px-4 bg-background">
+    <section id="solucoes" className="py-20 md:py-28 px-4 bg-background scroll-mt-24">
       <div className="container mx-auto max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}

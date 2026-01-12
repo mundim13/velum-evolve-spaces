@@ -46,7 +46,7 @@ const HeaderNew = () => {
             <a
               key={item.href}
               href={item.href}
-              className="font-montserrat text-sm text-foreground/80 hover:text-primary transition-colors"
+              className="font-montserrat text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
             >
               {item.label}
             </a>
@@ -71,14 +71,18 @@ const HeaderNew = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-background border-t border-border mt-2 py-4 px-4 space-y-4">
+      <div 
+        className={`lg:hidden bg-background/98 backdrop-blur-md border-t border-border overflow-hidden transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'max-h-80 py-4' : 'max-h-0 py-0'
+        }`}
+      >
+        <div className="px-4 space-y-3">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block font-montserrat text-foreground hover:text-primary transition-colors py-2"
+              className="block font-montserrat text-foreground hover:text-primary transition-colors duration-200 py-3 border-b border-border/30 last:border-0"
             >
               {item.label}
             </a>
@@ -86,12 +90,13 @@ const HeaderNew = () => {
           <button
             data-whatsapp="true"
             data-msg="Olá! Gostaria de solicitar um orçamento."
-            className="btn-velum-primary w-full text-center py-3"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="btn-velum-primary w-full text-center py-3 mt-2"
           >
             Solicitar orçamento
           </button>
         </div>
-      )}
+      </div>
     </header>
   );
 };
