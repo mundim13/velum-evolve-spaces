@@ -77,9 +77,9 @@ const SolucoesSection = () => {
                   </marker>
                 </defs>
 
-                {/* Arrow on top-left arc */}
+                {/* Arrow: Preço → Prazo (top to left, going counter-clockwise) */}
                 <path
-                  d="M 85 80 L 75 70"
+                  d="M 70 95 L 58 105"
                   stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   fill="none"
@@ -88,9 +88,9 @@ const SolucoesSection = () => {
                   style={{ transitionDelay: '1s' }}
                 />
 
-                {/* Arrow on bottom arc */}
+                {/* Arrow: Prazo → Tempo (left to bottom, continuing flow) */}
                 <path
-                  d="M 200 230 L 210 235"
+                  d="M 95 235 L 110 245"
                   stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   fill="none"
@@ -99,9 +99,9 @@ const SolucoesSection = () => {
                   style={{ transitionDelay: '1.2s' }}
                 />
 
-                {/* Arrow on right arc */}
+                {/* Arrow: Tempo → Preço (bottom-right to top, completing cycle) */}
                 <path
-                  d="M 240 100 L 245 90"
+                  d="M 225 80 L 210 65"
                   stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   fill="none"
