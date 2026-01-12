@@ -63,7 +63,7 @@ const PortfolioSection = () => {
         </h2>
 
         <p className="font-montserrat text-lg text-muted-foreground text-center mb-12">
-          Conheça alguns dos projetos e obras que já realizamos.
+          Conheça alguns dos projetos e obras.
         </p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
