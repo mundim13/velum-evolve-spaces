@@ -7,30 +7,35 @@ const JornadaCliente = () => {
       number: "1",
       title: "Entendimento e Diagnóstico",
       description: "Compreensão completa das suas necessidades e objetivos.",
+      note: null,
     },
     {
       Icon: PenTool,
       number: "2",
       title: "Projetos e Compatibilização",
       description: "Desenvolvimento e integração de todos os projetos.",
+      note: "Se o cliente já possui projeto, a Velum valida, compatibiliza e segue com segurança.",
     },
     {
       Icon: Calculator,
       number: "3",
       title: "Planejamento e Orçamento",
       description: "Cronograma físico-financeiro detalhado.",
+      note: null,
     },
     {
       Icon: HardHat,
       number: "4",
       title: "Obra",
       description: "Execução com gestão inteligente e qualidade.",
+      note: null,
     },
     {
       Icon: CheckCircle,
       number: "5",
       title: "Acompanhamento e Entrega",
       description: "Finalização técnica e suporte pós-obra.",
+      note: null,
     },
   ];
 
@@ -44,7 +49,7 @@ const JornadaCliente = () => {
         {/* Desktop: Horizontal timeline */}
         <div className="hidden lg:block relative">
           <div className="grid grid-cols-5 gap-6 relative">
-            {steps.map(({ Icon, number, title, description }, index) => (
+            {steps.map(({ Icon, number, title, description, note }, index) => (
               <div key={number} className="text-center relative flex flex-col items-center">
                 {/* Connecting line segment - only between icons */}
                 {index < steps.length - 1 && (
@@ -70,6 +75,15 @@ const JornadaCliente = () => {
                     {description}
                   </p>
                 </div>
+
+                {/* Note box - only for step 2 */}
+                {note && (
+                  <div className="mt-3 bg-primary/10 border border-primary/30 rounded-lg p-3 w-full">
+                    <p className="font-montserrat text-[10px] text-primary leading-relaxed">
+                      {note}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -78,7 +92,7 @@ const JornadaCliente = () => {
         {/* Tablet: 3 + 2 grid */}
         <div className="hidden md:block lg:hidden">
           <div className="grid grid-cols-3 gap-4 mb-4">
-            {steps.slice(0, 3).map(({ Icon, number, title, description }) => (
+            {steps.slice(0, 3).map(({ Icon, number, title, description, note }) => (
               <div key={number} className="text-center flex flex-col items-center">
                 <div className="relative w-16 h-16 mb-4 z-10">
                   <div className="rounded-full bg-background border-4 border-primary flex items-center justify-center shadow-lg w-full h-full">
@@ -96,6 +110,13 @@ const JornadaCliente = () => {
                     {description}
                   </p>
                 </div>
+                {note && (
+                  <div className="mt-2 bg-primary/10 border border-primary/30 rounded-lg p-2 w-full">
+                    <p className="font-montserrat text-[9px] text-primary leading-relaxed">
+                      {note}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -125,7 +146,7 @@ const JornadaCliente = () => {
 
         {/* Mobile: Vertical timeline */}
         <div className="md:hidden space-y-5">
-          {steps.map(({ Icon, number, title, description }, index) => (
+          {steps.map(({ Icon, number, title, description, note }, index) => (
             <div key={number} className="relative">
               {/* Vertical line segment - only between icons */}
               {index < steps.length - 1 && (
@@ -142,13 +163,22 @@ const JornadaCliente = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-3">
-                  <h3 className="font-syncopate text-[10px] font-bold text-foreground mb-1 leading-tight tracking-wide">
-                    {title.toUpperCase()}
-                  </h3>
-                  <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
-                    {description}
-                  </p>
+                <div className="flex-1">
+                  <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-3">
+                    <h3 className="font-syncopate text-[10px] font-bold text-foreground mb-1 leading-tight tracking-wide">
+                      {title.toUpperCase()}
+                    </h3>
+                    <p className="font-montserrat text-xs text-muted-foreground leading-relaxed">
+                      {description}
+                    </p>
+                  </div>
+                  {note && (
+                    <div className="mt-2 bg-primary/10 border border-primary/30 rounded-lg p-2">
+                      <p className="font-montserrat text-[10px] text-primary leading-relaxed">
+                        {note}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
