@@ -39,12 +39,12 @@ const SolucoesSection = () => {
             </p>
           </div>
 
-          {/* Triangle Graphic with animations */}
+          {/* Circular Economy Graphic with animations */}
           <div ref={sectionRef} className="flex justify-center">
             <div className="relative w-full max-w-md aspect-square">
-              {/* SVG Triangle background */}
-              <svg viewBox="0 0 300 280" className="w-full h-full" fill="none">
-                {/* Enhanced filters and gradients */}
+              {/* SVG Circular background */}
+              <svg viewBox="0 0 300 300" className="w-full h-full" fill="none">
+                {/* Filters and gradients */}
                 <defs>
                   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
@@ -53,64 +53,79 @@ const SolucoesSection = () => {
                       <feMergeNode in="SourceGraphic"/>
                     </feMerge>
                   </filter>
-                  <filter id="centerGlow" x="-100%" y="-100%" width="300%" height="300%">
-                    <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                  <linearGradient id="triangleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.12"/>
                     <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.03"/>
                   </linearGradient>
-                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.6"/>
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.3"/>
-                  </linearGradient>
                 </defs>
 
-                {/* Triangle with refined animation */}
-                <polygon 
-                  points="150,40 270,235 30,235" 
+                {/* Main outer circle */}
+                <circle 
+                  cx="150" cy="150" r="120"
                   stroke="hsl(var(--primary))" 
-                  strokeWidth="1.5" 
-                  fill="url(#triangleGradient)"
+                  strokeWidth="2" 
+                  fill="url(#circleGradient)"
                   className={`transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
                   style={{
-                    strokeDasharray: 650,
-                    strokeDashoffset: isVisible ? 0 : 650,
+                    strokeDasharray: 754,
+                    strokeDashoffset: isVisible ? 0 : 754,
                     transition: 'stroke-dashoffset 1.5s ease-out, opacity 0.5s ease-out'
                   }}
                 />
-                
-                {/* Connecting lines to center - more prominent */}
-                <line 
-                  x1="150" y1="40" x2="150" y2="120" 
-                  stroke="url(#lineGradient)" 
-                  strokeWidth="2" 
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-70' : 'opacity-0'}`}
+
+                {/* Circular arrows suggesting flow/cycle */}
+                <path
+                  d="M 150 30 A 120 120 0 0 1 256 100"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
                   style={{ transitionDelay: '1s' }}
                 />
-                <line 
-                  x1="30" y1="235" x2="115" y2="165" 
-                  stroke="url(#lineGradient)" 
-                  strokeWidth="2" 
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-70' : 'opacity-0'}`}
+                <polygon 
+                  points="256,100 248,88 262,92" 
+                  fill="hsl(var(--primary))"
+                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
+                  style={{ transitionDelay: '1s' }}
+                />
+
+                <path
+                  d="M 256 200 A 120 120 0 0 1 100 256"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
                   style={{ transitionDelay: '1.2s' }}
                 />
-                <line 
-                  x1="270" y1="235" x2="185" y2="165" 
-                  stroke="url(#lineGradient)" 
-                  strokeWidth="2" 
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-70' : 'opacity-0'}`}
+                <polygon 
+                  points="100,256 114,252 108,266" 
+                  fill="hsl(var(--primary))"
+                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
+                  style={{ transitionDelay: '1.2s' }}
+                />
+
+                <path
+                  d="M 44 200 A 120 120 0 0 1 44 100"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
+                  style={{ transitionDelay: '1.4s' }}
+                />
+                <polygon 
+                  points="44,100 52,112 38,108" 
+                  fill="hsl(var(--primary))"
+                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
                   style={{ transitionDelay: '1.4s' }}
                 />
               </svg>
 
-              {/* Top vertex - Preço Fechado de Verdade */}
+              {/* Top position - Preço Fechado de Verdade (12 o'clock) */}
               <div 
-                className={`absolute top-[2%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
+                className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
                 style={{ transitionDelay: '0.3s' }}
               >
                 <div className="relative">
@@ -124,9 +139,9 @@ const SolucoesSection = () => {
                 </span>
               </div>
 
-              {/* Bottom left vertex - Prazo Assumido */}
+              {/* Bottom left position - Prazo Assumido (7 o'clock) */}
               <div 
-                className={`absolute bottom-[5%] left-[0%] flex flex-col items-center gap-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                className={`absolute bottom-[5%] left-[5%] flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: '0.5s' }}
               >
                 <div className="relative">
@@ -140,9 +155,9 @@ const SolucoesSection = () => {
                 </span>
               </div>
 
-              {/* Bottom right vertex - Tempo Otimizado */}
+              {/* Bottom right position - Tempo Otimizado (5 o'clock) */}
               <div 
-                className={`absolute bottom-[5%] right-[0%] flex flex-col items-center gap-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                className={`absolute bottom-[5%] right-[5%] flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: '0.7s' }}
               >
                 <div className="relative">
@@ -156,18 +171,18 @@ const SolucoesSection = () => {
                 </span>
               </div>
 
-              {/* Center - Responsabilidade Total (Command Hub) */}
+              {/* Center - Responsabilidade Total */}
               <div 
-                className={`absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                 style={{ transitionDelay: '1.5s' }}
               >
                 <div className="relative">
                   {/* Outer glow ring */}
-                  <div className={`absolute -inset-3 bg-primary/30 rounded-full blur-2xl transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1.8s' }} />
+                  <div className={`absolute -inset-4 bg-primary/30 rounded-full blur-2xl transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1.8s' }} />
                   {/* Inner subtle pulse */}
-                  <div className={`absolute -inset-1 bg-primary/40 rounded-full blur-md transition-opacity duration-700 ${isVisible ? 'opacity-100 animate-pulse' : 'opacity-0'}`} style={{ transitionDelay: '2s' }} />
+                  <div className={`absolute -inset-2 bg-primary/40 rounded-full blur-md transition-opacity duration-700 ${isVisible ? 'opacity-100 animate-pulse' : 'opacity-0'}`} style={{ transitionDelay: '2s' }} />
                   {/* Main circle */}
-                  <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/30 p-4">
+                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/30 p-3">
                     <span className="font-syncopate text-[10px] sm:text-xs text-primary-foreground tracking-wider text-center leading-tight font-bold">
                       RESPONSABILIDADE<br />TOTAL
                     </span>
