@@ -41,7 +41,7 @@ const DiferenciaisSection = () => {
           ))}
         </div>
 
-        <p className="font-syncopate text-xl md:text-2xl font-bold text-primary text-center tracking-wider">
+        <p className="font-syncopate text-[10px] sm:text-xs md:text-sm font-bold text-primary text-center tracking-wider whitespace-nowrap">
           VOCÊ ENTRA EM QUALQUER ETAPA
         </p>
       </div>
