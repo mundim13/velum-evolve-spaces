@@ -39,155 +39,120 @@ const SolucoesSection = () => {
             </p>
           </div>
 
-          {/* Circular Economy Graphic with animations */}
+          {/* Circular Economy Graphic - matching sketch */}
           <div ref={sectionRef} className="flex justify-center">
-            <div className="relative w-full max-w-md aspect-square">
-              {/* SVG Circular background */}
+            <div className="relative w-full max-w-sm sm:max-w-md aspect-square">
+              {/* SVG Circle with arrows */}
               <svg viewBox="0 0 300 300" className="w-full h-full" fill="none">
-                {/* Filters and gradients */}
                 <defs>
-                  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                  <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.12"/>
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.03"/>
-                  </linearGradient>
+                  <marker 
+                    id="arrowhead" 
+                    markerWidth="10" 
+                    markerHeight="7" 
+                    refX="9" 
+                    refY="3.5" 
+                    orient="auto"
+                  >
+                    <polygon 
+                      points="0 0, 10 3.5, 0 7" 
+                      fill="hsl(var(--primary))"
+                    />
+                  </marker>
                 </defs>
 
-                {/* Main outer circle */}
-                <circle 
-                  cx="150" cy="150" r="120"
-                  stroke="hsl(var(--primary))" 
-                  strokeWidth="2" 
-                  fill="url(#circleGradient)"
-                  className={`transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+                {/* Arc from Preço to Prazo (top-right to left) */}
+                <path
+                  d="M 215 65 A 100 100 0 0 1 55 150"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="2"
+                  fill="none"
+                  markerEnd="url(#arrowhead)"
+                  className={`transition-all duration-1000 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
                   style={{
-                    strokeDasharray: 754,
-                    strokeDashoffset: isVisible ? 0 : 754,
-                    transition: 'stroke-dashoffset 1.5s ease-out, opacity 0.5s ease-out'
+                    strokeDasharray: 220,
+                    strokeDashoffset: isVisible ? 0 : 220,
+                    transition: 'stroke-dashoffset 1s ease-out 0.3s, opacity 0.5s ease-out 0.3s'
                   }}
                 />
 
-                {/* Circular arrows suggesting flow/cycle */}
+                {/* Arc from Prazo to Tempo (left to bottom-right) */}
                 <path
-                  d="M 150 30 A 120 120 0 0 1 256 100"
+                  d="M 70 195 A 100 100 0 0 1 230 195"
                   stroke="hsl(var(--primary))"
-                  strokeWidth="3"
+                  strokeWidth="2"
                   fill="none"
-                  strokeLinecap="round"
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
-                  style={{ transitionDelay: '1s' }}
-                />
-                <polygon 
-                  points="256,100 248,88 262,92" 
-                  fill="hsl(var(--primary))"
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
-                  style={{ transitionDelay: '1s' }}
+                  markerEnd="url(#arrowhead)"
+                  className={`transition-all duration-1000 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
+                  style={{
+                    strokeDasharray: 220,
+                    strokeDashoffset: isVisible ? 0 : 220,
+                    transition: 'stroke-dashoffset 1s ease-out 0.6s, opacity 0.5s ease-out 0.6s'
+                  }}
                 />
 
+                {/* Arc from Tempo to Preço (bottom-right to top) */}
                 <path
-                  d="M 256 200 A 120 120 0 0 1 100 256"
+                  d="M 245 150 A 100 100 0 0 1 185 55"
                   stroke="hsl(var(--primary))"
-                  strokeWidth="3"
+                  strokeWidth="2"
                   fill="none"
-                  strokeLinecap="round"
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
-                  style={{ transitionDelay: '1.2s' }}
-                />
-                <polygon 
-                  points="100,256 114,252 108,266" 
-                  fill="hsl(var(--primary))"
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
-                  style={{ transitionDelay: '1.2s' }}
-                />
-
-                <path
-                  d="M 44 200 A 120 120 0 0 1 44 100"
-                  stroke="hsl(var(--primary))"
-                  strokeWidth="3"
-                  fill="none"
-                  strokeLinecap="round"
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
-                  style={{ transitionDelay: '1.4s' }}
-                />
-                <polygon 
-                  points="44,100 52,112 38,108" 
-                  fill="hsl(var(--primary))"
-                  className={`transition-opacity duration-700 ${isVisible ? 'opacity-60' : 'opacity-0'}`}
-                  style={{ transitionDelay: '1.4s' }}
+                  markerEnd="url(#arrowhead)"
+                  className={`transition-all duration-1000 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
+                  style={{
+                    strokeDasharray: 180,
+                    strokeDashoffset: isVisible ? 0 : 180,
+                    transition: 'stroke-dashoffset 1s ease-out 0.9s, opacity 0.5s ease-out 0.9s'
+                  }}
                 />
               </svg>
 
-              {/* Top position - Preço Fechado de Verdade (12 o'clock) */}
+              {/* Top position - Preço Fechado de Verdade */}
               <div 
-                className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
-                style={{ transitionDelay: '0.3s' }}
+                className={`absolute top-[5%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
+                style={{ transitionDelay: '0.2s' }}
               >
-                <div className="relative">
-                  <div className={`absolute inset-0 bg-primary/50 rounded-full blur-lg transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.8s' }} />
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/25 border-2 border-primary flex items-center justify-center shadow-md">
-                    <DollarSign className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth={2.5} />
-                  </div>
-                </div>
-                <span className="font-syncopate text-[9px] sm:text-[11px] text-foreground tracking-wider text-center leading-tight font-medium">
+                <span className="font-syncopate text-[9px] sm:text-[10px] text-foreground tracking-wider text-center leading-tight font-medium order-first mb-1">
                   PREÇO FECHADO<br />DE VERDADE
                 </span>
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-primary bg-background flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" strokeWidth={2} />
+                </div>
               </div>
 
-              {/* Bottom left position - Prazo Assumido (7 o'clock) */}
+              {/* Left position - Prazo Garantido */}
               <div 
-                className={`absolute bottom-[5%] left-[5%] flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-                style={{ transitionDelay: '0.5s' }}
+                className={`absolute top-1/2 left-[2%] -translate-y-1/2 flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                style={{ transitionDelay: '0.4s' }}
               >
-                <div className="relative">
-                  <div className={`absolute inset-0 bg-primary/50 rounded-full blur-lg transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }} />
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/25 border-2 border-primary flex items-center justify-center shadow-md">
-                    <CalendarCheck className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth={2.5} />
-                  </div>
+                <span className="font-syncopate text-[9px] sm:text-[10px] text-foreground tracking-wider text-center font-medium mb-1">
+                  PRAZO<br />GARANTIDO
+                </span>
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-primary bg-background flex items-center justify-center">
+                  <CalendarCheck className="w-5 h-5 sm:w-6 sm:h-6 text-primary" strokeWidth={2} />
                 </div>
-                <span className="font-syncopate text-[9px] sm:text-[11px] text-foreground tracking-wider text-center font-medium">
-                  PRAZO ASSUMIDO
+              </div>
+
+              {/* Bottom position - Tempo Otimizado */}
+              <div 
+                className={`absolute bottom-[5%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                style={{ transitionDelay: '0.6s' }}
+              >
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-primary bg-background flex items-center justify-center">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" strokeWidth={2} />
+                </div>
+                <span className="font-syncopate text-[9px] sm:text-[10px] text-foreground tracking-wider text-center font-medium mt-1">
+                  TEMPO<br />OTIMIZADO
                 </span>
               </div>
 
-              {/* Bottom right position - Tempo Otimizado (5 o'clock) */}
+              {/* Center - Responsabilidade Total (text only) */}
               <div 
-                className={`absolute bottom-[5%] right-[5%] flex flex-col items-center gap-2 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-                style={{ transitionDelay: '0.7s' }}
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+                style={{ transitionDelay: '1s' }}
               >
-                <div className="relative">
-                  <div className={`absolute inset-0 bg-primary/50 rounded-full blur-lg transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1.2s' }} />
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary/25 border-2 border-primary flex items-center justify-center shadow-md">
-                    <Clock className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth={2.5} />
-                  </div>
-                </div>
-                <span className="font-syncopate text-[9px] sm:text-[11px] text-foreground tracking-wider text-center font-medium">
-                  TEMPO OTIMIZADO
+                <span className="font-syncopate text-sm sm:text-base md:text-lg text-foreground tracking-wider text-center leading-tight font-bold block">
+                  RESPONSABILIDADE<br />TOTAL
                 </span>
-              </div>
-
-              {/* Center - Responsabilidade Total */}
-              <div 
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
-                style={{ transitionDelay: '1.5s' }}
-              >
-                <div className="relative">
-                  {/* Outer glow ring */}
-                  <div className={`absolute -inset-4 bg-primary/30 rounded-full blur-2xl transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1.8s' }} />
-                  {/* Inner subtle pulse */}
-                  <div className={`absolute -inset-2 bg-primary/40 rounded-full blur-md transition-opacity duration-700 ${isVisible ? 'opacity-100 animate-pulse' : 'opacity-0'}`} style={{ transitionDelay: '2s' }} />
-                  {/* Main circle */}
-                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/30 p-3">
-                    <span className="font-syncopate text-[10px] sm:text-xs text-primary-foreground tracking-wider text-center leading-tight font-bold">
-                      RESPONSABILIDADE<br />TOTAL
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
