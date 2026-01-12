@@ -1,26 +1,32 @@
 import { Check } from "lucide-react";
 
 const DiferenciaisSection = () => {
-  const diferenciais = [
-    "Preço fechado de verdade",
-    "Prazo garantido",
-    "Qualidade de fábrica",
-    "Modularidade evolutiva",
-    "Neuroarquitetura aplicada",
-    "Transparência total",
-    "Engenharia + Arquitetura + IA",
-    "Gestão inteligente da obra",
+  const servicos = [
+    "Projeto de Arquitetura",
+    "Projetos Complementares",
+    "Compatibilização",
+    "Orçamentos",
+    "Cronograma Físico e Financeiro",
+    "Viabilidades",
+    "Execução e Acompanhamento",
+    "Coletânea Lûm",
+    "Criação de Produtos Personalizados",
+    "Consultorias",
   ];
 
   return (
     <section id="diferenciais" className="py-20 md:py-28 px-4 bg-background">
       <div className="container mx-auto max-w-5xl">
-        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-16 tracking-wider">
-          POR QUE A VELUM É DIFERENTE
+        <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-center mb-8 tracking-wider">
+          POR QUE A VELUM É DIFERENTE?
         </h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {diferenciais.map((item) => (
+        <p className="font-montserrat text-base md:text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-16 leading-relaxed">
+          A Velum atua de forma integrada em toda a jornada de construção. Você pode iniciar conosco no ponto em que estiver: com ou sem projeto, com estudos iniciais ou apenas com a ideia. A partir daí, assumimos a responsabilidade total, organizando decisões, prazos e execução até a entrega final.
+        </p>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
+          {servicos.map((item) => (
             <div
               key={item}
               className="velum-card flex items-center gap-3 p-4"
@@ -34,6 +40,10 @@ const DiferenciaisSection = () => {
             </div>
           ))}
         </div>
+
+        <p className="font-syncopate text-xl md:text-2xl font-bold text-primary text-center tracking-wider">
+          VOCÊ ENTRA EM QUALQUER ETAPA
+        </p>
       </div>
     </section>
   );
