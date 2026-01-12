@@ -19,9 +19,6 @@ const PortfolioSection = () => {
     },
     { id: 2, title: "", status: "Em execução", images: [portfolioResidencial2a] },
     { id: 3, title: "", status: "Em execução", images: [portfolioComercial1a] },
-    { id: 4, title: "Projeto Modular 1", status: null, images: [] },
-    { id: 5, title: "Projeto Modular 2", status: null, images: [] },
-    { id: 6, title: "Projeto Gourmet 1", status: null, images: [] },
   ];
 
   const nextImage = (itemId: number, totalImages: number) => {
