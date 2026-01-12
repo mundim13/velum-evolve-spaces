@@ -14,9 +14,9 @@ const portfolioItems = [
   {
     id: 1,
     name: "Residência Alto Padrão",
-    location: "Condomínio Jardins, Goiânia - GO",
-    area: "280 m²",
-    methodology: "Steel Frame + Drywall",
+    location: "Condomínio Portal do Sol Green, Goiânia - GO",
+    area: "650 m²",
+    methodology: "Concreto + Steel + Alvenaria",
     status: "Em execução",
     images: [portfolioResidencial1c, portfolioResidencial1a, portfolioResidencial1b],
   },
