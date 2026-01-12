@@ -11,6 +11,9 @@ import portfolioTerrasAlpha2 from "@/assets/portfolio-terras-alpha-2.jpg";
 import portfolioTerrasAlpha3 from "@/assets/portfolio-terras-alpha-3.jpg";
 import portfolioTerrasAlpha4 from "@/assets/portfolio-terras-alpha-4.jpg";
 import portfolioTerrasAlpha5 from "@/assets/portfolio-terras-alpha-5.jpg";
+import portfolioJardinsPorto1 from "@/assets/portfolio-jardins-porto-1.jpg";
+import portfolioJardinsPorto2 from "@/assets/portfolio-jardins-porto-2.jpg";
+import portfolioJardinsPorto3 from "@/assets/portfolio-jardins-porto-3.jpg";
 
 const portfolioItems = [
   {
@@ -24,6 +27,15 @@ const portfolioItems = [
   },
   {
     id: 2,
+    name: "Residência Jardins Porto",
+    location: "Condomínio Jardins Porto, Senador Canedo - GO",
+    area: "245 m²",
+    methodology: "100% Light Steel Frame",
+    status: "Entregue",
+    images: [portfolioJardinsPorto1, portfolioJardinsPorto2, portfolioJardinsPorto3],
+  },
+  {
+    id: 3,
     name: "Residência Alto Padrão",
     location: "Condomínio Portal do Sol Green, Goiânia - GO",
     area: "650 m²",
@@ -32,7 +44,7 @@ const portfolioItems = [
     images: [portfolioResidencial1c, portfolioResidencial1a, portfolioResidencial1b],
   },
   {
-    id: 3,
+    id: 4,
     name: "Casa Contemporânea",
     location: "Condomínio Jardins Porto, Senador Canedo - GO",
     area: "235 m²",
@@ -41,7 +53,7 @@ const portfolioItems = [
     images: [portfolioResidencial2a],
   },
   {
-    id: 4,
+    id: 5,
     name: "Residência Moderna",
     location: "Condomínio Aldeia do Parque, Aparecida de Goiânia - GO",
     area: "232 m²",
