@@ -61,8 +61,8 @@ const PortfolioSection = () => {
                   <>
                     <img
                       src={item.images[currentIndex]}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
+                      alt={item.title || "Projeto"}
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                     
                     {/* Status badge */}
