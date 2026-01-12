@@ -8,7 +8,7 @@ const QuemSomos = () => {
   ];
 
   return (
-    <section id="quem-somos" className="py-20 md:py-28 px-4 bg-background-alt">
+    <section id="quem-somos" className="py-20 md:py-28 px-4 bg-background-alt scroll-mt-24">
       <div className="container mx-auto max-w-4xl text-center">
         <h2 className="font-syncopate text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-8 tracking-wider">
           QUEM SOMOS
