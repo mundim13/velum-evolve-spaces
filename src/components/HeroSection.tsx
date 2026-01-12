@@ -20,7 +20,7 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="max-w-4xl">
           {/* Title */}
-          <h1 className="font-syncopate text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 tracking-wider">PROJETO E OBRA INTELIGENTES PARA UMA VIDA MAIS LEVE</h1>
+          <h1 className="font-syncopate text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 tracking-wider">PROJETO E OBRA INTELIGENTES PARA UMA EXPERIÊNCIA MAIS LEVE</h1>
 
           {/* Subtitle */}
           <p className="font-montserrat text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mb-10 leading-relaxed">
