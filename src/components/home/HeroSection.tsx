@@ -95,6 +95,51 @@ const options: Option[] = [
   },
 ];
 
+/* ── CTA button — always cyan ── */
+function CtaButton({ opt }: { opt: Option }) {
+  const style = {
+    padding: "12px 22px",
+    borderRadius: 6,
+    fontSize: 12,
+    background: "#22D3EE",
+    color: "#050505",
+  };
+  if (opt.isLink) {
+    return (
+      <Link to={opt.ctaHref} className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110" style={style}>
+        {opt.ctaLabel}
+      </Link>
+    );
+  }
+  return (
+    <a href={opt.ctaHref} target="_blank" rel="noopener noreferrer" className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110" style={style}>
+      {opt.ctaLabel}
+    </a>
+  );
+}
+
+function MobileCtaButton({ opt }: { opt: Option }) {
+  const style = {
+    padding: "8px 16px",
+    borderRadius: 6,
+    fontSize: 11,
+    background: "#22D3EE",
+    color: "#050505",
+  };
+  if (opt.isLink) {
+    return (
+      <Link to={opt.ctaHref} className="inline-flex font-dm font-medium" style={style}>
+        {opt.ctaLabel}
+      </Link>
+    );
+  }
+  return (
+    <a href={opt.ctaHref} target="_blank" rel="noopener noreferrer" className="inline-flex font-dm font-medium" style={style}>
+      {opt.ctaLabel}
+    </a>
+  );
+}
+
 /* ── Component ── */
 export default function HeroSection() {
   const [activeOption, setActiveOption] = useState(0);
@@ -105,7 +150,7 @@ export default function HeroSection() {
   return (
     <section className="relative">
       {/* ── DESKTOP ── */}
-      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100vh" }}>
+      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100vh", paddingTop: 56 }}>
         {/* Sidebar */}
         <div
           className="flex flex-col items-center py-6 relative"
@@ -171,43 +216,27 @@ export default function HeroSection() {
                   onMouseEnter={() => setHoveredOption(i)}
                   onMouseLeave={() => setHoveredOption(null)}
                 >
-                  {/* Number */}
                   <span
                     className="font-syncopate font-bold mb-1"
-                    style={{
-                      fontSize: 10,
-                      color: isActive ? "#22D3EE" : "rgba(249,250,251,0.15)",
-                    }}
+                    style={{ fontSize: 10, color: isActive ? "#22D3EE" : "rgba(249,250,251,0.15)" }}
                   >
                     {opt.number}
                   </span>
-                  {/* Dot */}
                   <div
                     style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
+                      width: 6, height: 6, borderRadius: "50%",
                       background: isActive ? "#22D3EE" : "rgba(249,250,251,0.08)",
                       boxShadow: isActive ? "0 0 8px rgba(34,211,238,0.5)" : "none",
                     }}
                   />
-                  {/* Tooltip */}
                   {isHovered && (
                     <div
                       className="font-dm"
                       style={{
-                        position: "absolute",
-                        left: 70,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "#0D0D0D",
-                        border: "1px solid rgba(34,211,238,0.2)",
-                        borderRadius: 6,
-                        padding: "5px 10px",
-                        fontSize: 11,
-                        color: "#F9FAFB",
-                        whiteSpace: "nowrap",
-                        zIndex: 30,
+                        position: "absolute", left: 70, top: "50%", transform: "translateY(-50%)",
+                        background: "#0D0D0D", border: "1px solid rgba(34,211,238,0.2)",
+                        borderRadius: 6, padding: "5px 10px", fontSize: 11,
+                        color: "#F9FAFB", whiteSpace: "nowrap", zIndex: 30,
                       }}
                     >
                       {opt.tooltip}
@@ -224,11 +253,8 @@ export default function HeroSection() {
             <span
               className="font-dm mt-2"
               style={{
-                fontSize: 7,
-                letterSpacing: 1.5,
-                color: "rgba(249,250,251,0.25)",
-                writingMode: "vertical-rl",
-                transform: "rotate(180deg)",
+                fontSize: 7, letterSpacing: 1.5, color: "rgba(249,250,251,0.25)",
+                writingMode: "vertical-rl", transform: "rotate(180deg)",
               }}
             >
               SCROLL
@@ -238,62 +264,74 @@ export default function HeroSection() {
 
         {/* Main area */}
         <div
-          className="relative overflow-hidden"
+          className="relative"
           style={{
             background: "#0D0D0D",
             backgroundImage:
               "linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px)",
             backgroundSize: "48px 48px",
-            display: "grid",
-            gridTemplateRows: "auto 1fr auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "56px 64px 80px",
           }}
         >
-          {/* Geometric circles */}
-          <div className="absolute pointer-events-none" style={{ right: -60, top: 20 }}>
-            <div style={{ width: 280, height: 280, borderRadius: "50%", border: "1px solid rgba(34,211,238,0.08)" }}>
+          {/* Geometric circles — absolutely positioned, visible */}
+          <div
+            className="pointer-events-none"
+            style={{
+              position: "absolute",
+              right: -60,
+              top: "50%",
+              transform: "translateY(-50%)",
+              zIndex: 1,
+            }}
+          >
+            <div style={{ width: 280, height: 280, borderRadius: "50%", border: "1px solid rgba(34,211,238,0.08)", position: "relative" }}>
               <div
-                className="absolute"
                 style={{
                   width: 180, height: 180, borderRadius: "50%",
                   border: "1px solid rgba(34,211,238,0.05)",
-                  top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+                  position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
                 }}
               />
               <div
-                className="absolute"
                 style={{
                   width: 80, height: 80, borderRadius: "50%",
                   border: "1px solid rgba(34,211,238,0.12)",
-                  top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+                  position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
                 }}
               />
             </div>
           </div>
 
-          {/* Row 1 — fixed phrase */}
-          <div className="flex items-center gap-4" style={{ padding: "18px 32px 0" }}>
-            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 12, opacity: 0.2, color: "#F9FAFB", whiteSpace: "nowrap" }}>
+          {/* Fixed phrase — absolute top-left */}
+          <div
+            style={{
+              position: "absolute",
+              top: 72,
+              left: 80,
+              zIndex: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.18)", whiteSpace: "nowrap" }}>
               Você decide por onde começa —
             </span>
-            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 12, color: "#22D3EE", opacity: 0.5, whiteSpace: "nowrap" }}>
+            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(34,211,238,0.4)", whiteSpace: "nowrap" }}>
               a Velum assume o restante
             </span>
-            <div className="flex-1" style={{ height: 1, background: "rgba(34,211,238,0.08)" }} />
           </div>
 
-          {/* Row 2 — dynamic content */}
-          <div style={{ padding: "16px 32px" }}>
-            <div
-              key={activeOption}
-              style={{ animation: "heroSlideIn 300ms ease" }}
-            >
+          {/* Dynamic content */}
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <div key={activeOption} style={{ animation: "heroSlideIn 300ms ease" }}>
               {/* Eyebrow */}
               <div className="flex items-center gap-2 mb-4">
                 <div style={{ width: 16, height: 1, background: active.accent }} />
-                <span
-                  className="font-dm uppercase"
-                  style={{ fontSize: 9, letterSpacing: 2.5, color: active.accent }}
-                >
+                <span className="font-dm uppercase" style={{ fontSize: 9, letterSpacing: 2.5, color: active.accent }}>
                   {active.eyebrow}
                 </span>
               </div>
@@ -301,22 +339,13 @@ export default function HeroSection() {
               {/* Headline */}
               <h1
                 className="font-syncopate font-bold uppercase mb-5"
-                style={{
-                  fontSize: 32,
-                  lineHeight: 0.95,
-                  letterSpacing: "-0.5px",
-                  color: "#F9FAFB",
-                  whiteSpace: "pre-line",
-                }}
+                style={{ fontSize: 32, lineHeight: 0.95, letterSpacing: "-0.5px", color: "#F9FAFB", whiteSpace: "pre-line" }}
               >
                 {active.headline}
               </h1>
 
               {/* Description */}
-              <p
-                className="font-dm mb-6 max-w-lg"
-                style={{ fontSize: 13, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}
-              >
+              <p className="font-dm mb-6 max-w-lg" style={{ fontSize: 13, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
                 {active.desc}
               </p>
 
@@ -331,46 +360,22 @@ export default function HeroSection() {
               </div>
 
               {/* CTA */}
-              {active.isLink ? (
-                <Link
-                  to={active.ctaHref}
-                  className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110"
-                  style={{
-                    padding: "12px 22px",
-                    borderRadius: 6,
-                    fontSize: 12,
-                    background: active.accent,
-                    color: "#050505",
-                  }}
-                >
-                  {active.ctaLabel}
-                </Link>
-              ) : (
-                <a
-                  href={active.ctaHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110"
-                  style={{
-                    padding: "12px 22px",
-                    borderRadius: 6,
-                    fontSize: 12,
-                    background: active.accent,
-                    color: "#050505",
-                  }}
-                >
-                  {active.ctaLabel}
-                </a>
-              )}
+              <CtaButton opt={active} />
             </div>
           </div>
 
-          {/* Row 3 — trust bar inline */}
+          {/* Trust bar inline — bottom */}
           <div
-            className="flex items-center justify-center gap-6 px-6 py-4 flex-wrap"
+            className="flex items-center justify-center gap-6 flex-wrap"
             style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: "14px 24px",
               background: "rgba(5,5,5,0.85)",
               borderTop: "1px solid rgba(34,211,238,0.1)",
+              zIndex: 2,
             }}
           >
             {["Prazo garantido em contrato", "100% Light Steel Frame", "Goiânia, GO e DF", "Empresa registrada"].map(
@@ -389,7 +394,7 @@ export default function HeroSection() {
       </div>
 
       {/* ── MOBILE ── */}
-      <div className="md:hidden" style={{ background: "#0D0D0D", paddingTop: 80 }}>
+      <div className="md:hidden" style={{ background: "#050505", paddingTop: 80 }}>
         <div
           className="px-5 pb-10"
           style={{
@@ -399,8 +404,8 @@ export default function HeroSection() {
           }}
         >
           {/* Fixed phrase */}
-          <p className="font-dm uppercase mb-4" style={{ fontSize: 10, letterSpacing: 1, opacity: 0.2, color: "#F9FAFB" }}>
-            Você decide por onde começa — <span style={{ color: "#22D3EE", opacity: 1 }}>a Velum assume o restante</span>
+          <p className="font-dm uppercase mb-4" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.2)" }}>
+            Você decide por onde começa — <span style={{ color: "rgba(34,211,238,0.4)" }}>a Velum assume o restante</span>
           </p>
 
           {/* Eyebrow */}
@@ -443,7 +448,6 @@ export default function HeroSection() {
                     background: isOpen ? "rgba(34,211,238,0.05)" : "transparent",
                   }}
                 >
-                  {/* Header */}
                   <button
                     onClick={() => setMobileOpen(i)}
                     className="flex items-center gap-2.5 w-full text-left"
@@ -465,17 +469,12 @@ export default function HeroSection() {
                     </div>
                     <span
                       className="shrink-0 transition-transform duration-200"
-                      style={{
-                        fontSize: 14,
-                        color: "rgba(249,250,251,0.3)",
-                        transform: isOpen ? "rotate(90deg)" : "none",
-                      }}
+                      style={{ fontSize: 14, color: "rgba(249,250,251,0.3)", transform: isOpen ? "rotate(90deg)" : "none" }}
                     >
                       ›
                     </span>
                   </button>
 
-                  {/* Expandable content */}
                   <div
                     className="transition-all duration-300 overflow-hidden"
                     style={{ maxHeight: isOpen ? 160 : 0, opacity: isOpen ? 1 : 0 }}
@@ -484,37 +483,7 @@ export default function HeroSection() {
                       <p className="font-dm mb-3" style={{ fontSize: 11, color: "rgba(249,250,251,0.4)", lineHeight: 1.6 }}>
                         {opt.desc}
                       </p>
-                      {opt.isLink ? (
-                        <Link
-                          to={opt.ctaHref}
-                          className="inline-flex font-dm font-medium"
-                          style={{
-                            padding: "8px 16px",
-                            borderRadius: 6,
-                            fontSize: 11,
-                            background: opt.accent,
-                            color: "#050505",
-                          }}
-                        >
-                          {opt.ctaLabel}
-                        </Link>
-                      ) : (
-                        <a
-                          href={opt.ctaHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex font-dm font-medium"
-                          style={{
-                            padding: "8px 16px",
-                            borderRadius: 6,
-                            fontSize: 11,
-                            background: opt.accent,
-                            color: "#050505",
-                          }}
-                        >
-                          {opt.ctaLabel}
-                        </a>
-                      )}
+                      <MobileCtaButton opt={opt} />
                     </div>
                   </div>
                 </div>
@@ -536,7 +505,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Animation keyframe */}
       <style>{`
         @keyframes heroSlideIn {
           from { opacity: 0; transform: translateY(12px); }

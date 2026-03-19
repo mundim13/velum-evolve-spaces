@@ -1,8 +1,7 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, MapPin, Ruler, Wrench } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import portfolioResidencial1a from "@/assets/portfolio-residencial-1a.png";
 import portfolioResidencial1b from "@/assets/portfolio-residencial-1b.png";
@@ -77,7 +76,7 @@ const portfolioItems = [
   },
 ];
 
-const Portfolio = () => {
+export default function Portfolio() {
   const [activeImageIndex, setActiveImageIndex] = useState<{ [key: number]: number }>({});
 
   const nextImage = (itemId: number, totalImages: number) => {
@@ -95,69 +94,92 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
-      <Header />
-      <main className="pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 break-words">
-            Nosso <span className="gradient-text">Portfólio</span>
-          </h1>
+    <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <Navbar />
 
-          <p className="text-lg md:text-xl text-center text-muted-foreground mb-16 max-w-3xl mx-auto leading-relaxed px-4">
+      {/* Hero */}
+      <section style={{ paddingTop: 120, paddingBottom: 48, background: "#0D0D0D" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center gap-2 mb-4">
+            <div style={{ width: 16, height: 1, background: "#22D3EE" }} />
+            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 2, color: "#22D3EE" }}>
+              PORTFÓLIO
+            </span>
+          </div>
+          <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 48, lineHeight: 0.95, color: "#F9FAFB" }}>
+            NOSSAS OBRAS
+          </h1>
+          <p className="font-dm max-w-xl" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
             Conheça os projetos e obras que já realizamos. Cada projeto é único e reflete nosso compromisso com qualidade, inovação e entrega no prazo.
           </p>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Grid */}
+      <section style={{ background: "#0D0D0D", padding: "0 0 64px" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {portfolioItems.map((item) => {
               const currentIndex = activeImageIndex[item.id] || 0;
-
               return (
                 <div
                   key={item.id}
-                  className="velum-card overflow-hidden group"
+                  className="group overflow-hidden"
+                  style={{ borderRadius: 10, border: "1px solid rgba(34,211,238,0.13)", background: "#0A0A0A" }}
                 >
                   {/* Image */}
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={item.images[currentIndex]}
                       alt={item.name}
-                      className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${item.imagePosition || ''}`}
+                      className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${item.imagePosition || ""}`}
                     />
 
-                    {/* Status badge */}
-                    {item.status && (
-                      <div className="absolute top-3 left-3 bg-accent text-accent-foreground text-[10px] font-syncopate font-bold px-3 py-1.5 rounded">
-                        {item.status}
-                      </div>
-                    )}
+                    {/* Badge */}
+                    <div
+                      className="absolute top-3 left-3 font-syncopate font-bold uppercase"
+                      style={{
+                        fontSize: 9,
+                        padding: "5px 10px",
+                        borderRadius: 4,
+                        background: "#22D3EE",
+                        color: "#050505",
+                      }}
+                    >
+                      {item.status}
+                    </div>
 
-                    {/* Navigation arrows */}
+                    {/* Nav arrows */}
                     {item.images.length > 1 && (
                       <>
                         <button
                           onClick={() => prevImage(item.id, item.images.length)}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-background/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ background: "rgba(13,13,13,0.8)" }}
                           aria-label="Imagem anterior"
                         >
-                          <ChevronLeft className="w-5 h-5 text-foreground" />
+                          <ChevronLeft size={16} style={{ color: "#F9FAFB" }} />
                         </button>
                         <button
                           onClick={() => nextImage(item.id, item.images.length)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-background/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ background: "rgba(13,13,13,0.8)" }}
                           aria-label="Próxima imagem"
                         >
-                          <ChevronRight className="w-5 h-5 text-foreground" />
+                          <ChevronRight size={16} style={{ color: "#F9FAFB" }} />
                         </button>
-
-                        {/* Dots */}
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                           {item.images.map((_, idx) => (
                             <button
                               key={idx}
                               onClick={() => setActiveImageIndex((prev) => ({ ...prev, [item.id]: idx }))}
-                              className={`w-2 h-2 rounded-full transition-all ${
-                                idx === currentIndex ? "bg-primary w-4" : "bg-foreground/50"
-                              }`}
+                              style={{
+                                width: idx === currentIndex ? 16 : 6,
+                                height: 6,
+                                borderRadius: 3,
+                                background: idx === currentIndex ? "#22D3EE" : "rgba(249,250,251,0.4)",
+                                transition: "all 200ms",
+                              }}
                               aria-label={`Ir para imagem ${idx + 1}`}
                             />
                           ))}
@@ -167,23 +189,22 @@ const Portfolio = () => {
                   </div>
 
                   {/* Info */}
-                  <div className="p-5 space-y-3">
-                    <h3 className="font-syncopate text-lg font-bold text-foreground">
+                  <div style={{ padding: "16px 18px" }}>
+                    <h3 className="font-syncopate font-bold uppercase mb-3" style={{ fontSize: 14, color: "#F9FAFB" }}>
                       {item.name}
                     </h3>
-
-                    <div className="space-y-2 text-sm text-muted-foreground">
+                    <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
-                        <span>{item.location}</span>
+                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#22D3EE", flexShrink: 0 }} />
+                        <span className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)" }}>{item.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Ruler className="w-4 h-4 text-primary flex-shrink-0" />
-                        <span>{item.area}</span>
+                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#22D3EE", flexShrink: 0 }} />
+                        <span className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)" }}>{item.area}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Wrench className="w-4 h-4 text-primary flex-shrink-0" />
-                        <span>{item.methodology}</span>
+                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#22D3EE", flexShrink: 0 }} />
+                        <span className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)" }}>{item.methodology}</span>
                       </div>
                     </div>
                   </div>
@@ -192,11 +213,9 @@ const Portfolio = () => {
             })}
           </div>
         </div>
-      </main>
+      </section>
+
       <Footer />
-      <WhatsAppButton />
     </div>
   );
-};
-
-export default Portfolio;
+}
