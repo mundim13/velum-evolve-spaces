@@ -150,11 +150,13 @@ export default function HeroSection() {
   return (
     <section className="relative">
       {/* ── DESKTOP ── */}
-      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100vh", paddingTop: 56 }}>
+      <div className="hidden md:flex" style={{ height: "100vh" }}>
         {/* Sidebar */}
         <div
           className="flex flex-col items-center py-6 relative"
           style={{
+            width: 64,
+            flexShrink: 0,
             background: "#080808",
             borderRight: "1px solid rgba(34,211,238,0.12)",
           }}
@@ -264,52 +266,56 @@ export default function HeroSection() {
 
         {/* Main area */}
         <div
-          className="relative"
           style={{
+            flex: 1,
+            position: "relative",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "80px 80px 80px 80px",
             background: "#0D0D0D",
             backgroundImage:
               "linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px)",
             backgroundSize: "48px 48px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "56px 64px 80px",
           }}
         >
-          {/* Geometric circles — absolutely positioned, visible */}
+          {/* Geometric circles */}
           <div
             className="pointer-events-none"
             style={{
               position: "absolute",
-              right: -60,
+              right: -80,
               top: "50%",
               transform: "translateY(-50%)",
+              width: 400,
+              height: 400,
+              borderRadius: "50%",
+              border: "1px solid rgba(34,211,238,0.08)",
               zIndex: 1,
             }}
           >
-            <div style={{ width: 280, height: 280, borderRadius: "50%", border: "1px solid rgba(34,211,238,0.08)", position: "relative" }}>
-              <div
-                style={{
-                  width: 180, height: 180, borderRadius: "50%",
-                  border: "1px solid rgba(34,211,238,0.05)",
-                  position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-                }}
-              />
-              <div
-                style={{
-                  width: 80, height: 80, borderRadius: "50%",
-                  border: "1px solid rgba(34,211,238,0.12)",
-                  position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-                }}
-              />
-            </div>
+            <div
+              style={{
+                width: 260, height: 260, borderRadius: "50%",
+                border: "1px solid rgba(34,211,238,0.05)",
+                position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+              }}
+            />
+            <div
+              style={{
+                width: 120, height: 120, borderRadius: "50%",
+                border: "1px solid rgba(34,211,238,0.12)",
+                position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+              }}
+            />
           </div>
 
           {/* Fixed phrase — absolute top-left */}
           <div
             style={{
               position: "absolute",
-              top: 72,
+              top: 24,
               left: 80,
               zIndex: 2,
               display: "flex",
