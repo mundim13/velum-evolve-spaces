@@ -1,6 +1,11 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ultrapocketImg from "@/assets/ultrapocket-new-1.png";
+import lumEssentialImg from "@/assets/lum-essential-new-1.png";
+import lumConfortImg from "@/assets/lum-confort-cover.png";
+import lumFamilyImg from "@/assets/lum-family-terreo-cover.png";
+import lumZenImg from "@/assets/lum-zen-cover.png";
 
 type FilterType = "todos" | "disponivel" | "em_breve";
 
@@ -10,6 +15,7 @@ interface Modulo {
   tagline: string;
   features: string[];
   status: "disponivel" | "em_breve";
+  image?: string;
 }
 
 const modulos: Modulo[] = [
@@ -24,6 +30,7 @@ const modulos: Modulo[] = [
       "Entrega rápida",
     ],
     status: "disponivel",
+    image: ultrapocketImg,
   },
   {
     number: "02",
@@ -36,6 +43,7 @@ const modulos: Modulo[] = [
       "Plug and play",
     ],
     status: "disponivel",
+    image: lumEssentialImg,
   },
   {
     number: "03",
@@ -48,6 +56,7 @@ const modulos: Modulo[] = [
       "Acabamento premium",
     ],
     status: "disponivel",
+    image: lumConfortImg,
   },
   {
     number: "04",
@@ -60,6 +69,7 @@ const modulos: Modulo[] = [
       "Projeto bioclimático",
     ],
     status: "disponivel",
+    image: lumFamilyImg,
   },
   {
     number: "05",
@@ -72,6 +82,7 @@ const modulos: Modulo[] = [
       "Design contemplativo",
     ],
     status: "disponivel",
+    image: lumZenImg,
   },
   {
     number: "06",
@@ -129,13 +140,13 @@ export default function Lum() {
         }}
       >
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2" style={{ marginBottom: 16 }}>
             <div style={{ width: 16, height: 1, background: "#22D3EE" }} />
             <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 2, color: "#22D3EE" }}>
               COLETÂNEA
             </span>
           </div>
-          <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 80, lineHeight: 0.9, color: "#F9FAFB" }}>
+          <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 80, lineHeight: 0.9, color: "#F9FAFB", marginTop: 8 }}>
             LÛM
           </h1>
           <p className="font-dm max-w-xl" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
@@ -185,6 +196,13 @@ export default function Lum() {
                   flexDirection: "column",
                 }}
               >
+                {/* Image */}
+                {m.image && (
+                  <div style={{ marginBottom: 16, borderRadius: 6, overflow: "hidden" }}>
+                    <img src={m.image} alt={m.name} style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
+                  </div>
+                )}
+
                 {/* Number + badge */}
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-syncopate font-bold" style={{ fontSize: 11, color: "rgba(34,211,238,0.3)" }}>

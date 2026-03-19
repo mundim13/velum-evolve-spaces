@@ -38,11 +38,11 @@ const options: Option[] = [
   {
     number: "02",
     tooltip: "02 — Não tenho projeto",
-    accent: "#22D3EE",
+    accent: "#C8FF6E",
     eyebrow: "Projeto do zero",
     headline: (
       <>
-        NÃO TENHO{"\n"}PROJETO,{"\n"}QUERO <span style={{ color: "#22D3EE" }}>ENTENDER</span>
+        NÃO TENHO{"\n"}PROJETO,{"\n"}QUERO <span style={{ color: "#C8FF6E" }}>ENTENDER</span>
       </>
     ),
     desc: "Você tem um terreno ou uma ideia. A Velum faz o projeto completo, do briefing à entrega das chaves.",
@@ -57,11 +57,11 @@ const options: Option[] = [
   {
     number: "03",
     tooltip: "03 — Viabilidade do negócio",
-    accent: "#7eb8ff",
+    accent: "#a78bfa",
     eyebrow: "Viabilidade econômica",
     headline: (
       <>
-        QUERO A{"\n"}VIABILIDADE{"\n"}DO MEU <span style={{ color: "#7eb8ff" }}>NEGÓCIO</span>
+        QUERO A{"\n"}VIABILIDADE{"\n"}DO MEU <span style={{ color: "#a78bfa" }}>NEGÓCIO</span>
       </>
     ),
     desc: "Análise econômica de ativos imobiliários. Entenda o potencial de retorno antes de investir.",
@@ -76,11 +76,11 @@ const options: Option[] = [
   {
     number: "04",
     tooltip: "04 — Coletânea LÛM",
-    accent: "#a78bfa",
+    accent: "#f97316",
     eyebrow: "Coletânea LÛM",
     headline: (
       <>
-        QUERO{"\n"}CONHECER{"\n"}A <span style={{ color: "#a78bfa" }}>COLETÂNEA</span>
+        QUERO{"\n"}CONHECER{"\n"}A <span style={{ color: "#f97316" }}>COLETÂNEA</span>
       </>
     ),
     desc: "Módulos industrializados plug and play. Entrega rápida, design inteligente, preço fechado.",
@@ -95,13 +95,13 @@ const options: Option[] = [
   },
 ];
 
-/* ── CTA button — always cyan ── */
+/* ── CTA button — color per option ── */
 function CtaButton({ opt }: { opt: Option }) {
   const style = {
     padding: "12px 22px",
     borderRadius: 6,
     fontSize: 12,
-    background: "#22D3EE",
+    background: opt.accent,
     color: "#050505",
   };
   if (opt.isLink) {
@@ -123,7 +123,7 @@ function MobileCtaButton({ opt }: { opt: Option }) {
     padding: "8px 16px",
     borderRadius: 6,
     fontSize: 11,
-    background: "#22D3EE",
+    background: opt.accent,
     color: "#050505",
   };
   if (opt.isLink) {
@@ -150,7 +150,7 @@ export default function HeroSection() {
   return (
     <section className="relative">
       {/* ── DESKTOP ── */}
-      <div className="hidden md:flex" style={{ height: "100vh" }}>
+      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100vh", paddingTop: 56 }}>
         {/* Sidebar */}
         <div
           className="flex flex-col items-center py-6 relative"
@@ -210,7 +210,7 @@ export default function HeroSection() {
                   className="relative flex flex-col items-center cursor-pointer transition-all duration-200"
                   style={{
                     padding: "11px 0",
-                    borderLeft: `2px solid ${isActive ? "#22D3EE" : "transparent"}`,
+                    borderLeft: `2px solid ${isActive ? opt.accent : "transparent"}`,
                     background: isActive ? "rgba(34,211,238,0.07)" : "transparent",
                     width: "100%",
                   }}
@@ -220,15 +220,15 @@ export default function HeroSection() {
                 >
                   <span
                     className="font-syncopate font-bold mb-1"
-                    style={{ fontSize: 10, color: isActive ? "#22D3EE" : "rgba(249,250,251,0.15)" }}
+                    style={{ fontSize: 10, color: isActive ? opt.accent : "rgba(249,250,251,0.15)" }}
                   >
                     {opt.number}
                   </span>
                   <div
                     style={{
                       width: 6, height: 6, borderRadius: "50%",
-                      background: isActive ? "#22D3EE" : "rgba(249,250,251,0.08)",
-                      boxShadow: isActive ? "0 0 8px rgba(34,211,238,0.5)" : "none",
+                      background: isActive ? opt.accent : "rgba(249,250,251,0.08)",
+                      boxShadow: isActive ? `0 0 8px ${opt.accent}80` : "none",
                     }}
                   />
                   {isHovered && (
@@ -266,56 +266,55 @@ export default function HeroSection() {
 
         {/* Main area */}
         <div
+          className="relative"
           style={{
             flex: 1,
             position: "relative",
             overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "80px 80px 80px 80px",
             background: "#0D0D0D",
             backgroundImage:
               "linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px)",
             backgroundSize: "48px 48px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "56px 64px 80px",
           }}
         >
-          {/* Geometric circles */}
+          {/* Geometric circles — absolutely positioned, visible */}
           <div
             className="pointer-events-none"
             style={{
               position: "absolute",
-              right: -80,
+              right: -60,
               top: "50%",
               transform: "translateY(-50%)",
-              width: 400,
-              height: 400,
-              borderRadius: "50%",
-              border: "1px solid rgba(34,211,238,0.08)",
               zIndex: 1,
             }}
           >
-            <div
-              style={{
-                width: 260, height: 260, borderRadius: "50%",
-                border: "1px solid rgba(34,211,238,0.05)",
-                position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-              }}
-            />
-            <div
-              style={{
-                width: 120, height: 120, borderRadius: "50%",
-                border: "1px solid rgba(34,211,238,0.12)",
-                position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-              }}
-            />
+            <div style={{ width: 280, height: 280, borderRadius: "50%", border: "1px solid rgba(34,211,238,0.08)", position: "relative" }}>
+              <div
+                style={{
+                  width: 180, height: 180, borderRadius: "50%",
+                  border: "1px solid rgba(34,211,238,0.05)",
+                  position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+                }}
+              />
+              <div
+                style={{
+                  width: 80, height: 80, borderRadius: "50%",
+                  border: "1px solid rgba(34,211,238,0.12)",
+                  position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+                }}
+              />
+            </div>
           </div>
 
           {/* Fixed phrase — absolute top-left */}
           <div
             style={{
               position: "absolute",
-              top: 24,
+              top: 72,
               left: 80,
               zIndex: 2,
               display: "flex",
@@ -323,10 +322,10 @@ export default function HeroSection() {
               gap: 6,
             }}
           >
-            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.18)", whiteSpace: "nowrap" }}>
+            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.35)", whiteSpace: "nowrap" }}>
               Você decide por onde começa —
             </span>
-            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(34,211,238,0.4)", whiteSpace: "nowrap" }}>
+            <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "#22D3EE", whiteSpace: "nowrap" }}>
               a Velum assume o restante
             </span>
           </div>
@@ -410,8 +409,8 @@ export default function HeroSection() {
           }}
         >
           {/* Fixed phrase */}
-          <p className="font-dm uppercase mb-4" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.2)" }}>
-            Você decide por onde começa — <span style={{ color: "rgba(34,211,238,0.4)" }}>a Velum assume o restante</span>
+          <p className="font-dm uppercase mb-4" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.35)" }}>
+            Você decide por onde começa — <span style={{ color: "#22D3EE" }}>a Velum assume o restante</span>
           </p>
 
           {/* Eyebrow */}

@@ -4,13 +4,21 @@ import Footer from "@/components/layout/Footer";
 const fundadores = [
   {
     name: "Fernando Mundim",
+    initials: "FM",
     role: "Gestão e Estratégia",
     desc: "Responsável pela gestão de projetos, planejamento estratégico e relacionamento com clientes. Garante que cada obra entregue o que foi prometido — no prazo e no custo.",
   },
   {
     name: "Lucas Oliveira",
+    initials: "LO",
     role: "Engenharia e Execução",
     desc: "Engenheiro civil especialista em Light Steel Frame e construção industrializada. Lidera a equipe técnica e a execução das obras com rigor e inovação.",
+  },
+  {
+    name: "Catharina Macedo",
+    initials: "CM",
+    role: "Arquitetura",
+    desc: "Arquiteta responsável pelo projeto autoral de cada espaço Velum. Garante que cada obra seja funcional, estética e pensada para o bem-estar de quem vai viver nela.",
   },
 ];
 
@@ -100,7 +108,7 @@ export default function Sobre() {
             QUEM FAZ ACONTECER
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {fundadores.map((f, i) => (
               <div
                 key={i}
@@ -123,7 +131,7 @@ export default function Sobre() {
                   }}
                 >
                   <span className="font-syncopate font-bold" style={{ fontSize: 16, color: "#22D3EE" }}>
-                    {f.name.split(" ").map((n) => n[0]).join("")}
+                    {f.initials}
                   </span>
                 </div>
 
