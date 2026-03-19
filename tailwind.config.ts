@@ -16,6 +16,8 @@ export default {
       fontFamily: {
         syncopate: ["Syncopate", "sans-serif"],
         montserrat: ["Montserrat", "sans-serif"],
+        syne: ["Syne", "sans-serif"],
+        dm: ["DM Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -58,6 +60,14 @@ export default {
           cyan: "hsl(var(--velum-cyan))",
           white: "hsl(var(--velum-white))",
           gray: "hsl(var(--velum-gray))",
+          bg: "#0E2420",
+          bg2: "#0B1E1B",
+          bg3: "#081512",
+          accent: "#00D4B4",
+          lime: "#C8FF6E",
+          text: "#EDF5F3",
+          muted: "rgba(237,245,243,0.45)",
+          border: "rgba(0,212,180,0.13)",
         },
       },
       borderRadius: {

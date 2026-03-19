@@ -3,9 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "@/styles/velum.css";
 import Index from "./pages/Index";
-import Produtos from "./pages/Produtos";
+import Lum from "./pages/Lum";
+import Gerenciamento from "./pages/Gerenciamento";
 import Portfolio from "./pages/Portfolio";
+import Sobre from "./pages/Sobre";
+import Contato from "./pages/Contato";
 import Auth from "./pages/Auth";
 import AdminPropostas from "./pages/AdminPropostas";
 import PropostaForm from "./pages/PropostaForm";
@@ -22,14 +26,16 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/produtos" element={<Produtos />} />
+          <Route path="/lum" element={<Lum />} />
+          <Route path="/gerenciamento" element={<Gerenciamento />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/contato" element={<Contato />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin/propostas" element={<AdminPropostas />} />
           <Route path="/admin/propostas/nova" element={<PropostaForm />} />
           <Route path="/admin/propostas/:id" element={<PropostaForm />} />
           <Route path="/proposta/:token" element={<PropostaPublica />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

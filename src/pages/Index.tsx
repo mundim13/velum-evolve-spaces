@@ -1,65 +1,25 @@
-import { useEffect } from "react";
-import HeaderNew from "@/components/HeaderNew";
-import HeroSection from "@/components/HeroSection";
-import QuemSomos from "@/components/QuemSomos";
-import SolucoesSection from "@/components/SolucoesSection";
-import ModeloIntegrado from "@/components/ModeloIntegrado";
-import DiferenciaisSection from "@/components/DiferenciaisSection";
-import GestaoInteligente from "@/components/GestaoInteligente";
-import JornadaCliente from "@/components/JornadaCliente";
-import ColetaneaLumIntro from "@/components/ColetaneaLumIntro";
-import ProdutosLum from "@/components/ProdutosLum";
-import ProjetosPersonalizados from "@/components/ProjetosPersonalizados";
-import PortfolioSection from "@/components/PortfolioSection";
-import EquipeSection from "@/components/EquipeSection";
-import CalculadoraTeaser from "@/components/CalculadoraTeaser";
-import CTAFinal from "@/components/CTAFinal";
-import FooterSection from "@/components/FooterSection";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import "@/lib/whatsapp";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import HeroSection from "@/components/home/HeroSection";
+import TrustBar from "@/components/home/TrustBar";
+import ServicosSection from "@/components/home/ServicosSection";
+import PortfolioPreview from "@/components/home/PortfolioPreview";
+import LumPreview from "@/components/home/LumPreview";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
 
-const Index = () => {
-  useEffect(() => {
-    const handleWhatsAppClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const el = target?.closest?.("[data-whatsapp='true']") as HTMLElement | null;
-      if (!el) return;
-      e.preventDefault();
-
-      const msg =
-        el.getAttribute("data-msg") ||
-        "Olá! Vim pelo site da Velum e gostaria de um orçamento.";
-
-      (window as any).openWhatsApp?.(msg);
-    };
-
-    document.addEventListener("click", handleWhatsAppClick);
-    return () => document.removeEventListener("click", handleWhatsAppClick);
-  }, []);
-
+export default function Index() {
   return (
-    <div className="min-h-screen bg-background">
-      <HeaderNew />
+    <div className="min-h-screen bg-velum-bg font-dm text-velum-text">
+      <Navbar />
       <main>
         <HeroSection />
-        <QuemSomos />
-        <SolucoesSection />
-        <ModeloIntegrado />
-        <DiferenciaisSection />
-        <GestaoInteligente />
-        <JornadaCliente />
-        <ColetaneaLumIntro />
-        <ProdutosLum />
-        <ProjetosPersonalizados />
-        <PortfolioSection />
-        <EquipeSection />
-        <CalculadoraTeaser />
-        <CTAFinal />
+        <TrustBar />
+        <ServicosSection />
+        <PortfolioPreview />
+        <LumPreview />
+        <TestimonialsSection />
       </main>
-      <FooterSection />
-      <WhatsAppButton />
+      <Footer />
     </div>
   );
-};
-
-export default Index;
+}
