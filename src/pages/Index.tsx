@@ -1,38 +1,37 @@
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
-import TrustBar from "@/components/home/TrustBar";
-
-/* ── Placeholder section ── */
-function PlaceholderSection({ title }: { title: string }) {
-  return (
-    <section style={{ background: "#0B1E1B", padding: "80px 24px" }}>
-      <div className="max-w-7xl mx-auto text-center">
-        <h2
-          className="font-syne font-extrabold uppercase mb-4"
-          style={{ fontSize: "clamp(22px, 3vw, 32px)", color: "#00D4B4", letterSpacing: "-0.5px" }}
-        >
-          {title}
-        </h2>
-        <p className="font-dm" style={{ fontSize: 14, color: "rgba(237,245,243,0.35)" }}>
-          Em construção — sprint 2
-        </p>
-      </div>
-    </section>
-  );
-}
+import Footer from "@/components/layout/Footer";
 
 export default function Index() {
   return (
-    <div className="min-h-screen font-dm" style={{ background: "#0E2420", color: "#EDF5F3" }}>
+    <div className="bg-[#0D0D0D] min-h-screen">
       <Navbar />
-      <main>
-        <HeroSection />
-        <TrustBar />
-        <PlaceholderSection title="PROJETO · GESTÃO · EXECUÇÃO" />
-        <PlaceholderSection title="COLETÂNEA LÛM" />
-        <PlaceholderSection title="PORTFÓLIO" />
-      </main>
+      <HeroSection />
+
+      {/* Placeholder — Modelo integrado */}
+      <section className="bg-[#0A0A0A] py-20 text-center border-t border-[rgba(34,211,238,0.08)]">
+        <h2 className="font-syncopate font-bold text-[#22D3EE] text-2xl uppercase tracking-widest mb-3">
+          NOSSO MODELO INTEGRADO
+        </h2>
+        <p className="font-dm text-[rgba(249,250,251,0.3)] text-sm">Em construção — sprint 2</p>
+      </section>
+
+      {/* Placeholder — LÛM */}
+      <section className="bg-[#0D0D0D] py-20 text-center border-t border-[rgba(34,211,238,0.08)]">
+        <h2 className="font-syncopate font-bold text-[#22D3EE] text-2xl uppercase tracking-widest mb-3">
+          COLETÂNEA LÛM
+        </h2>
+        <p className="font-dm text-[rgba(249,250,251,0.3)] text-sm">Em construção — sprint 2</p>
+      </section>
+
+      {/* Placeholder — Portfólio */}
+      <section className="bg-[#0A0A0A] py-20 text-center border-t border-[rgba(34,211,238,0.08)]">
+        <h2 className="font-syncopate font-bold text-[#22D3EE] text-2xl uppercase tracking-widest mb-3">
+          PORTFÓLIO
+        </h2>
+        <p className="font-dm text-[rgba(249,250,251,0.3)] text-sm">Em construção — sprint 2</p>
+      </section>
+
       <Footer />
     </div>
   );
