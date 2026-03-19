@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { X, Phone } from "lucide-react";
 
 const navLinks = [
   { label: "Coletânea LÛM", href: "/lum" },
@@ -19,34 +19,30 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
-  // Lock body scroll when overlay is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Close overlay on route change
-  useEffect(() => {
-    setOpen(false);
-  }, [location.pathname]);
+  useEffect(() => { setOpen(false); }, [location.pathname]);
 
   return (
     <nav
       className="fixed top-0 left-0 w-full z-50 border-b"
       style={{
         height: 60,
-        background: "rgba(8,21,18,0.92)",
+        background: "rgba(8,8,8,0.92)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
-        borderColor: "rgba(0,212,180,0.13)",
+        borderColor: "rgba(34,211,238,0.12)",
       }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-full">
         {/* Logo */}
         <Link to="/" className="shrink-0">
           <span
-            className="font-syne font-extrabold text-[1.25rem] text-velum-text"
-            style={{ letterSpacing: "0.12em" }}
+            className="font-syncopate font-bold"
+            style={{ fontSize: 16, letterSpacing: 3, color: "#F9FAFB" }}
           >
             VELUM
           </span>
@@ -60,13 +56,17 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 to={link.href}
-                className="relative font-dm text-[0.8125rem] font-medium transition-colors duration-200"
-                style={{ color: isActive ? "#00D4B4" : "rgba(237,245,243,0.6)" }}
+                className="font-dm font-medium uppercase transition-colors duration-200"
+                style={{
+                  fontSize: 11,
+                  letterSpacing: 1,
+                  color: isActive ? "#22D3EE" : "rgba(249,250,251,0.45)",
+                }}
                 onMouseEnter={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "#EDF5F3";
+                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "#F9FAFB";
                 }}
                 onMouseLeave={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(237,245,243,0.6)";
+                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(249,250,251,0.45)";
                 }}
               >
                 {link.label}
@@ -76,13 +76,21 @@ export default function Navbar() {
         </div>
 
         {/* Desktop — CTA right */}
-        <Link
-          to="/contato"
-          className="hidden lg:inline-flex items-center gap-2 px-6 py-2 rounded-full font-dm font-medium text-sm transition-colors duration-200 hover:brightness-110"
-          style={{ background: "#00D4B4", color: "#081512" }}
+        <a
+          href="https://wa.me/5562999447553"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden lg:inline-flex font-dm font-medium transition-colors duration-200 hover:brightness-110"
+          style={{
+            padding: "9px 20px",
+            borderRadius: 5,
+            fontSize: 12,
+            background: "#22D3EE",
+            color: "#050505",
+          }}
         >
           Falar com especialista
-        </Link>
+        </a>
 
         {/* Mobile — hamburger */}
         <button
@@ -90,9 +98,9 @@ export default function Navbar() {
           className="lg:hidden flex flex-col justify-center gap-[5px] w-7 h-7"
           aria-label="Abrir menu"
         >
-          <span className="block w-full h-[2px] bg-velum-text rounded-full" />
-          <span className="block w-full h-[2px] bg-velum-text rounded-full" />
-          <span className="block w-5 h-[2px] bg-velum-text rounded-full" />
+          <span className="block w-full h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
+          <span className="block w-full h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
+          <span className="block w-5 h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
         </button>
       </div>
 
@@ -100,38 +108,31 @@ export default function Navbar() {
       <div
         className="fixed inset-0 z-[60] flex flex-col transition-all duration-300 ease-out lg:pointer-events-none"
         style={{
-          background: open ? "#0B1E1B" : "transparent",
+          background: open ? "#080808" : "transparent",
           opacity: open ? 1 : 0,
           pointerEvents: open ? "auto" : "none",
           visibility: open ? "visible" : "hidden",
         }}
       >
-        {/* Decorative grid background */}
+        {/* Decorative grid */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(0,212,180,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,180,0.05) 1px, transparent 1px)",
-            backgroundSize: "56px 56px",
+              "linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
           }}
         />
 
         {/* Header row */}
-        <div
-          className="relative flex items-center justify-between px-6 shrink-0"
-          style={{ height: 60 }}
-        >
+        <div className="relative flex items-center justify-between px-6 shrink-0" style={{ height: 60 }}>
           <span
-            className="font-syne font-extrabold text-[1.25rem] text-velum-text"
-            style={{ letterSpacing: "0.12em" }}
+            className="font-syncopate font-bold"
+            style={{ fontSize: 16, letterSpacing: 3, color: "#F9FAFB" }}
           >
             VELUM
           </span>
-          <button
-            onClick={() => setOpen(false)}
-            className="text-velum-text p-1"
-            aria-label="Fechar menu"
-          >
+          <button onClick={() => setOpen(false)} className="p-1" style={{ color: "#F9FAFB" }} aria-label="Fechar menu">
             <X size={26} strokeWidth={2} />
           </button>
         </div>
@@ -145,14 +146,18 @@ export default function Navbar() {
                 key={link.href}
                 to={link.href}
                 onClick={() => setOpen(false)}
-                className="font-syne font-extrabold uppercase tracking-wide transition-all duration-300"
+                className="font-syncopate font-bold uppercase transition-all duration-300"
                 style={{
-                  fontSize: "1.5rem",
+                  fontSize: 28,
                   lineHeight: 1.2,
-                  color: isActive ? "#00D4B4" : "#EDF5F3",
+                  color: isActive ? "#22D3EE" : "rgba(249,250,251,0.45)",
                   transform: open ? "translateY(0)" : `translateY(${20 + i * 8}px)`,
                   opacity: open ? 1 : 0,
                   transitionDelay: open ? `${80 + i * 40}ms` : "0ms",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#22D3EE"; }}
+                onMouseLeave={(e) => {
+                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(249,250,251,0.45)";
                 }}
               >
                 {link.label}
@@ -174,8 +179,8 @@ export default function Navbar() {
             href="https://wa.me/5562999447553"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full py-4 rounded-full font-dm font-medium text-base transition-colors duration-200"
-            style={{ background: "#00D4B4", color: "#081512" }}
+            className="flex items-center justify-center gap-3 w-full py-4 rounded font-dm font-medium text-base transition-colors duration-200"
+            style={{ background: "#22D3EE", color: "#050505" }}
           >
             <Phone size={18} />
             Falar com especialista — (62) 99944-7553
