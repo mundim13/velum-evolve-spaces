@@ -1,26 +1,68 @@
-import { Shield, Clock, Award, Ruler } from "lucide-react";
-
-const credentials = [
-  { icon: Shield, label: "Garantia contratual de prazo e preço" },
-  { icon: Clock, label: "Obras entregues no prazo desde 2020" },
-  { icon: Award, label: "CREA & CAU registrados" },
-  { icon: Ruler, label: "Engenharia + Arquitetura integradas" },
+const items = [
+  "Prazo garantido em contrato",
+  "100% Light Steel Frame",
+  "Gestão com IA integrada",
+  "Goiânia e região",
+  "Empresa registrada e normatizada",
 ];
 
 export default function TrustBar() {
   return (
-    <section className="bg-velum-bg2 border-y border-velum-border">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {credentials.map((item) => (
-            <div key={item.label} className="flex items-start gap-3">
-              <item.icon
-                size={20}
-                className="text-velum-accent mt-0.5 shrink-0"
-              />
-              <span className="font-dm text-sm text-velum-text/80 leading-snug">
-                {item.label}
-              </span>
+    <section
+      style={{
+        background: "#081512",
+        borderTop: "1px solid rgba(0,212,180,0.13)",
+        borderBottom: "1px solid rgba(0,212,180,0.13)",
+      }}
+    >
+      <div
+        className="flex items-center overflow-x-auto max-w-7xl mx-auto"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
+        <style>{`.trust-scroll::-webkit-scrollbar { display: none; }`}</style>
+        <div className="trust-scroll flex items-center overflow-x-auto w-full"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {items.map((text, i) => (
+            <div key={i} className="flex items-center shrink-0">
+              <div
+                className="flex items-center gap-2.5 shrink-0"
+                style={{ padding: "14px 20px" }}
+              >
+                {/* Dot */}
+                <span
+                  className="shrink-0 rounded-full"
+                  style={{
+                    width: 5,
+                    height: 5,
+                    background: "#00D4B4",
+                  }}
+                />
+                <span
+                  className="font-dm whitespace-nowrap"
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 500,
+                    color: "rgba(237,245,243,0.45)",
+                  }}
+                >
+                  {text}
+                </span>
+              </div>
+              {/* Separator (not after last) */}
+              {i < items.length - 1 && (
+                <div
+                  className="shrink-0"
+                  style={{
+                    width: 1,
+                    height: 16,
+                    background: "rgba(0,212,180,0.13)",
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
