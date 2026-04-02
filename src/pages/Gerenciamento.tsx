@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { BookImage, BarChart3, Package, FileText, Smartphone, Monitor } from "lucide-react";
 
 const escopoCards = [
   {
@@ -63,7 +64,7 @@ export default function Gerenciamento() {
               </h1>
 
               <p className="font-dm mb-6 max-w-md" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
-                Compatibilização, planejamento e execução com método. Você acompanha cada etapa com transparência total — e nós entregamos no prazo, com preço fechado.
+                Compatibilização, planejamento e execução com método. Você acompanha cada etapa com transparência total. E nós entregamos no prazo, com preço fechado.
               </p>
 
               <div className="flex flex-col gap-2 mb-8">
@@ -151,8 +152,155 @@ export default function Gerenciamento() {
         </div>
       </section>
 
+      {/* Portal do Cliente */}
+      <section style={{ background: "#0D0D0D", padding: "80px 0", borderTop: "1px solid rgba(34,211,238,0.08)" }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
+            {/* Left content */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div style={{ width: 16, height: 1, background: "#22D3EE" }} />
+                <span className="font-dm uppercase" style={{ fontSize: 9, letterSpacing: 2.5, color: "#22D3EE" }}>
+                  Tecnologia
+                </span>
+              </div>
+              <h2 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 28, lineHeight: 1, color: "#F9FAFB" }}>
+                GESTÃO DE OBRAS
+              </h2>
+              <h3 className="font-syncopate font-bold uppercase mb-6" style={{ fontSize: 20, lineHeight: 1, color: "rgba(249,250,251,0.5)" }}>
+                PORTAL DO CLIENTE
+              </h3>
+              <p className="font-dm mb-10 max-w-md" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
+                Utilizamos software de gestão de obras com inteligência artificial integrada, emitindo relatório em tempo real de tudo que acontece instantaneamente na obra.
+              </p>
+
+              {/* Feature cards */}
+              <div className="flex flex-col gap-4">
+                {[
+                  {
+                    icon: BookImage,
+                    title: "DIÁRIO DE OBRAS",
+                    desc: "Relatório fotográfico e técnico em tempo real",
+                  },
+                  {
+                    icon: BarChart3,
+                    title: "DASHBOARD PREVISTO VS REALIZADO",
+                    desc: "Clareza em forma de números",
+                  },
+                  {
+                    icon: Package,
+                    title: "GESTÃO DE SUPRIMENTOS",
+                    desc: "Controle de compras e entrega",
+                  },
+                  {
+                    icon: FileText,
+                    title: "GESTÃO FINANCEIRA E CONTRATOS",
+                    desc: "Toda a burocracia de forma sucinta e prática",
+                  },
+                ].map((feature, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-4"
+                    style={{
+                      padding: "18px 22px",
+                      borderRadius: 10,
+                      border: "1px solid rgba(34,211,238,0.15)",
+                      background: "rgba(34,211,238,0.03)",
+                    }}
+                  >
+                    <div
+                      className="flex items-center justify-center shrink-0"
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: 8,
+                        background: "rgba(34,211,238,0.1)",
+                        border: "1px solid rgba(34,211,238,0.2)",
+                      }}
+                    >
+                      <feature.icon size={18} style={{ color: "#22D3EE" }} />
+                    </div>
+                    <div>
+                      <h4 className="font-syncopate font-bold uppercase mb-1" style={{ fontSize: 12, color: "#22D3EE" }}>
+                        {feature.title}
+                      </h4>
+                      <p className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)" }}>
+                        {feature.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right visual */}
+            <div className="flex flex-col items-center gap-6">
+              {/* Phone mockup */}
+              <div
+                className="relative"
+                style={{
+                  width: "100%",
+                  maxWidth: 360,
+                  aspectRatio: "9/16",
+                  borderRadius: 24,
+                  background: "linear-gradient(145deg, rgba(34,211,238,0.08), rgba(34,211,238,0.02))",
+                  border: "1px solid rgba(34,211,238,0.2)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 32,
+                  overflow: "hidden",
+                }}
+              >
+                <Smartphone size={40} style={{ color: "rgba(34,211,238,0.25)", marginBottom: 16 }} />
+                <span className="font-syncopate font-bold uppercase text-center" style={{ fontSize: 11, color: "rgba(34,211,238,0.4)", letterSpacing: 2 }}>
+                  Diário de obra
+                </span>
+                <span className="font-dm text-center mt-2" style={{ fontSize: 11, color: "rgba(249,250,251,0.25)" }}>
+                  Acesso pelo celular em tempo real
+                </span>
+
+                {/* Simulated UI lines */}
+                <div className="w-full mt-8 flex flex-col gap-3">
+                  {[75, 60, 90, 45, 80].map((w, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div style={{ width: 8, height: 8, borderRadius: 2, background: "rgba(34,211,238,0.15)", flexShrink: 0 }} />
+                      <div style={{ width: `${w}%`, height: 6, borderRadius: 3, background: "rgba(34,211,238,0.08)" }} />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Simulated chart */}
+                <div className="w-full mt-6 flex items-end justify-center gap-2" style={{ height: 60 }}>
+                  {[35, 55, 40, 70, 50, 85, 60].map((h, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: 16,
+                        height: `${h}%`,
+                        borderRadius: "3px 3px 0 0",
+                        background: i === 5 ? "rgba(34,211,238,0.5)" : "rgba(34,211,238,0.12)",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Laptop hint */}
+              <div className="flex items-center gap-2">
+                <Monitor size={14} style={{ color: "rgba(249,250,251,0.25)" }} />
+                <span className="font-dm" style={{ fontSize: 10, color: "rgba(249,250,251,0.25)" }}>
+                  Também disponível no computador
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Processo */}
-      <section style={{ background: "#0D0D0D", padding: "64px 0", borderTop: "1px solid rgba(34,211,238,0.08)" }}>
+      <section style={{ background: "#0A0A0A", padding: "64px 0", borderTop: "1px solid rgba(34,211,238,0.08)" }}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center gap-2 mb-3">
             <div style={{ width: 16, height: 1, background: "#22D3EE" }} />

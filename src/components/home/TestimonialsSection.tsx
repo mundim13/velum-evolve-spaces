@@ -1,7 +1,7 @@
 const testimonials = [
   {
     nome: "Mariana R.",
-    cargo: "Proprietária — Residência Alphaville",
+    cargo: "Proprietária, Residência Alphaville",
     texto:
       "A Velum entregou no prazo, dentro do orçamento e com um nível de acabamento que superou nossas expectativas.",
   },
@@ -13,7 +13,7 @@ const testimonials = [
   },
   {
     nome: "Fernanda S.",
-    cargo: "LÛM Studio — Home Office",
+    cargo: "LÛM Studio, Home Office",
     texto:
       "Em 3 semanas eu tinha meu escritório pronto. Sem dor de cabeça, sem surpresas. É outro nível.",
   },

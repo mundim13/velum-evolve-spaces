@@ -50,7 +50,7 @@ const ProductsSection = () => {
       description:
         "Crie um refúgio para encontros, descanso e celebrações. O Ultrapocket Gourmet combina engenharia modular e neuroarquitetura para oferecer conforto, estética e tecnologia em um espaço pronto em poucas semanas.",
       specs: [
-        "Toda mobília já inclusa, entregamos no formato 'plug and play' — a instalação é em poucas horas e já fica pronta para uso.",
+        "Toda mobília já inclusa, entregamos no formato 'plug and play'. A instalação é em poucas horas e já fica pronta para uso.",
         "Design guiado por neuroarquitetura para gerar conforto ao extremo.",
         "Não existe obra, nem poeira e nem dor de cabeça.",
         "Materiais de alta durabilidade e acabamento premium.",
@@ -79,7 +79,7 @@ const ProductsSection = () => {
       subtitle: "Pré-venda exclusiva",
       emotionalHeadline: "Começos com espaço para crescer.",
       description:
-        "Feito para quem está começando uma nova fase — mas já entende o valor de viver bem. Mais espaço para memórias, receber amigos e viver com acolhimento. Perfeito para quem quer começar pequeno, mas sonha grande.",
+        "Feito para quem está começando uma nova fase, mas já entende o valor de viver bem. Mais espaço para memórias, receber amigos e viver com acolhimento. Perfeito para quem quer começar pequeno, mas sonha grande.",
       specs: [
         "Área total de 74,91 m²",
         "Área total otimizada para conforto e funcionalidade",

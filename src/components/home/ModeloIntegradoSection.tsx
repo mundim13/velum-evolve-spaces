@@ -14,7 +14,7 @@ const pilares = [
     icon: BarChart3,
     number: "02",
     title: "GESTÃO",
-    desc: "Gerenciamento de obra com controle de cronograma, custos e qualidade — do planejamento à entrega.",
+    desc: "Gerenciamento de obra com controle de cronograma, custos e qualidade, do planejamento à entrega.",
     href: "/gerenciamento",
     bullets: ["Orçamento fechado", "Relatórios em tempo real", "Cronograma com marcos definidos"],
   },
@@ -43,7 +43,7 @@ export default function ModeloIntegradoSection() {
           PROJETO, GESTÃO E OBRA
         </h2>
         <p className="font-dm mb-12 max-w-xl" style={{ fontSize: 14, color: "rgba(249,250,251,0.4)", lineHeight: 1.7 }}>
-          Na Velum, arquitetura, engenharia e gestão caminham juntas. Você entra em qualquer etapa — a responsabilidade é sempre total.
+          Na Velum, arquitetura, engenharia e gestão caminham juntas. Você entra em qualquer etapa. A responsabilidade é sempre total.
         </p>
 
         {/* Cards */}

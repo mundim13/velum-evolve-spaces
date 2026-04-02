@@ -35,7 +35,7 @@ const HeaderNew = () => {
         <Link to="/" className="focus:outline-none focus:ring-2 focus:ring-primary rounded">
           <img
             src={logoVelum}
-            alt="VELUM — Projetar, Montar, Entregar"
+            alt="VELUM · Projetar, Montar, Entregar"
             className="h-8 md:h-10 w-auto"
           />
         </Link>

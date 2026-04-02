@@ -11,7 +11,7 @@ const Cases = () => {
       type: "Residencial",
       title: "Família Silva",
       quote:
-        "Cada expansão foi previsível, sem desperdício e sem trauma — a vida evoluiu com a VELUM.",
+        "Cada expansão foi previsível, sem desperdício e sem trauma. A vida evoluiu com a VELUM.",
       client: "Marina Silva",
       role: "Designer de Interiores",
       image: "residencial",
