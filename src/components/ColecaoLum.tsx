@@ -16,7 +16,7 @@ const ColecaoLum = () => {
       name: "Lûm Esencial",
       subtitle: "O essencial para uma vida com propósito.",
       description:
-        "Mais do que um módulo, o Lûm Esencial é o ponto de partida para quem busca viver com o necessário — e nada além do necessário. Conforto, tecnologia e design em harmonia: tempo, equilíbrio e propósito.",
+        "Mais do que um módulo, o Lûm Esencial é o ponto de partida para quem busca viver com o necessário e nada além do necessário. Conforto, tecnologia e design em harmonia: tempo, equilíbrio e propósito.",
       available: true,
     },
     {
@@ -24,7 +24,7 @@ const ColecaoLum = () => {
       name: "Lûm Confort",
       subtitle: "Começos com espaço para crescer.",
       description:
-        "Feito para quem está começando uma nova fase — mas já entende o valor de viver bem. Mais espaço para memórias, receber amigos e viver com acolhimento. Perfeito para quem quer começar pequeno, mas sonha grande.",
+        "Feito para quem está começando uma nova fase, mas já entende o valor de viver bem. Mais espaço para memórias, receber amigos e viver com acolhimento. Perfeito para quem quer começar pequeno, mas sonha grande.",
       available: true,
     },
     {
@@ -32,7 +32,7 @@ const ColecaoLum = () => {
       name: "Lûm Family",
       subtitle: "Espaço para crescer em família.",
       description:
-        "Criado para abrigar histórias em crescimento. Mais espaço, conforto e integração — com eficiência e design inteligente. Ambientes que acolhem, conectam e evoluem com quem você ama.",
+        "Criado para abrigar histórias em crescimento. Mais espaço, conforto e integração com eficiência e design inteligente. Ambientes que acolhem, conectam e evoluem com quem você ama.",
       available: true,
     },
     {
@@ -66,7 +66,7 @@ const ColecaoLum = () => {
         </h2>
 
         <p className="text-lg md:text-xl text-center text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-          A cada 15 dias, um novo módulo se une à nossa coleção híbrida. Juntos, eles formam a LÛM — um ecossistema vivo de arquitetura modular, onde cada lançamento se conecta ao anterior para dar forma a uma solução única, inteligente e nunca antes vista.
+          A cada 15 dias, um novo módulo se une à nossa coleção híbrida. Juntos, eles formam a LÛM: um ecossistema vivo de arquitetura modular, onde cada lançamento se conecta ao anterior para dar forma a uma solução única, inteligente e nunca antes vista.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

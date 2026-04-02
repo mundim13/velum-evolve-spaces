@@ -28,7 +28,7 @@ const UltrapocketGourmet = () => {
         </div>
 
         <p className="text-xl md:text-2xl text-center italic text-muted-foreground mb-8 leading-relaxed">
-          "Mais do que uma área gourmet — um espaço que amadurece junto com a sua história."
+          "Mais do que uma área gourmet, um espaço que amadurece junto com a sua história."
         </p>
 
         <Card className="shadow-elevated mb-8">

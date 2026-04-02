@@ -6,11 +6,11 @@ const fundadores = [
     name: "Fernando Mundim",
     initials: "FM",
     role: "Gestão e Estratégia",
-    desc: "Responsável pela gestão de projetos, planejamento estratégico e relacionamento com clientes. Garante que cada obra entregue o que foi prometido — no prazo e no custo.",
+    desc: "Responsável pela gestão de projetos, planejamento estratégico e relacionamento com clientes. Garante que cada obra entregue o que foi prometido, no prazo e no custo.",
   },
   {
-    name: "Lucas Oliveira",
-    initials: "LO",
+    name: "Lucas Veloso",
+    initials: "LV",
     role: "Engenharia e Execução",
     desc: "Engenheiro civil especialista em Light Steel Frame e construção industrializada. Lidera a equipe técnica e a execução das obras com rigor e inovação.",
   },
@@ -51,10 +51,10 @@ export default function Sobre() {
           </h1>
 
           <p className="font-dm max-w-2xl mb-4" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.8 }}>
-            A Velum é uma construtora de Goiânia que integra arquitetura, engenharia e gestão num modelo único. Atuamos em Goiânia, região metropolitana e Distrito Federal com foco em construção industrializada — principalmente Light Steel Frame.
+            A Velum é uma construtora de Goiânia que integra arquitetura, engenharia e gestão num modelo único. Atuamos em Goiânia, região metropolitana e Distrito Federal com foco em construção industrializada, principalmente Light Steel Frame.
           </p>
           <p className="font-dm max-w-2xl" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.8 }}>
-            Nosso modelo elimina a fragmentação tradicional da construção civil. Em vez de dezenas de fornecedores desalinhados, oferecemos um time integrado que cuida de tudo — do projeto à entrega das chaves. O resultado: obra mais rápida, custo previsível e qualidade superior.
+            Nosso modelo elimina a fragmentação tradicional da construção civil. Em vez de dezenas de fornecedores desalinhados, oferecemos um time integrado que cuida de tudo, do projeto à entrega das chaves. O resultado: obra mais rápida, custo previsível e qualidade superior.
           </p>
         </div>
       </section>

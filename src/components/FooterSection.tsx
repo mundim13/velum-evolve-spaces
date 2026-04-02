@@ -19,7 +19,7 @@ const FooterSection = () => {
         <div className="text-center">
           <img
             src={logoVelum}
-            alt="VELUM — Projetar, Montar, Entregar"
+            alt="VELUM · Projetar, Montar, Entregar"
             className="h-12 w-auto mx-auto mb-6 opacity-90"
           />
           <p className="font-montserrat text-muted-foreground text-sm mb-2">

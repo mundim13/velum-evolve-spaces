@@ -21,7 +21,7 @@ const Manifesto = () => {
   }, {
     icon: Heart,
     title: "Bem-estar Contínuo",
-    subtitle: "Ambientes que cuidam de você — neuroarquitetura, conforto térmico e equilíbrio natural todos os dias."
+    subtitle: "Ambientes que cuidam de você: neuroarquitetura, conforto térmico e equilíbrio natural todos os dias."
   }];
   const nextSlide = () => {
     setActiveIndex(prev => (prev + 1) % pillars.length);
