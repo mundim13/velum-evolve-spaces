@@ -2,64 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Velum Design System - Dark Petrol Theme
+/* Velum Design System - Dark Theme
    Primary Colors:
-   - Background: #062C30 (dark petrol)
-   - Accent: #36C4CF (light blue)
-   - White: #FFFFFF
-   - Gray Light: #E6E6E6
+   - Background: #0D0D0D (near black)
+   - Background Alt: #0A0A0A
+   - Accent: #22D3EE (cyan)
+   - White: #F9FAFB
 */
 
 @layer base {
   :root {
-    /* Core petrol/teal palette - converted to HSL */
-    --background: 185 75% 10%; /* #062C30 */
-    --background-alt: 185 65% 14%; /* #0A3B40 */
-    --foreground: 0 0% 100%; /* #FFFFFF */
+    /* Core dark palette - aligned with actual site colors */
+    --background: 0 0% 5%; /* #0D0D0D */
+    --background-alt: 0 0% 4%; /* #0A0A0A */
+    --foreground: 210 20% 98%; /* #F9FAFB */
 
-    --card: 185 65% 12%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 4%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 185 65% 12%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 185 60% 51%; /* #36C4CF - accent blue */
-    --primary-foreground: 185 75% 10%;
+    --primary: 187 80% 54%; /* #22D3EE - cyan */
+    --primary-foreground: 0 0% 2%;
 
-    --secondary: 185 40% 18%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 185 30% 20%;
-    --muted-foreground: 0 0% 90%; /* #E6E6E6 */
+    --muted: 0 0% 12%;
+    --muted-foreground: 210 20% 90%;
 
-    --accent: 185 60% 51%; /* #36C4CF */
-    --accent-foreground: 185 75% 10%;
+    --accent: 187 80% 54%; /* #22D3EE */
+    --accent-foreground: 0 0% 2%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 185 40% 25%;
-    --input: 185 40% 25%;
-    --ring: 185 60% 51%;
+    --border: 187 40% 15%;
+    --input: 187 40% 15%;
+    --ring: 187 80% 54%;
 
     --radius: 0.75rem;
 
     /* Velum specific tokens */
-    --velum-petrol: 185 75% 10%;
-    --velum-petrol-light: 185 65% 14%;
-    --velum-cyan: 185 60% 51%;
-    --velum-white: 0 0% 100%;
+    --velum-petrol: 0 0% 5%;
+    --velum-petrol-light: 0 0% 7%;
+    --velum-cyan: 187 80% 54%;
+    --velum-white: 210 20% 98%;
     --velum-gray: 0 0% 90%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(185 60% 51%), hsl(185 70% 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(185 75% 10%), hsl(185 65% 14%));
-    --gradient-diagonal: linear-gradient(135deg, hsl(185 75% 10%) 0%, hsl(185 65% 14%) 100%);
+    --gradient-primary: linear-gradient(135deg, #22D3EE, hsl(187 80% 62%));
+    --gradient-hero: linear-gradient(135deg, #0D0D0D, #0A0A0A);
+    --gradient-diagonal: linear-gradient(135deg, #0D0D0D 0%, #0A0A0A 100%);
   }
 
   .dark {
-    --background: 185 75% 10%;
-    --foreground: 0 0% 100%;
+    --background: 0 0% 5%;
+    --foreground: 210 20% 98%;
   }
 }
 
@@ -99,7 +99,7 @@
 
   /* Velum gradient text */
   .text-gradient {
-    background: linear-gradient(90deg, hsl(185 60% 51%) 0%, hsl(185 70% 65%) 100%);
+    background: linear-gradient(90deg, hsl(187 80% 54%) 0%, hsl(185 70% 65%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -118,7 +118,7 @@
   .btn-velum-primary:hover {
     filter: brightness(1.1);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px hsl(185 60% 51% / 0.3);
+    box-shadow: 0 8px 25px hsl(187 80% 54% / 0.3);
   }
 
   .btn-velum-outline {
@@ -157,7 +157,7 @@
 
   .velum-card:hover {
     border-color: hsl(var(--primary) / 0.5);
-    box-shadow: 0 10px 40px hsl(185 60% 51% / 0.1);
+    box-shadow: 0 10px 40px hsl(187 80% 54% / 0.1);
   }
 
   /* Diagonal texture overlay */
@@ -173,8 +173,8 @@
       135deg,
       transparent,
       transparent 50px,
-      hsl(185 60% 51% / 0.02) 50px,
-      hsl(185 60% 51% / 0.02) 100px
+      hsl(187 80% 54% / 0.02) 50px,
+      hsl(187 80% 54% / 0.02) 100px
     );
     pointer-events: none;
   }
@@ -186,11 +186,11 @@
 
   /* Shadow utilities */
   .shadow-velum {
-    box-shadow: 0 4px 20px hsl(185 75% 10% / 0.2);
+    box-shadow: 0 4px 20px hsl(0 0% 5% / 0.2);
   }
 
   .shadow-velum-glow {
-    box-shadow: 0 0 40px hsl(185 60% 51% / 0.2);
+    box-shadow: 0 0 40px hsl(187 80% 54% / 0.2);
   }
 }
 
