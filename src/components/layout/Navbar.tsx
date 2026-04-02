@@ -106,7 +106,7 @@ export default function Navbar() {
 
       {/* ── Mobile overlay ── */}
       <div
-        className="fixed inset-0 z-[60] flex flex-col transition-all duration-300 ease-out lg:pointer-events-none"
+        className="fixed inset-0 z-[999] flex flex-col transition-all duration-300 ease-out lg:pointer-events-none"
         style={{
           background: open ? "#080808" : "transparent",
           opacity: open ? 1 : 0,
