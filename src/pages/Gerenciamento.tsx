@@ -245,8 +245,9 @@ export default function Gerenciamento() {
                   borderRadius: 24,
                   border: "2px solid rgba(34,211,238,0.2)",
                   background: "#000",
-                  padding: "10px 6px",
+                  padding: "10px 6px 6px",
                   boxShadow: "0 20px 60px rgba(34,211,238,0.1)",
+                  overflow: "hidden",
                 }}
               >
                 <div
@@ -256,7 +257,7 @@ export default function Gerenciamento() {
                 <img
                   src={diarioObra1}
                   alt="Relatório de Diário de Obra"
-                  style={{ width: "100%", borderRadius: 14, display: "block" }}
+                  style={{ width: "100%", borderRadius: "14px 14px 20px 20px", display: "block" }}
                 />
               </div>
 
@@ -268,7 +269,7 @@ export default function Gerenciamento() {
                   borderRadius: 24,
                   border: "2px solid rgba(34,211,238,0.15)",
                   background: "#000",
-                  padding: "10px 6px",
+                  padding: "10px 6px 6px",
                   boxShadow: "0 20px 60px rgba(34,211,238,0.08)",
                   marginTop: 40,
                 }}
@@ -280,7 +281,7 @@ export default function Gerenciamento() {
                 <img
                   src={diarioObra2}
                   alt="Fotos da obra em tempo real"
-                  style={{ width: "100%", borderRadius: 14, display: "block" }}
+                  style={{ width: "100%", borderRadius: "14px 14px 20px 20px", display: "block" }}
                 />
               </div>
             </div>
