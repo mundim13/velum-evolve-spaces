@@ -1,7 +1,8 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { BookImage, BarChart3, Package, FileText, Monitor } from "lucide-react";
-import diarioObraImg from "@/assets/diario-obra-screenshot.jpeg";
+import { BookImage, BarChart3, Package, FileText } from "lucide-react";
+import diarioObra1 from "@/assets/diario-obra-1.jpeg";
+import diarioObra2 from "@/assets/diario-obra-2.jpeg";
 
 const escopoCards = [
   {
@@ -234,47 +235,53 @@ export default function Gerenciamento() {
               </div>
             </div>
 
-            {/* Right visual — real screenshot */}
-            <div className="flex flex-col items-center gap-6">
+            {/* Right visual — two real screenshots */}
+            <div className="flex gap-4 justify-center">
+              {/* Print 1 — Relatório */}
               <div
                 style={{
-                  width: "100%",
-                  maxWidth: 320,
-                  borderRadius: 28,
+                  flex: 1,
+                  maxWidth: 220,
+                  borderRadius: 24,
                   border: "2px solid rgba(34,211,238,0.2)",
                   background: "#000",
-                  padding: "12px 8px",
-                  boxShadow: "0 20px 60px rgba(34,211,238,0.1), 0 0 0 1px rgba(34,211,238,0.05)",
+                  padding: "10px 6px",
+                  boxShadow: "0 20px 60px rgba(34,211,238,0.1)",
                 }}
               >
-                {/* Phone notch */}
                 <div
                   className="mx-auto mb-2"
-                  style={{
-                    width: 80,
-                    height: 4,
-                    borderRadius: 4,
-                    background: "rgba(249,250,251,0.15)",
-                  }}
+                  style={{ width: 50, height: 3, borderRadius: 3, background: "rgba(249,250,251,0.15)" }}
                 />
-                {/* Screenshot */}
                 <img
-                  src={diarioObraImg}
-                  alt="Relatório de Diário de Obra em tempo real"
-                  style={{
-                    width: "100%",
-                    borderRadius: 16,
-                    display: "block",
-                  }}
+                  src={diarioObra1}
+                  alt="Relatório de Diário de Obra"
+                  style={{ width: "100%", borderRadius: 14, display: "block" }}
                 />
               </div>
 
-              {/* Caption */}
-              <div className="flex items-center gap-2">
-                <Monitor size={14} style={{ color: "rgba(249,250,251,0.25)" }} />
-                <span className="font-dm" style={{ fontSize: 10, color: "rgba(249,250,251,0.25)" }}>
-                  Também disponível no computador
-                </span>
+              {/* Print 2 — Fotos da obra */}
+              <div
+                style={{
+                  flex: 1,
+                  maxWidth: 220,
+                  borderRadius: 24,
+                  border: "2px solid rgba(34,211,238,0.15)",
+                  background: "#000",
+                  padding: "10px 6px",
+                  boxShadow: "0 20px 60px rgba(34,211,238,0.08)",
+                  marginTop: 40,
+                }}
+              >
+                <div
+                  className="mx-auto mb-2"
+                  style={{ width: 50, height: 3, borderRadius: 3, background: "rgba(249,250,251,0.15)" }}
+                />
+                <img
+                  src={diarioObra2}
+                  alt="Fotos da obra em tempo real"
+                  style={{ width: "100%", borderRadius: 14, display: "block" }}
+                />
               </div>
             </div>
           </div>
