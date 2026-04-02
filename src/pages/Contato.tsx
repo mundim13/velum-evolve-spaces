@@ -77,7 +77,7 @@ export default function Contato() {
               <span className="font-syncopate font-bold text-sm">(62) 99944-7553</span>
             </div>
             <p className="font-dm text-sm mb-4" style={{ color: "#9CA3AF" }}>
-              Resposta rápida — atendimento de segunda a sábado
+              Resposta rápida, atendimento de segunda a sábado
             </p>
             <a
               href="https://wa.me/5562999447553"

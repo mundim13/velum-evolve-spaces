@@ -18,7 +18,7 @@ interface Option {
 const options: Option[] = [
   {
     number: "01",
-    tooltip: "01 — Tenho projeto, quero orçamento",
+    tooltip: "01 · Tenho projeto, quero orçamento",
     accent: "#22D3EE",
     eyebrow: "Gerenciamento de obra",
     headline: (
@@ -37,7 +37,7 @@ const options: Option[] = [
   },
   {
     number: "02",
-    tooltip: "02 — Não tenho projeto",
+    tooltip: "02 · Não tenho projeto",
     accent: "#C8FF6E",
     eyebrow: "Projeto do zero",
     headline: (
@@ -56,7 +56,7 @@ const options: Option[] = [
   },
   {
     number: "03",
-    tooltip: "03 — Viabilidade do negócio",
+    tooltip: "03 · Viabilidade do negócio",
     accent: "#a78bfa",
     eyebrow: "Viabilidade econômica",
     headline: (
@@ -75,7 +75,7 @@ const options: Option[] = [
   },
   {
     number: "04",
-    tooltip: "04 — Coletânea LÛM",
+    tooltip: "04 · Coletânea LÛM",
     accent: "#f97316",
     eyebrow: "Coletânea LÛM",
     headline: (
@@ -323,10 +323,10 @@ export default function HeroSection() {
             }}
           >
             <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.35)", whiteSpace: "nowrap" }}>
-              Você decide por onde começa —
+              Você decide por onde começa.
             </span>
             <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 1, color: "#22D3EE", whiteSpace: "nowrap" }}>
-              a Velum assume o restante
+              A Velum assume o restante
             </span>
           </div>
 
@@ -410,7 +410,7 @@ export default function HeroSection() {
         >
           {/* Fixed phrase */}
           <p className="font-dm uppercase mb-4" style={{ fontSize: 10, letterSpacing: 1, color: "rgba(249,250,251,0.35)" }}>
-            Você decide por onde começa — <span style={{ color: "#22D3EE" }}>a Velum assume o restante</span>
+            Você decide por onde começa. <span style={{ color: "#22D3EE" }}>A Velum assume o restante</span>
           </p>
 
           {/* Eyebrow */}
@@ -469,7 +469,7 @@ export default function HeroSection() {
                         {opt.eyebrow}
                       </p>
                       <p className="font-dm" style={{ fontSize: 10, color: "rgba(249,250,251,0.35)" }}>
-                        {opt.tooltip.replace(/^\d+ — /, "")}
+                        {opt.tooltip.replace(/^\d+ · /, "")}
                       </p>
                     </div>
                     <span

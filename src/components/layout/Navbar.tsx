@@ -183,7 +183,7 @@ export default function Navbar() {
             style={{ background: "#22D3EE", color: "#050505" }}
           >
             <Phone size={18} />
-            Falar com especialista — (62) 99944-7553
+            Falar com especialista · (62) 99944-7553
           </a>
         </div>
       </div>

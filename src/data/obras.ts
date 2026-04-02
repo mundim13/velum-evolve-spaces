@@ -31,7 +31,7 @@ export const obras: Obra[] = [
   },
   {
     id: "lum-studio-modelo",
-    titulo: "LÛM Studio — Modelo",
+    titulo: "LÛM Studio Modelo",
     tipo: "modular",
     localizacao: "Showroom VELUM, Goiânia",
     area: "28 m²",

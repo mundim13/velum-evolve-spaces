@@ -13,7 +13,7 @@ const servicos = [
     icon: BarChart3,
     titulo: "Gestão",
     descricao:
-      "Gerenciamento de obra com controle de cronograma, custos e qualidade — do planejamento à entrega.",
+      "Gerenciamento de obra com controle de cronograma, custos e qualidade, do planejamento à entrega.",
     href: "/gerenciamento",
   },
   {

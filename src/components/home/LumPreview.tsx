@@ -16,7 +16,7 @@ export default function LumPreview() {
             </h2>
             <p className="font-dm text-velum-muted leading-relaxed mb-8 max-w-md">
               Módulos de 20 a 50 m² com engenharia de precisão. Monte, combine e
-              expanda — sem obra convencional.
+              expanda, sem obra convencional.
             </p>
             <Link
               to="/lum"

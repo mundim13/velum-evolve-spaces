@@ -63,7 +63,7 @@ export default function Gerenciamento() {
               </h1>
 
               <p className="font-dm mb-6 max-w-md" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
-                Compatibilização, planejamento e execução com método. Você acompanha cada etapa com transparência total — e nós entregamos no prazo, com preço fechado.
+                Compatibilização, planejamento e execução com método. Você acompanha cada etapa com transparência total. E nós entregamos no prazo, com preço fechado.
               </p>
 
               <div className="flex flex-col gap-2 mb-8">

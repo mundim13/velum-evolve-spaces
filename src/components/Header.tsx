@@ -31,11 +31,11 @@ const Header = () => {
           <Link
             to="/"
             className="focus:outline-none focus:ring-2 focus:ring-primary-variant rounded"
-            aria-label="VELUM — Projetar, Montar, Entregar"
+            aria-label="VELUM · Projetar, Montar, Entregar"
           >
             <img
               src={logoVelum}
-              alt="VELUM — Projetar, Montar, Entregar"
+              alt="VELUM · Projetar, Montar, Entregar"
               className="h-9 md:h-12 w-auto"
             />
           </Link>

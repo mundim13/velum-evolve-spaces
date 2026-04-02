@@ -150,7 +150,7 @@ export default function Lum() {
             LÛM
           </h1>
           <p className="font-dm max-w-xl" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
-            Um ecossistema modular que cresce conforme sua vida evolui. Módulos industrializados em Light Steel Frame — design inteligente, entrega rápida, preço fechado.
+            Um ecossistema modular que cresce conforme sua vida evolui. Módulos industrializados em Light Steel Frame. Design inteligente, entrega rápida, preço fechado.
           </p>
         </div>
       </section>
