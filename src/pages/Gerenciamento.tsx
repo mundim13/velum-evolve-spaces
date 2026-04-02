@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { BookImage, BarChart3, Package, FileText, Smartphone, Monitor } from "lucide-react";
+import { BookImage, BarChart3, Package, FileText, Monitor } from "lucide-react";
+import diarioObraImg from "@/assets/diario-obra-screenshot.jpeg";
 
 const escopoCards = [
   {
@@ -64,7 +65,7 @@ export default function Gerenciamento() {
               </h1>
 
               <p className="font-dm mb-6 max-w-md" style={{ fontSize: 14, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
-                Compatibilização, planejamento e execução com método. Você acompanha cada etapa com transparência total. E nós entregamos no prazo, com preço fechado.
+                Compatibilização, planejamento e execução com método. Você acompanha cada etapa com transparência total — e nós entregamos no prazo, com preço fechado.
               </p>
 
               <div className="flex flex-col gap-2 mb-8">
@@ -233,61 +234,42 @@ export default function Gerenciamento() {
               </div>
             </div>
 
-            {/* Right visual */}
+            {/* Right visual — real screenshot */}
             <div className="flex flex-col items-center gap-6">
-              {/* Phone mockup */}
               <div
-                className="relative"
                 style={{
                   width: "100%",
-                  maxWidth: 360,
-                  aspectRatio: "9/16",
-                  borderRadius: 24,
-                  background: "linear-gradient(145deg, rgba(34,211,238,0.08), rgba(34,211,238,0.02))",
-                  border: "1px solid rgba(34,211,238,0.2)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 32,
-                  overflow: "hidden",
+                  maxWidth: 320,
+                  borderRadius: 28,
+                  border: "2px solid rgba(34,211,238,0.2)",
+                  background: "#000",
+                  padding: "12px 8px",
+                  boxShadow: "0 20px 60px rgba(34,211,238,0.1), 0 0 0 1px rgba(34,211,238,0.05)",
                 }}
               >
-                <Smartphone size={40} style={{ color: "rgba(34,211,238,0.25)", marginBottom: 16 }} />
-                <span className="font-syncopate font-bold uppercase text-center" style={{ fontSize: 11, color: "rgba(34,211,238,0.4)", letterSpacing: 2 }}>
-                  Diário de obra
-                </span>
-                <span className="font-dm text-center mt-2" style={{ fontSize: 11, color: "rgba(249,250,251,0.25)" }}>
-                  Acesso pelo celular em tempo real
-                </span>
-
-                {/* Simulated UI lines */}
-                <div className="w-full mt-8 flex flex-col gap-3">
-                  {[75, 60, 90, 45, 80].map((w, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div style={{ width: 8, height: 8, borderRadius: 2, background: "rgba(34,211,238,0.15)", flexShrink: 0 }} />
-                      <div style={{ width: `${w}%`, height: 6, borderRadius: 3, background: "rgba(34,211,238,0.08)" }} />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Simulated chart */}
-                <div className="w-full mt-6 flex items-end justify-center gap-2" style={{ height: 60 }}>
-                  {[35, 55, 40, 70, 50, 85, 60].map((h, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        width: 16,
-                        height: `${h}%`,
-                        borderRadius: "3px 3px 0 0",
-                        background: i === 5 ? "rgba(34,211,238,0.5)" : "rgba(34,211,238,0.12)",
-                      }}
-                    />
-                  ))}
-                </div>
+                {/* Phone notch */}
+                <div
+                  className="mx-auto mb-2"
+                  style={{
+                    width: 80,
+                    height: 4,
+                    borderRadius: 4,
+                    background: "rgba(249,250,251,0.15)",
+                  }}
+                />
+                {/* Screenshot */}
+                <img
+                  src={diarioObraImg}
+                  alt="Relatório de Diário de Obra em tempo real"
+                  style={{
+                    width: "100%",
+                    borderRadius: 16,
+                    display: "block",
+                  }}
+                />
               </div>
 
-              {/* Laptop hint */}
+              {/* Caption */}
               <div className="flex items-center gap-2">
                 <Monitor size={14} style={{ color: "rgba(249,250,251,0.25)" }} />
                 <span className="font-dm" style={{ fontSize: 10, color: "rgba(249,250,251,0.25)" }}>
