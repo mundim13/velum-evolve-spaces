@@ -245,19 +245,18 @@ export default function Gerenciamento() {
                   borderRadius: 24,
                   border: "2px solid rgba(34,211,238,0.2)",
                   background: "#000",
-                  padding: "10px 6px 6px",
                   boxShadow: "0 20px 60px rgba(34,211,238,0.1)",
                   overflow: "hidden",
                 }}
               >
                 <div
-                  className="mx-auto mb-2"
-                  style={{ width: 50, height: 3, borderRadius: 3, background: "rgba(249,250,251,0.15)" }}
+                  className="mx-auto"
+                  style={{ width: 50, height: 3, borderRadius: 3, background: "rgba(249,250,251,0.15)", marginTop: 10, marginBottom: 8 }}
                 />
                 <img
                   src={diarioObra1}
                   alt="Relatório de Diário de Obra"
-                  style={{ width: "100%", borderRadius: "14px 14px 20px 20px", display: "block" }}
+                  style={{ width: "100%", display: "block" }}
                 />
               </div>
 
@@ -269,19 +268,19 @@ export default function Gerenciamento() {
                   borderRadius: 24,
                   border: "2px solid rgba(34,211,238,0.15)",
                   background: "#000",
-                  padding: "10px 6px 6px",
                   boxShadow: "0 20px 60px rgba(34,211,238,0.08)",
                   marginTop: 40,
+                  overflow: "hidden",
                 }}
               >
                 <div
-                  className="mx-auto mb-2"
-                  style={{ width: 50, height: 3, borderRadius: 3, background: "rgba(249,250,251,0.15)" }}
+                  className="mx-auto"
+                  style={{ width: 50, height: 3, borderRadius: 3, background: "rgba(249,250,251,0.15)", marginTop: 10, marginBottom: 8 }}
                 />
                 <img
                   src={diarioObra2}
                   alt="Fotos da obra em tempo real"
-                  style={{ width: "100%", borderRadius: "14px 14px 20px 20px", display: "block" }}
+                  style={{ width: "100%", display: "block" }}
                 />
               </div>
             </div>
