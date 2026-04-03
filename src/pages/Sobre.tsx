@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
 
 const fundadores = [
   {
@@ -25,6 +26,22 @@ const fundadores = [
 export default function Sobre() {
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Quem Somos"
+        description="Conheça a Velum: arquitetura, engenharia e gestão integradas em Goiânia. Construção industrializada com método e tecnologia."
+        path="/sobre"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "Sobre a VELUM",
+          url: "https://www.grupovelum.com/sobre",
+          mainEntity: {
+            "@type": "Organization",
+            name: "VELUM",
+            foundingLocation: { "@type": "Place", name: "Goiânia, GO" },
+          },
+        }}
+      />
       <Navbar />
 
       {/* Hero */}

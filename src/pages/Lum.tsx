@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
 import ultrapocketImg from "@/assets/ultrapocket-new-1.png";
 import lumEssentialImg from "@/assets/lum-essential-new-1.png";
 import lumConfortImg from "@/assets/lum-confort-cover.png";
@@ -126,6 +127,19 @@ export default function Lum() {
 
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Coletânea LÛM"
+        description="Módulos industrializados em Light Steel Frame. Design inteligente, entrega rápida e preço fechado. Conheça a Coletânea LÛM."
+        path="/lum"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ProductCollection",
+          name: "Coletânea LÛM",
+          description: "Módulos industrializados em Light Steel Frame.",
+          url: "https://www.grupovelum.com/lum",
+          brand: { "@type": "Brand", name: "VELUM" },
+        }}
+      />
       <Navbar />
 
       {/* Hero */}

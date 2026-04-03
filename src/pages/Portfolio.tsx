@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -95,6 +96,18 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Portfólio"
+        description="Projetos entregues e em execução pela Velum. Residências em Light Steel Frame e concreto em Goiânia e região."
+        path="/portfolio"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Portfólio VELUM",
+          description: "Projetos entregues e em execução pela Velum em Goiânia e região.",
+          url: "https://www.grupovelum.com/portfolio",
+        }}
+      />
       <Navbar />
 
       {/* Hero */}

@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
 import { useForm } from "react-hook-form";
 import { MessageCircle, Mail, Instagram, MapPin, ArrowRight } from "lucide-react";
 
@@ -36,6 +37,17 @@ export default function Contato() {
 
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Contato"
+        description="Fale com a Velum. Atendimento em Goiânia e Distrito Federal. WhatsApp, email e formulário de contato."
+        path="/contato"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Contato VELUM",
+          url: "https://www.grupovelum.com/contato",
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
