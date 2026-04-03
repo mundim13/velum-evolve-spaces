@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import HeroSection from "@/components/home/HeroSection";
 import ModeloIntegradoSection from "@/components/home/ModeloIntegradoSection";
+import NumerosSection from "@/components/home/NumerosSection";
 import LumHomeSection from "@/components/home/LumHomeSection";
 import PortfolioHomeSection from "@/components/home/PortfolioHomeSection";
 import CtaFinalSection from "@/components/home/CtaFinalSection";
@@ -20,6 +21,7 @@ export default function Index() {
       <main id="main">
       <HeroSection />
       <ModeloIntegradoSection />
+      <NumerosSection />
       <LumHomeSection />
       <PortfolioHomeSection />
       <CtaFinalSection />
