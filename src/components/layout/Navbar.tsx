@@ -22,19 +22,18 @@ export default function Navbar() {
 
   useEffect(() => {
     if (open) {
+      const y = window.scrollY;
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
-      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.top = `-${y}px`;
     } else {
-      const scrollY = document.body.style.top;
+      const top = document.body.style.top;
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
       document.body.style.top = "";
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || "0") * -1);
-      }
+      if (top) window.scrollTo(0, parseInt(top || "0") * -1);
     }
     return () => {
       document.body.style.overflow = "";
@@ -60,17 +59,12 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-full">
-        {/* Logo */}
         <Link to="/" className="shrink-0">
-          <span
-            className="font-syncopate font-bold"
-            style={{ fontSize: 16, letterSpacing: 3, color: "#F9FAFB" }}
-          >
+          <span className="font-syncopate font-bold" style={{ fontSize: 16, letterSpacing: 3, color: "#F9FAFB" }}>
             VELUM
           </span>
         </Link>
 
-        {/* Desktop links */}
         <div className="hidden lg:flex items-center gap-9">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.href;
@@ -79,17 +73,9 @@ export default function Navbar() {
                 key={link.href}
                 to={link.href}
                 className="font-dm font-medium uppercase transition-colors duration-200"
-                style={{
-                  fontSize: 11,
-                  letterSpacing: 1,
-                  color: isActive ? "#22D3EE" : "rgba(249,250,251,0.45)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "#F9FAFB";
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(249,250,251,0.45)";
-                }}
+                style={{ fontSize: 11, letterSpacing: 1, color: isActive ? "#22D3EE" : "rgba(249,250,251,0.45)" }}
+                onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "#F9FAFB"; }}
+                onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(249,250,251,0.45)"; }}
               >
                 {link.label}
               </Link>
@@ -97,24 +83,16 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Desktop CTA */}
         <a
           href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden lg:inline-flex font-dm font-medium transition-colors duration-200 hover:brightness-110"
-          style={{
-            padding: "9px 20px",
-            borderRadius: 5,
-            fontSize: 12,
-            background: "#22D3EE",
-            color: "#050505",
-          }}
+          className="hidden lg:inline-flex font-dm font-medium hover:brightness-110 transition-all"
+          style={{ padding: "9px 20px", borderRadius: 5, fontSize: 12, background: "#22D3EE", color: "#050505" }}
         >
           Falar com especialista
         </a>
 
-        {/* Hamburger */}
         <button
           onClick={() => setOpen(true)}
           className="lg:hidden flex flex-col justify-center gap-[5px] w-11 h-11 items-center"
@@ -127,31 +105,18 @@ export default function Navbar() {
       </div>
     </nav>
 
-    {/* ── Mobile overlay (outside nav to avoid z-index stacking context) ── */}
+    {/* ── Mobile fullscreen menu ── */}
     {open && (
       <div
         className="fixed inset-0 flex flex-col lg:hidden"
-        style={{
-          zIndex: 9999,
-          background: "#080808",
-        }}
+        style={{ zIndex: 9999, background: "#050505" }}
       >
-        {/* Grid decoration */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-
         {/* Header */}
-        <div className="relative flex items-center justify-between px-6 shrink-0" style={{ height: 60 }}>
-          <span
-            className="font-syncopate font-bold"
-            style={{ fontSize: 16, letterSpacing: 3, color: "#F9FAFB" }}
-          >
+        <div
+          className="flex items-center justify-between px-6 shrink-0"
+          style={{ height: 60, borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          <span className="font-syncopate font-bold" style={{ fontSize: 16, letterSpacing: 3, color: "#F9FAFB" }}>
             VELUM
           </span>
           <button
@@ -160,45 +125,70 @@ export default function Navbar() {
             style={{ minWidth: 44, minHeight: 44, color: "#F9FAFB" }}
             aria-label="Fechar menu"
           >
-            <X size={26} strokeWidth={2} />
+            <X size={24} strokeWidth={1.5} />
           </button>
         </div>
 
-        {/* Links */}
-        <div className="relative flex-1 flex flex-col items-center justify-center gap-7 px-6">
-          {mobileLinks.map((link) => {
-            const isActive = location.pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setOpen(false)}
-                className="font-syncopate font-bold uppercase"
-                style={{
-                  fontSize: 28,
-                  lineHeight: 1.2,
-                  color: isActive ? "#22D3EE" : "rgba(249,250,251,0.6)",
-                }}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
+        {/* Links — centered group */}
+        <div className="flex-1 flex flex-col items-center justify-center px-8">
+          <div className="flex flex-col w-full max-w-xs">
+            {mobileLinks.map((link, i) => {
+              const isActive = location.pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  onClick={() => setOpen(false)}
+                  className="font-syncopate font-bold uppercase block"
+                  style={{
+                    fontSize: 20,
+                    letterSpacing: 2,
+                    lineHeight: 1,
+                    padding: "18px 0",
+                    color: isActive ? "#22D3EE" : "rgba(255,255,255,0.7)",
+                    borderBottom: i < mobileLinks.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                    animation: `menuSlideIn 400ms ease both`,
+                    animationDelay: `${60 + i * 50}ms`,
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {/* CTA bottom */}
-        <div className="relative shrink-0 px-6 pb-8 pt-4">
+        <div className="shrink-0 px-6" style={{ paddingBottom: "max(2rem, env(safe-area-inset-bottom, 2rem))" }}>
           <a
             href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full rounded font-dm font-medium text-base"
-            style={{ background: "#22D3EE", color: "#050505", minHeight: 52, padding: "14px 24px" }}
+            className="flex items-center justify-center gap-3 w-full font-dm font-medium"
+            style={{
+              background: "#22D3EE",
+              color: "#050505",
+              minHeight: 52,
+              padding: "14px 24px",
+              borderRadius: 16,
+              fontSize: 14,
+            }}
           >
             <Phone size={18} />
-            Falar com especialista · (62) 99944-7553
+            Falar com especialista
           </a>
+          <p className="font-dm text-center mt-3" style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
+            (62) 99944-7553
+          </p>
         </div>
+
+        {/* Keyframe */}
+        <style>{`
+          @keyframes menuSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
       </div>
     )}
     </>
