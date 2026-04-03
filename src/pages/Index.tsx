@@ -4,6 +4,7 @@ import ModeloIntegradoSection from "@/components/home/ModeloIntegradoSection";
 import NumerosSection from "@/components/home/NumerosSection";
 import LumHomeSection from "@/components/home/LumHomeSection";
 import PortfolioHomeSection from "@/components/home/PortfolioHomeSection";
+import FaqSection from "@/components/home/FaqSection";
 import CtaFinalSection from "@/components/home/CtaFinalSection";
 import Footer from "@/components/layout/Footer";
 import SeoHead, { organizationSchema, localBusinessSchema } from "@/components/SeoHead";
@@ -24,6 +25,7 @@ export default function Index() {
       <NumerosSection />
       <LumHomeSection />
       <PortfolioHomeSection />
+      <FaqSection />
       <CtaFinalSection />
       </main>
       <Footer />
