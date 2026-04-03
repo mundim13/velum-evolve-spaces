@@ -99,8 +99,9 @@ export default function Portfolio() {
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
       <SeoHead
         title="Portfólio"
-        description="Projetos entregues e em execução pela Velum. Residências em Light Steel Frame e concreto em Goiânia e região."
+        description="Residências entregues e em execução em Goiânia e região. Light Steel Frame, concreto e sistemas híbridos com prazo garantido."
         path="/portfolio"
+        ogImage="https://www.grupovelum.com/og-portfolio.jpg"
         schema={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",

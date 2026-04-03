@@ -15,7 +15,7 @@ export default function SeoHead({
   description,
   path,
   schema,
-  ogImage = `${BASE_URL}/og-velum.png`,
+  ogImage = `${BASE_URL}/og-velum.jpg`,
 }: SeoHeadProps) {
   const canonical = `${BASE_URL}${path}`;
   const fullTitle = `${title} | VELUM`;
@@ -32,8 +32,11 @@ export default function SeoHead({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="VELUM" />
+      <meta property="og:locale" content="pt_BR" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
@@ -56,8 +59,8 @@ export const organizationSchema = {
   "@type": "Organization",
   name: "VELUM",
   url: BASE_URL,
-  logo: `${BASE_URL}/og-velum.png`,
-  description: "Arquitetura, engenharia e gestão integradas. Construção industrializada em Goiânia, GO e DF.",
+  logo: `${BASE_URL}/og-velum.jpg`,
+  description: "Construa com prazo garantido e preço fechado. Projeto, gestão e obra integrados em Light Steel Frame.",
   telephone: "+5562999447553",
   address: {
     "@type": "PostalAddress",
@@ -85,5 +88,5 @@ export const localBusinessSchema = {
   },
   priceRange: "$$",
   openingHours: "Mo-Sa 08:00-18:00",
-  description: "Projeto, gestão e obra integrados. Construção industrializada com Light Steel Frame, prazo garantido e preço fechado.",
+  description: "Construa com prazo garantido e preço fechado. Projeto, gestão e obra integrados em Light Steel Frame.",
 };

@@ -29,8 +29,9 @@ export default function Sobre() {
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
       <SeoHead
         title="Quem Somos"
-        description="Conheça a Velum: arquitetura, engenharia e gestão integradas em Goiânia. Construção industrializada com método e tecnologia."
+        description="Conheça a Velum: arquitetura, engenharia e gestão integradas em Goiânia e DF. Construção industrializada com método e tecnologia."
         path="/sobre"
+        ogImage="https://www.grupovelum.com/og-sobre.jpg"
         schema={{
           "@context": "https://schema.org",
           "@type": "AboutPage",
