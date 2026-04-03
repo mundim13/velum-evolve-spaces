@@ -40,8 +40,9 @@ export default function Gerenciamento() {
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
       <SeoHead
         title="Gerenciamento de Obra"
-        description="Gerenciamento de obra com preço fechado, cronograma real e relatórios em tempo real. Da compatibilização à entrega das chaves."
+        description="Preço fechado e cronograma real. Gerenciamento de obra com relatórios em tempo real, da compatibilização à entrega das chaves."
         path="/gerenciamento"
+        ogImage="https://www.grupovelum.com/og-gerenciamento.jpg"
         schema={{
           "@context": "https://schema.org",
           "@type": "Service",

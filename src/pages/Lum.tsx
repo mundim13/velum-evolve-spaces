@@ -130,8 +130,9 @@ export default function Lum() {
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
       <SeoHead
         title="Coletânea LÛM"
-        description="Módulos industrializados em Light Steel Frame. Design inteligente, entrega rápida e preço fechado. Conheça a Coletânea LÛM."
+        description="Módulos industrializados prontos para morar. Light Steel Frame, design inteligente e preço fechado. Conheça a Coletânea LÛM."
         path="/lum"
+        ogImage="https://www.grupovelum.com/og-lum.jpg"
         schema={{
           "@context": "https://schema.org",
           "@type": "ProductCollection",

@@ -14,7 +14,7 @@ export default function Index() {
     <div className="bg-[#0D0D0D] min-h-screen">
       <SeoHead
         title="Arquitetura e Construção Industrializada"
-        description="Projeto, gestão e obra integrados em Goiânia e DF. Construção industrializada com prazo garantido e preço fechado. Conheça a Velum."
+        description="Construa com prazo garantido e preço fechado. Projeto, gestão e obra integrados em Light Steel Frame. Goiânia, GO e DF."
         path="/"
         schema={[organizationSchema, localBusinessSchema]}
       />
