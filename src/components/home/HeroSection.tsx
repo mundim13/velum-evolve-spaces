@@ -150,7 +150,7 @@ export default function HeroSection() {
   return (
     <section className="relative">
       {/* ── DESKTOP ── */}
-      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100vh", paddingTop: 56 }}>
+      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100dvh", paddingTop: 56 }}>
         {/* Sidebar */}
         <div
           className="flex flex-col items-center py-6 relative"

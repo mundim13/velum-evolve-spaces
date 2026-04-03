@@ -81,7 +81,8 @@
     overflow-x: hidden;
     width: 100%;
     position: relative;
-    min-height: 100vh;
+    min-height: 100dvh;
+    min-height: 100vh; /* fallback for older browsers */
   }
 }
 
@@ -251,6 +252,28 @@
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+}
+
+/* Touch targets — minimum 44x44px for iOS accessibility */
+@media (pointer: coarse) {
+  a, button, [role="button"], input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Safari iOS fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix 100vh on Safari iOS */
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+
+  /* Fix backdrop-filter rendering */
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    -webkit-backdrop-filter: blur(12px);
   }
 }
 
