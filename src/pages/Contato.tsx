@@ -30,7 +30,7 @@ export default function Contato() {
   };
 
   const inputBase =
-    "w-full rounded-md border px-3 py-3 text-sm text-white placeholder:text-gray-500 font-dm focus:outline-none focus:border-[#22D3EE] transition-colors";
+    "w-full rounded-md border px-3 py-3 text-sm text-white placeholder:text-gray-400 font-dm focus:outline-none focus:border-[#22D3EE] transition-colors";
   const inputStyle = {
     background: "rgba(255,255,255,0.04)",
     borderColor: "rgba(34,211,238,0.15)",

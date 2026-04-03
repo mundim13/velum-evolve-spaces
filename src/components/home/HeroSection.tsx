@@ -181,7 +181,7 @@ export default function HeroSection() {
             style={{
               fontSize: 7,
               letterSpacing: 1.5,
-              color: "rgba(34,211,238,0.4)",
+              color: "rgba(34,211,238,0.6)",
               writingMode: "vertical-rl",
               transform: "rotate(180deg)",
             }}
@@ -220,7 +220,7 @@ export default function HeroSection() {
                 >
                   <span
                     className="font-syncopate font-bold mb-1"
-                    style={{ fontSize: 10, color: isActive ? opt.accent : "rgba(249,250,251,0.15)" }}
+                    style={{ fontSize: 10, color: isActive ? opt.accent : "rgba(249,250,251,0.45)" }}
                   >
                     {opt.number}
                   </span>
@@ -255,7 +255,7 @@ export default function HeroSection() {
             <span
               className="font-dm mt-2"
               style={{
-                fontSize: 7, letterSpacing: 1.5, color: "rgba(249,250,251,0.25)",
+                fontSize: 7, letterSpacing: 1.5, color: "rgba(249,250,251,0.5)",
                 writingMode: "vertical-rl", transform: "rotate(180deg)",
               }}
             >
@@ -435,7 +435,7 @@ export default function HeroSection() {
           </p>
 
           {/* Accordion label */}
-          <p className="font-dm uppercase mb-3" style={{ fontSize: 8, letterSpacing: 1.5, color: "rgba(249,250,251,0.3)" }}>
+          <p className="font-dm uppercase mb-3" style={{ fontSize: 8, letterSpacing: 1.5, color: "rgba(249,250,251,0.5)" }}>
             O QUE VOCÊ BUSCA?
           </p>
 
@@ -460,7 +460,7 @@ export default function HeroSection() {
                   >
                     <span
                       className="font-syncopate font-bold shrink-0"
-                      style={{ fontSize: 10, color: isOpen ? opt.accent : "rgba(249,250,251,0.25)" }}
+                      style={{ fontSize: 10, color: isOpen ? opt.accent : "rgba(249,250,251,0.45)" }}
                     >
                       {opt.number}
                     </span>
@@ -502,7 +502,7 @@ export default function HeroSection() {
               (item, i) => (
                 <div key={i} className="flex items-center gap-1.5">
                   <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#22D3EE" }} />
-                  <span className="font-dm" style={{ fontSize: 8, color: "rgba(249,250,251,0.35)" }}>{item}</span>
+                  <span className="font-dm" style={{ fontSize: 8, color: "rgba(249,250,251,0.5)" }}>{item}</span>
                 </div>
               )
             )}

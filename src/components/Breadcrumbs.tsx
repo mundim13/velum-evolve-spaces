@@ -46,7 +46,7 @@ export default function Breadcrumbs({ current, path }: BreadcrumbsProps) {
               Home
             </Link>
           </li>
-          <li style={{ color: "rgba(249,250,251,0.2)" }}>/</li>
+          <li style={{ color: "rgba(249,250,251,0.4)" }}>/</li>
           <li style={{ color: "rgba(249,250,251,0.55)" }}>{current}</li>
         </ol>
       </nav>
