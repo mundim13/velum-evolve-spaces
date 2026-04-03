@@ -17,11 +17,13 @@ export default function Index() {
         schema={[organizationSchema, localBusinessSchema]}
       />
       <Navbar />
+      <main id="main">
       <HeroSection />
       <ModeloIntegradoSection />
       <LumHomeSection />
       <PortfolioHomeSection />
       <CtaFinalSection />
+      </main>
       <Footer />
     </div>
   );

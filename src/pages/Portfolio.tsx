@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -111,7 +112,7 @@ export default function Portfolio() {
       <Navbar />
 
       {/* Hero */}
-      <section style={{ paddingTop: 120, paddingBottom: 48, background: "#0D0D0D" }}>
+      <section id="main" style={{ paddingTop: 120, paddingBottom: 48, background: "#0D0D0D" }}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center gap-2 mb-4">
             <div style={{ width: 16, height: 1, background: "#22D3EE" }} />
@@ -119,6 +120,7 @@ export default function Portfolio() {
               PORTFÓLIO
             </span>
           </div>
+          <Breadcrumbs current="Portfólio" path="/portfolio" />
           <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 48, lineHeight: 0.95, color: "#F9FAFB" }}>
             NOSSAS OBRAS
           </h1>

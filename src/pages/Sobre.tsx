@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const fundadores = [
   {
@@ -46,6 +47,7 @@ export default function Sobre() {
 
       {/* Hero */}
       <section
+        id="main"
         style={{
           paddingTop: 120,
           paddingBottom: 64,
@@ -62,6 +64,7 @@ export default function Sobre() {
               Quem somos
             </span>
           </div>
+          <Breadcrumbs current="Quem Somos" path="/sobre" />
 
           <h1 className="font-syncopate font-bold uppercase mb-6" style={{ fontSize: 36, lineHeight: 0.95, color: "#F9FAFB" }}>
             QUEM ESTÁ POR TRÁS{"\n"}DA <span style={{ color: "#22D3EE" }}>VELUM</span>

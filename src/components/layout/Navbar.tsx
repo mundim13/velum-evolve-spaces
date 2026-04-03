@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { X, Phone } from "lucide-react";
+import SkipNav from "@/components/SkipNav";
 
 const navLinks = [
   { label: "Coletânea LÛM", href: "/lum" },
@@ -27,6 +28,8 @@ export default function Navbar() {
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
   return (
+    <>
+    <SkipNav />
     <nav
       className="fixed top-0 left-0 w-full z-50 border-b"
       style={{
@@ -188,5 +191,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+    </>
   );
 }

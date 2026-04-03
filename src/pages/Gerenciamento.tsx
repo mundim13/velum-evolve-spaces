@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { BookImage, BarChart3, Package, FileText } from "lucide-react";
 import diarioObra1 from "@/assets/diario-obra-1.jpeg";
 import diarioObra2 from "@/assets/diario-obra-2.jpeg";
@@ -54,6 +55,7 @@ export default function Gerenciamento() {
 
       {/* Hero */}
       <section
+        id="main"
         style={{
           paddingTop: 120,
           paddingBottom: 64,
@@ -73,6 +75,7 @@ export default function Gerenciamento() {
                   Gerenciamento de obra
                 </span>
               </div>
+              <Breadcrumbs current="Gerenciamento" path="/gerenciamento" />
 
               <h1 className="font-syncopate font-bold uppercase mb-6" style={{ fontSize: 36, lineHeight: 0.95, color: "#F9FAFB" }}>
                 VOCÊ TEM O PROJETO.{"\n"}A GENTE{" "}

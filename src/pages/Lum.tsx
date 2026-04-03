@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import SeoHead from "@/components/SeoHead";
 import ultrapocketImg from "@/assets/ultrapocket-new-1.png";
@@ -144,6 +145,7 @@ export default function Lum() {
 
       {/* Hero */}
       <section
+        id="main"
         style={{
           paddingTop: 120,
           paddingBottom: 48,
@@ -160,6 +162,7 @@ export default function Lum() {
               COLETÂNEA
             </span>
           </div>
+          <Breadcrumbs current="Coletânea LÛM" path="/lum" />
           <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 80, lineHeight: 0.9, color: "#F9FAFB", marginTop: 8 }}>
             LÛM
           </h1>

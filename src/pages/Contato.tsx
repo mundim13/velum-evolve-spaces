@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { useForm } from "react-hook-form";
 import { MessageCircle, Mail, Instagram, MapPin, ArrowRight } from "lucide-react";
 
@@ -52,10 +53,12 @@ export default function Contato() {
 
       {/* Hero */}
       <section
+        id="main"
         className="flex items-center justify-center text-center px-6"
         style={{ background: "#0D0D0D", paddingTop: 56, minHeight: "40vh" }}
       >
         <div>
+          <Breadcrumbs current="Contato" path="/contato" />
           <p
             className="font-syncopate uppercase tracking-[0.3em] mb-4"
             style={{ fontSize: 10, color: "#22D3EE" }}
