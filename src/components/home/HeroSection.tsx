@@ -33,7 +33,7 @@ const options: Option[] = [
       "Gestão com relatórios em tempo real",
     ],
     ctaLabel: "Enviar projeto para análise →",
-    ctaHref: "https://wa.me/5562999447553",
+    ctaHref: "https://wa.me/5562999447553?text=Ol%C3%A1!%20Tenho%20um%20projeto%20e%20quero%20saber%20quanto%20custa%20a%20execu%C3%A7%C3%A3o.",
   },
   {
     number: "02",
@@ -52,7 +52,7 @@ const options: Option[] = [
       "Execução com gestão integrada",
     ],
     ctaLabel: "Falar com um especialista →",
-    ctaHref: "https://wa.me/5562999447553",
+    ctaHref: "https://wa.me/5562999447553?text=Ol%C3%A1!%20N%C3%A3o%20tenho%20projeto%20ainda%20e%20gostaria%20de%20come%C3%A7ar%20do%20zero.",
   },
   {
     number: "03",
@@ -71,7 +71,7 @@ const options: Option[] = [
       "Relatório técnico detalhado",
     ],
     ctaLabel: "Solicitar análise →",
-    ctaHref: "https://wa.me/5562999447553",
+    ctaHref: "https://wa.me/5562999447553?text=Ol%C3%A1!%20Gostaria%20de%20uma%20an%C3%A1lise%20de%20viabilidade%20econ%C3%B4mica.",
   },
   {
     number: "04",
@@ -421,13 +421,13 @@ export default function HeroSection() {
             </span>
           </div>
 
-          {/* Headline */}
-          <h1
+          {/* Headline (mobile uses h2 to avoid duplicate h1) */}
+          <h2
             className="font-syncopate font-bold uppercase mb-5"
             style={{ fontSize: 20, lineHeight: 1, letterSpacing: "-0.5px", color: "#F9FAFB", whiteSpace: "pre-line" }}
           >
             {options[mobileOpen].headline}
-          </h1>
+          </h2>
 
           {/* Desc */}
           <p className="font-dm mb-6" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>

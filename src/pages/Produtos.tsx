@@ -109,7 +109,7 @@ const Produtos = () => {
 
                   {product.available && (
                     <a
-                      href="https://wa.me/5562999447553"
+                      href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20os%20m%C3%B3dulos%20L%C3%9BM."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"

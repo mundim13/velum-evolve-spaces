@@ -80,7 +80,7 @@ export default function Contato() {
               Resposta rápida, atendimento de segunda a sábado
             </p>
             <a
-              href="https://wa.me/5562999447553"
+              href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-semibold transition-opacity hover:opacity-90"
@@ -263,7 +263,7 @@ export default function Contato() {
           Análise inicial gratuita. Retorno em 48h.
         </p>
         <a
-          href="https://wa.me/5562999447553"
+          href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-md text-sm font-semibold transition-opacity hover:opacity-90"

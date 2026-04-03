@@ -400,7 +400,7 @@ const PropostaPublica = () => {
           <p className="text-muted-foreground">
             Dúvidas? Entre em contato conosco pelo WhatsApp{" "}
             <a
-              href="https://wa.me/5562999447553"
+              href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pela%20proposta%20e%20gostaria%20de%20conversar."
               className="text-primary hover:underline"
             >
               (62) 99944-7553

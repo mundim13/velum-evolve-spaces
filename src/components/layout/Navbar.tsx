@@ -77,7 +77,7 @@ export default function Navbar() {
 
         {/* Desktop — CTA right */}
         <a
-          href="https://wa.me/5562999447553"
+          href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
           target="_blank"
           rel="noopener noreferrer"
           className="hidden lg:inline-flex font-dm font-medium transition-colors duration-200 hover:brightness-110"
@@ -176,7 +176,7 @@ export default function Navbar() {
           }}
         >
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 w-full py-4 rounded font-dm font-medium text-base transition-colors duration-200"

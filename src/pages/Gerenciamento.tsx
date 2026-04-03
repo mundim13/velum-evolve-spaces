@@ -344,7 +344,7 @@ export default function Gerenciamento() {
             Retorno em 48h. Envie seu projeto e receba um diagnóstico técnico completo.
           </p>
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Tenho%20um%20projeto%20e%20quero%20saber%20quanto%20custa%20a%20execu%C3%A7%C3%A3o."
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110"

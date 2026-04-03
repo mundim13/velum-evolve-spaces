@@ -9,8 +9,6 @@ const solucoesLinks = [
 
 const empresaLinks = [
   { label: "Quem somos", href: "/sobre" },
-  { label: "Blog", href: "#" },
-  { label: "Carreiras", href: "#" },
 ];
 
 function SocialButton({ children, href }: { children: React.ReactNode; href: string }) {
@@ -65,7 +63,7 @@ export default function Footer() {
             </div>
             <p className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)" }}>
               <a
-                href="https://wa.me/5562999447553"
+                href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"

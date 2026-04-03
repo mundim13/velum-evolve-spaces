@@ -160,7 +160,7 @@ export default function Sobre() {
             Fale com a equipe Velum pelo WhatsApp. Retorno rápido e sem compromisso.
           </p>
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20conhecer%20mais%20sobre%20a%20Velum."
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110"

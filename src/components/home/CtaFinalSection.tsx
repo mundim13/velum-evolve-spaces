@@ -51,7 +51,7 @@ export default function CtaFinalSection() {
             Conhecer os módulos LÛM
           </Link>
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center font-dm font-medium transition-all duration-200"

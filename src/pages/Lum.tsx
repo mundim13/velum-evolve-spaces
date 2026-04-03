@@ -247,7 +247,7 @@ export default function Lum() {
                 {/* CTA */}
                 {m.status === "disponivel" ? (
                   <a
-                    href="https://wa.me/5562999447553"
+                    href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20os%20m%C3%B3dulos%20L%C3%9BM."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center font-dm font-medium transition-all duration-200 hover:brightness-110"
@@ -264,7 +264,7 @@ export default function Lum() {
                   </a>
                 ) : (
                   <a
-                    href="https://wa.me/5562999447553"
+                    href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20os%20m%C3%B3dulos%20L%C3%9BM."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center font-dm font-medium transition-all duration-200"
