@@ -21,6 +21,10 @@ const FooterSection = () => {
             src={logoVelum}
             alt="VELUM · Projetar, Montar, Entregar"
             className="h-12 w-auto mx-auto mb-6 opacity-90"
+            loading="lazy"
+            decoding="async"
+            width={120}
+            height={48}
           />
           <p className="font-montserrat text-muted-foreground text-sm mb-2">
             &copy; {new Date().getFullYear()} VELUM. Todos os direitos reservados.

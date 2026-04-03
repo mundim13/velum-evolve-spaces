@@ -21,10 +21,14 @@ const TeamSection = () => {
         {/* Team Photo */}
         <div className="relative max-w-2xl mx-auto mb-6 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-2xl shadow-elevated hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-            <img 
-              src={teamImage} 
-              alt="Equipe VELUM - Lucas, Catharina e Fernando" 
-              className="w-full h-auto object-cover" 
+            <img
+              src={teamImage}
+              alt="Equipe VELUM - Lucas, Catharina e Fernando"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+              decoding="async"
+              width={1200}
+              height={800}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           </div>

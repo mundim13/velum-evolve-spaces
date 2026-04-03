@@ -20,6 +20,10 @@ const EquipeSection = () => {
               src={teamImage}
               alt="Equipe VELUM - Lucas, Catharina e Fernando"
               className="w-full h-auto object-cover"
+              loading="lazy"
+              decoding="async"
+              width={1200}
+              height={800}
             />
           </div>
         </div>

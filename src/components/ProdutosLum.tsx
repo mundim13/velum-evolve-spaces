@@ -103,6 +103,10 @@ const ProdutosLum = () => {
                     src={product.images[currentIndex]}
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
                   />
                   
                   {product.images.length > 1 && (

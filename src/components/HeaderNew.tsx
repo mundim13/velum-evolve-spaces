@@ -37,6 +37,8 @@ const HeaderNew = () => {
             src={logoVelum}
             alt="VELUM · Projetar, Montar, Entregar"
             className="h-8 md:h-10 w-auto"
+            width={120}
+            height={40}
           />
         </Link>
 

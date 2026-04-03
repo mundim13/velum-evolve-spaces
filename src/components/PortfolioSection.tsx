@@ -117,6 +117,10 @@ const PortfolioSection = () => {
                     src={item.images[currentIndex]}
                     alt={item.name}
                     className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${item.imagePosition || ''}`}
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
                   />
 
                   {/* Status badge */}

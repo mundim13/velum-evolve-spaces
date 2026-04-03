@@ -87,6 +87,10 @@ export default function LumHomeSection() {
                 <img
                   src={m.image}
                   alt={m.name}
+                  width={400}
+                  height={180}
+                  loading="lazy"
+                  decoding="async"
                   className="transition-transform duration-500 group-hover:scale-105"
                   style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }}
                 />

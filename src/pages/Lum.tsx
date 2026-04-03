@@ -199,7 +199,7 @@ export default function Lum() {
                 {/* Image */}
                 {m.image && (
                   <div style={{ marginBottom: 16, borderRadius: 6, overflow: "hidden" }}>
-                    <img src={m.image} alt={m.name} style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
+                    <img src={m.image} alt={m.name} width={400} height={180} loading="lazy" decoding="async" style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
                   </div>
                 )}
 

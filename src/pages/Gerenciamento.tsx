@@ -256,6 +256,10 @@ export default function Gerenciamento() {
                 <img
                   src={diarioObra1}
                   alt="Relatório de Diário de Obra"
+                  width={320}
+                  height={640}
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: "100%", display: "block" }}
                 />
               </div>
@@ -280,6 +284,10 @@ export default function Gerenciamento() {
                 <img
                   src={diarioObra2}
                   alt="Fotos da obra em tempo real"
+                  width={320}
+                  height={480}
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: "100%", display: "block" }}
                 />
               </div>
