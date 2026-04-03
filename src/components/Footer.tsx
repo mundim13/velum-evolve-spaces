@@ -43,10 +43,14 @@ const Footer = () => {
 
         {/* Logo and Copyright */}
         <div className="text-center pt-12 border-t border-white/10">
-          <img 
-            src={logoVelum} 
-            alt="VELUM · Projetar, Montar, Entregar" 
+          <img
+            src={logoVelum}
+            alt="VELUM · Projetar, Montar, Entregar"
             className="h-12 w-auto mx-auto mb-6 opacity-90 hover:opacity-100 transition-opacity"
+            loading="lazy"
+            decoding="async"
+            width={120}
+            height={48}
           />
           <p className="text-white/60 text-sm mb-2">
             &copy; {new Date().getFullYear()} VELUM. Todos os direitos reservados.

@@ -1,5 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -95,10 +97,22 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Portfólio"
+        description="Projetos entregues e em execução pela Velum. Residências em Light Steel Frame e concreto em Goiânia e região."
+        path="/portfolio"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Portfólio VELUM",
+          description: "Projetos entregues e em execução pela Velum em Goiânia e região.",
+          url: "https://www.grupovelum.com/portfolio",
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
-      <section style={{ paddingTop: 120, paddingBottom: 48, background: "#0D0D0D" }}>
+      <section id="main" style={{ paddingTop: 120, paddingBottom: 48, background: "#0D0D0D" }}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center gap-2 mb-4">
             <div style={{ width: 16, height: 1, background: "#22D3EE" }} />
@@ -106,6 +120,7 @@ export default function Portfolio() {
               PORTFÓLIO
             </span>
           </div>
+          <Breadcrumbs current="Portfólio" path="/portfolio" />
           <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 48, lineHeight: 0.95, color: "#F9FAFB" }}>
             NOSSAS OBRAS
           </h1>
@@ -132,6 +147,10 @@ export default function Portfolio() {
                     <img
                       src={item.images[currentIndex]}
                       alt={item.name}
+                      width={800}
+                      height={600}
+                      loading="lazy"
+                      decoding="async"
                       className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${item.imagePosition || ""}`}
                     />
 

@@ -9,16 +9,15 @@ const solucoesLinks = [
 
 const empresaLinks = [
   { label: "Quem somos", href: "/sobre" },
-  { label: "Blog", href: "#" },
-  { label: "Carreiras", href: "#" },
 ];
 
-function SocialButton({ children, href }: { children: React.ReactNode; href: string }) {
+function SocialButton({ children, href, ariaLabel }: { children: React.ReactNode; href: string; ariaLabel?: string }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      aria-label={ariaLabel}
       className="flex items-center justify-center transition-all duration-200 group"
       style={{
         width: 36,
@@ -65,7 +64,7 @@ export default function Footer() {
             </div>
             <p className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)" }}>
               <a
-                href="https://wa.me/5562999447553"
+                href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
@@ -134,8 +133,8 @@ export default function Footer() {
             </h4>
             <div className="flex gap-2.5">
               {/* Instagram */}
-              <SocialButton href="https://www.instagram.com/velum.fab/">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <SocialButton href="https://www.instagram.com/velum.fab/" ariaLabel="Siga a Velum no Instagram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                   <circle cx="12" cy="12" r="5" />
                   <circle cx="17.5" cy="6.5" r="1.5" />

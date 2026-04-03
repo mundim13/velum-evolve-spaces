@@ -14,10 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        syncopate: ["Syncopate", "sans-serif"],
-        montserrat: ["Montserrat", "sans-serif"],
-        syne: ["Syne", "sans-serif"],
-        dm: ["DM Sans", "sans-serif"],
+        syncopate: ["Syncopate", "Impact", "Arial Black", "sans-serif"],
+        montserrat: ["Montserrat", "system-ui", "-apple-system", "sans-serif"],
+        syne: ["Syne", "Impact", "Arial Black", "sans-serif"],
+        dm: ["DM Sans", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

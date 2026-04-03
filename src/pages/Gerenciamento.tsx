@@ -1,5 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { BookImage, BarChart3, Package, FileText } from "lucide-react";
 import diarioObra1 from "@/assets/diario-obra-1.jpeg";
 import diarioObra2 from "@/assets/diario-obra-2.jpeg";
@@ -36,10 +38,24 @@ const processoSteps = [
 export default function Gerenciamento() {
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Gerenciamento de Obra"
+        description="Gerenciamento de obra com preço fechado, cronograma real e relatórios em tempo real. Da compatibilização à entrega das chaves."
+        path="/gerenciamento"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: "Gerenciamento de Obra",
+          provider: { "@type": "Organization", name: "VELUM" },
+          description: "Compatibilização, planejamento e execução com método. Preço fechado e prazo garantido.",
+          areaServed: { "@type": "Place", name: "Goiânia, GO e DF" },
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
       <section
+        id="main"
         style={{
           paddingTop: 120,
           paddingBottom: 64,
@@ -59,6 +75,7 @@ export default function Gerenciamento() {
                   Gerenciamento de obra
                 </span>
               </div>
+              <Breadcrumbs current="Gerenciamento" path="/gerenciamento" />
 
               <h1 className="font-syncopate font-bold uppercase mb-6" style={{ fontSize: 36, lineHeight: 0.95, color: "#F9FAFB" }}>
                 VOCÊ TEM O PROJETO.{"\n"}A GENTE{" "}
@@ -256,6 +273,10 @@ export default function Gerenciamento() {
                 <img
                   src={diarioObra1}
                   alt="Relatório de Diário de Obra"
+                  width={320}
+                  height={640}
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: "100%", display: "block" }}
                 />
               </div>
@@ -280,6 +301,10 @@ export default function Gerenciamento() {
                 <img
                   src={diarioObra2}
                   alt="Fotos da obra em tempo real"
+                  width={320}
+                  height={480}
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: "100%", display: "block" }}
                 />
               </div>
@@ -336,7 +361,7 @@ export default function Gerenciamento() {
             Retorno em 48h. Envie seu projeto e receba um diagnóstico técnico completo.
           </p>
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Tenho%20um%20projeto%20e%20quero%20saber%20quanto%20custa%20a%20execu%C3%A7%C3%A3o."
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110"

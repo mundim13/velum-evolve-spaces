@@ -37,6 +37,8 @@ const Header = () => {
               src={logoVelum}
               alt="VELUM · Projetar, Montar, Entregar"
               className="h-9 md:h-12 w-auto"
+              width={120}
+              height={40}
             />
           </Link>
 
@@ -55,7 +57,7 @@ const Header = () => {
               Portfolio
             </Link>
             <a
-              href="https://wa.me/5562999447553"
+              href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
               target="_blank"
               rel="noopener noreferrer"
               className="btn-hero-primary inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium h-11 px-6"
@@ -96,7 +98,7 @@ const Header = () => {
               Portfolio
             </Link>
             <a
-              href="https://wa.me/5562999447553"
+              href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
               target="_blank"
               rel="noopener noreferrer"
               className="btn-hero-primary inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium w-full h-11"

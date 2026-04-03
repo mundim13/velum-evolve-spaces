@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { X, Phone } from "lucide-react";
+import SkipNav from "@/components/SkipNav";
 
 const navLinks = [
   { label: "Coletânea LÛM", href: "/lum" },
@@ -27,6 +28,8 @@ export default function Navbar() {
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
   return (
+    <>
+    <SkipNav />
     <nav
       className="fixed top-0 left-0 w-full z-50 border-b"
       style={{
@@ -77,7 +80,7 @@ export default function Navbar() {
 
         {/* Desktop — CTA right */}
         <a
-          href="https://wa.me/5562999447553"
+          href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
           target="_blank"
           rel="noopener noreferrer"
           className="hidden lg:inline-flex font-dm font-medium transition-colors duration-200 hover:brightness-110"
@@ -95,12 +98,12 @@ export default function Navbar() {
         {/* Mobile — hamburger */}
         <button
           onClick={() => setOpen(true)}
-          className="lg:hidden flex flex-col justify-center gap-[5px] w-7 h-7"
+          className="lg:hidden flex flex-col justify-center gap-[5px] w-11 h-11 items-center"
           aria-label="Abrir menu"
         >
-          <span className="block w-full h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
-          <span className="block w-full h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
-          <span className="block w-5 h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
+          <span className="block w-6 h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
+          <span className="block w-6 h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
+          <span className="block w-4 h-[2px] rounded-full" style={{ background: "#F9FAFB" }} />
         </button>
       </div>
 
@@ -132,7 +135,7 @@ export default function Navbar() {
           >
             VELUM
           </span>
-          <button onClick={() => setOpen(false)} className="p-1" style={{ color: "#F9FAFB" }} aria-label="Fechar menu">
+          <button onClick={() => setOpen(false)} className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center" style={{ color: "#F9FAFB" }} aria-label="Fechar menu">
             <X size={26} strokeWidth={2} />
           </button>
         </div>
@@ -176,7 +179,7 @@ export default function Navbar() {
           }}
         >
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 w-full py-4 rounded font-dm font-medium text-base transition-colors duration-200"
@@ -188,5 +191,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+    </>
   );
 }

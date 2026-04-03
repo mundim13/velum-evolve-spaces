@@ -33,7 +33,7 @@ const options: Option[] = [
       "Gestão com relatórios em tempo real",
     ],
     ctaLabel: "Enviar projeto para análise →",
-    ctaHref: "https://wa.me/5562999447553",
+    ctaHref: "https://wa.me/5562999447553?text=Ol%C3%A1!%20Tenho%20um%20projeto%20e%20quero%20saber%20quanto%20custa%20a%20execu%C3%A7%C3%A3o.",
   },
   {
     number: "02",
@@ -52,7 +52,7 @@ const options: Option[] = [
       "Execução com gestão integrada",
     ],
     ctaLabel: "Falar com um especialista →",
-    ctaHref: "https://wa.me/5562999447553",
+    ctaHref: "https://wa.me/5562999447553?text=Ol%C3%A1!%20N%C3%A3o%20tenho%20projeto%20ainda%20e%20gostaria%20de%20come%C3%A7ar%20do%20zero.",
   },
   {
     number: "03",
@@ -71,7 +71,7 @@ const options: Option[] = [
       "Relatório técnico detalhado",
     ],
     ctaLabel: "Solicitar análise →",
-    ctaHref: "https://wa.me/5562999447553",
+    ctaHref: "https://wa.me/5562999447553?text=Ol%C3%A1!%20Gostaria%20de%20uma%20an%C3%A1lise%20de%20viabilidade%20econ%C3%B4mica.",
   },
   {
     number: "04",
@@ -150,7 +150,7 @@ export default function HeroSection() {
   return (
     <section className="relative">
       {/* ── DESKTOP ── */}
-      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100vh", paddingTop: 56 }}>
+      <div className="hidden md:grid" style={{ gridTemplateColumns: "64px 1fr", height: "100dvh", paddingTop: 56 }}>
         {/* Sidebar */}
         <div
           className="flex flex-col items-center py-6 relative"
@@ -181,7 +181,7 @@ export default function HeroSection() {
             style={{
               fontSize: 7,
               letterSpacing: 1.5,
-              color: "rgba(34,211,238,0.4)",
+              color: "rgba(34,211,238,0.6)",
               writingMode: "vertical-rl",
               transform: "rotate(180deg)",
             }}
@@ -220,7 +220,7 @@ export default function HeroSection() {
                 >
                   <span
                     className="font-syncopate font-bold mb-1"
-                    style={{ fontSize: 10, color: isActive ? opt.accent : "rgba(249,250,251,0.15)" }}
+                    style={{ fontSize: 10, color: isActive ? opt.accent : "rgba(249,250,251,0.45)" }}
                   >
                     {opt.number}
                   </span>
@@ -255,7 +255,7 @@ export default function HeroSection() {
             <span
               className="font-dm mt-2"
               style={{
-                fontSize: 7, letterSpacing: 1.5, color: "rgba(249,250,251,0.25)",
+                fontSize: 7, letterSpacing: 1.5, color: "rgba(249,250,251,0.5)",
                 writingMode: "vertical-rl", transform: "rotate(180deg)",
               }}
             >
@@ -421,13 +421,13 @@ export default function HeroSection() {
             </span>
           </div>
 
-          {/* Headline */}
-          <h1
+          {/* Headline (mobile uses h2 to avoid duplicate h1) */}
+          <h2
             className="font-syncopate font-bold uppercase mb-5"
             style={{ fontSize: 20, lineHeight: 1, letterSpacing: "-0.5px", color: "#F9FAFB", whiteSpace: "pre-line" }}
           >
             {options[mobileOpen].headline}
-          </h1>
+          </h2>
 
           {/* Desc */}
           <p className="font-dm mb-6" style={{ fontSize: 12, color: "rgba(249,250,251,0.45)", lineHeight: 1.7 }}>
@@ -435,7 +435,7 @@ export default function HeroSection() {
           </p>
 
           {/* Accordion label */}
-          <p className="font-dm uppercase mb-3" style={{ fontSize: 8, letterSpacing: 1.5, color: "rgba(249,250,251,0.3)" }}>
+          <p className="font-dm uppercase mb-3" style={{ fontSize: 8, letterSpacing: 1.5, color: "rgba(249,250,251,0.5)" }}>
             O QUE VOCÊ BUSCA?
           </p>
 
@@ -460,7 +460,7 @@ export default function HeroSection() {
                   >
                     <span
                       className="font-syncopate font-bold shrink-0"
-                      style={{ fontSize: 10, color: isOpen ? opt.accent : "rgba(249,250,251,0.25)" }}
+                      style={{ fontSize: 10, color: isOpen ? opt.accent : "rgba(249,250,251,0.45)" }}
                     >
                       {opt.number}
                     </span>
@@ -502,7 +502,7 @@ export default function HeroSection() {
               (item, i) => (
                 <div key={i} className="flex items-center gap-1.5">
                   <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#22D3EE" }} />
-                  <span className="font-dm" style={{ fontSize: 8, color: "rgba(249,250,251,0.35)" }}>{item}</span>
+                  <span className="font-dm" style={{ fontSize: 8, color: "rgba(249,250,251,0.5)" }}>{item}</span>
                 </div>
               )
             )}

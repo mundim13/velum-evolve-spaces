@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
 import ultrapocketImg from "@/assets/ultrapocket-new-1.png";
 import lumEssentialImg from "@/assets/lum-essential-new-1.png";
 import lumConfortImg from "@/assets/lum-confort-cover.png";
@@ -126,10 +128,24 @@ export default function Lum() {
 
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Coletânea LÛM"
+        description="Módulos industrializados em Light Steel Frame. Design inteligente, entrega rápida e preço fechado. Conheça a Coletânea LÛM."
+        path="/lum"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ProductCollection",
+          name: "Coletânea LÛM",
+          description: "Módulos industrializados em Light Steel Frame.",
+          url: "https://www.grupovelum.com/lum",
+          brand: { "@type": "Brand", name: "VELUM" },
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
       <section
+        id="main"
         style={{
           paddingTop: 120,
           paddingBottom: 48,
@@ -146,6 +162,7 @@ export default function Lum() {
               COLETÂNEA
             </span>
           </div>
+          <Breadcrumbs current="Coletânea LÛM" path="/lum" />
           <h1 className="font-syncopate font-bold uppercase mb-4" style={{ fontSize: 80, lineHeight: 0.9, color: "#F9FAFB", marginTop: 8 }}>
             LÛM
           </h1>
@@ -199,7 +216,7 @@ export default function Lum() {
                 {/* Image */}
                 {m.image && (
                   <div style={{ marginBottom: 16, borderRadius: 6, overflow: "hidden" }}>
-                    <img src={m.image} alt={m.name} style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
+                    <img src={m.image} alt={m.name} width={400} height={180} loading="lazy" decoding="async" style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
                   </div>
                 )}
 
@@ -247,7 +264,7 @@ export default function Lum() {
                 {/* CTA */}
                 {m.status === "disponivel" ? (
                   <a
-                    href="https://wa.me/5562999447553"
+                    href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20os%20m%C3%B3dulos%20L%C3%9BM."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center font-dm font-medium transition-all duration-200 hover:brightness-110"
@@ -264,7 +281,7 @@ export default function Lum() {
                   </a>
                 ) : (
                   <a
-                    href="https://wa.me/5562999447553"
+                    href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20os%20m%C3%B3dulos%20L%C3%9BM."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center font-dm font-medium transition-all duration-200"

@@ -1,5 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { useForm } from "react-hook-form";
 import { MessageCircle, Mail, Instagram, MapPin, ArrowRight } from "lucide-react";
 
@@ -28,7 +30,7 @@ export default function Contato() {
   };
 
   const inputBase =
-    "w-full rounded-md border px-3 py-3 text-sm text-white placeholder:text-gray-500 font-dm focus:outline-none focus:border-[#22D3EE] transition-colors";
+    "w-full rounded-md border px-3 py-3 text-sm text-white placeholder:text-gray-400 font-dm focus:outline-none focus:border-[#22D3EE] transition-colors";
   const inputStyle = {
     background: "rgba(255,255,255,0.04)",
     borderColor: "rgba(34,211,238,0.15)",
@@ -36,14 +38,27 @@ export default function Contato() {
 
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Contato"
+        description="Fale com a Velum. Atendimento em Goiânia e Distrito Federal. WhatsApp, email e formulário de contato."
+        path="/contato"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Contato VELUM",
+          url: "https://www.grupovelum.com/contato",
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
       <section
+        id="main"
         className="flex items-center justify-center text-center px-6"
         style={{ background: "#0D0D0D", paddingTop: 56, minHeight: "40vh" }}
       >
         <div>
+          <Breadcrumbs current="Contato" path="/contato" />
           <p
             className="font-syncopate uppercase tracking-[0.3em] mb-4"
             style={{ fontSize: 10, color: "#22D3EE" }}
@@ -80,7 +95,7 @@ export default function Contato() {
               Resposta rápida, atendimento de segunda a sábado
             </p>
             <a
-              href="https://wa.me/5562999447553"
+              href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-semibold transition-opacity hover:opacity-90"
@@ -263,7 +278,7 @@ export default function Contato() {
           Análise inicial gratuita. Retorno em 48h.
         </p>
         <a
-          href="https://wa.me/5562999447553"
+          href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Velum%20e%20gostaria%20de%20falar%20com%20um%20especialista."
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-md text-sm font-semibold transition-opacity hover:opacity-90"

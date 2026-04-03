@@ -171,6 +171,10 @@ const ProductsSection = () => {
                     src={product.images[activeImageIndex[product.id]]}
                     alt={`${product.name} - Imagem ${activeImageIndex[product.id] + 1}`}
                     className="w-full h-full object-cover transition-opacity duration-500"
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
                   />
                 </div>
                 

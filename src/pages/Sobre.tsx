@@ -1,5 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SeoHead from "@/components/SeoHead";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const fundadores = [
   {
@@ -25,10 +27,27 @@ const fundadores = [
 export default function Sobre() {
   return (
     <div className="min-h-screen font-dm" style={{ background: "#0D0D0D", color: "#F9FAFB" }}>
+      <SeoHead
+        title="Quem Somos"
+        description="Conheça a Velum: arquitetura, engenharia e gestão integradas em Goiânia. Construção industrializada com método e tecnologia."
+        path="/sobre"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "Sobre a VELUM",
+          url: "https://www.grupovelum.com/sobre",
+          mainEntity: {
+            "@type": "Organization",
+            name: "VELUM",
+            foundingLocation: { "@type": "Place", name: "Goiânia, GO" },
+          },
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
       <section
+        id="main"
         style={{
           paddingTop: 120,
           paddingBottom: 64,
@@ -45,6 +64,7 @@ export default function Sobre() {
               Quem somos
             </span>
           </div>
+          <Breadcrumbs current="Quem Somos" path="/sobre" />
 
           <h1 className="font-syncopate font-bold uppercase mb-6" style={{ fontSize: 36, lineHeight: 0.95, color: "#F9FAFB" }}>
             QUEM ESTÁ POR TRÁS{"\n"}DA <span style={{ color: "#22D3EE" }}>VELUM</span>
@@ -160,7 +180,7 @@ export default function Sobre() {
             Fale com a equipe Velum pelo WhatsApp. Retorno rápido e sem compromisso.
           </p>
           <a
-            href="https://wa.me/5562999447553"
+            href="https://wa.me/5562999447553?text=Ol%C3%A1!%20Quero%20conhecer%20mais%20sobre%20a%20Velum."
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex font-dm font-medium transition-all duration-200 hover:brightness-110"

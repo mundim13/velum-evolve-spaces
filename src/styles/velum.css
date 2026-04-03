@@ -1,24 +1,24 @@
 /* Velum Design Tokens */
 :root {
-  --velum-bg: #0E2420;
-  --velum-bg2: #0B1E1B;
-  --velum-bg3: #081512;
-  --velum-accent: #00D4B4;
+  --velum-bg: #0D0D0D;
+  --velum-bg2: #0A0A0A;
+  --velum-bg3: #080808;
+  --velum-accent: #22D3EE;
   --velum-lime: #C8FF6E;
-  --velum-text: #EDF5F3;
-  --velum-muted: rgba(237, 245, 243, 0.45);
-  --velum-border: rgba(0, 212, 180, 0.13);
+  --velum-text: #F9FAFB;
+  --velum-muted: rgba(249, 250, 251, 0.45);
+  --velum-border: rgba(34, 211, 238, 0.13);
 }
 
 /* Base styles for the redesign */
 .font-heading {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Syne', Impact, 'Arial Black', sans-serif;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .font-body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-weight: 400;
 }
 
@@ -41,7 +41,7 @@ html {
 
 /* Glass card */
 .velum-glass {
-  background: rgba(14, 36, 32, 0.6);
+  background: rgba(13, 13, 13, 0.6);
   backdrop-filter: blur(16px);
   border: 1px solid var(--velum-border);
 }
