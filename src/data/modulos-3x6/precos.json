@@ -1,0 +1,95 @@
+{
+  "versao": "2026-10-23",
+  "modulo": "3x6",
+  "observacao": "Valores de venda validados por Fernando como ponto de partida. A venda é o valor que o simulador soma; custo e margem ficam como referência. Edite aqui sem mexer no código.",
+  "margens": {
+    "modulo": 0.125,
+    "opcionais": 0.25
+  },
+  "casca": {
+    "id": "casca",
+    "nome": "Módulo 3x6 vazio",
+    "descricao": "Casca com textura e esquadria padrão na testada",
+    "custo": null,
+    "venda": 62000
+  },
+  "banheiro": {
+    "nenhum": { "nome": "Sem banheiro", "custo": null, "venda": 0 },
+    "lavabo": { "nome": "Lavabo", "custo": null, "venda": 7000 },
+    "completo": { "nome": "Banheiro completo", "custo": 9000, "venda": 10000 }
+  },
+  "cozinha": {
+    "nenhuma": { "nome": "Sem cozinha", "custo": null, "venda": 0 },
+    "copa": { "nome": "Copa", "descricao": "Bancada, cuba e frigobar", "custo": 4000, "venda": 4500 },
+    "completa": { "nome": "Cozinha completa", "descricao": "Cooktop e armários", "custo": null, "venda": 8500 }
+  },
+  "vivencia": {
+    "casal": { "nome": "Quarto de casal", "custo": null, "venda": 3500 },
+    "solteiro": { "nome": "Quarto de solteiro", "custo": null, "venda": 3500 },
+    "estar": { "nome": "Estar", "custo": null, "venda": 3500 },
+    "escritorio": { "nome": "Escritório", "custo": null, "venda": 8000 },
+    "academia": { "nome": "Academia", "custo": null, "venda": 8000 },
+    "brinquedoteca": { "nome": "Brinquedoteca", "custo": null, "venda": 8000 },
+    "loja": { "nome": "Loja", "descricao": "Vitrine e balcão", "custo": null, "venda": 12000 }
+  },
+  "esquadria": {
+    "precoVidroM2": 1200,
+    "descontoPortaPadrao": 1500,
+    "padrao": { "nome": "Padrão Cazita na testada", "vao": [2.0, 2.1], "vidroM2": 4.2, "custo": 0, "venda": 0 },
+    "parcial": { "nome": "Lateral 3,00 m", "vao": [3.0, 2.1], "vidroM2": 6.3, "custo": 2520, "venda": 3400 },
+    "fora450": { "nome": "Fora a fora 4,50 m", "vao": [4.5, 2.1], "vidroM2": 9.45, "custo": 7800, "venda": 10400, "vergaReforcada": true },
+    "fora600": { "nome": "Fora a fora 6,00 m", "vao": [6.0, 2.1], "vidroM2": 12.6, "custo": 12580, "venda": 16800, "vergaReforcada": true }
+  },
+  "fachada": {
+    "textura": { "nome": "Textura", "custoM2": 60, "venda": 0 },
+    "ripadoFrontal": {
+      "nome": "Ripado WPC frontal",
+      "descricao": "Face da esquadria principal, por m² já descontado o vão",
+      "custoM2": 90,
+      "margem": 0.25,
+      "vendaM2": 120
+    },
+    "ripadoCompleto": { "nome": "Ripado WPC completo", "descricao": "Quatro faces", "custoM2": 150, "margem": 0.25, "venda": 5600 }
+  },
+  "cores": {
+    "textura": {
+      "offwhite": { "nome": "Off-white", "hex": "#E9E7E1" },
+      "grafite": { "nome": "Grafite", "hex": "#3B3D40" },
+      "areia": { "nome": "Areia", "hex": "#CBB896" },
+      "musgo": { "nome": "Musgo", "hex": "#5C6A4C" }
+    },
+    "wpc": {
+      "ipe": { "nome": "Ipê", "hex": "#6A3D25" },
+      "cumaru": { "nome": "Cumaru", "hex": "#8C5B36" },
+      "teca": { "nome": "Teca", "hex": "#A97E50" },
+      "cinza": { "nome": "Cinza", "hex": "#7B7873" }
+    }
+  },
+  "kitMobilia": {
+    "academia": { "nome": "Kit academia", "descricao": "Equipamentos básicos", "venda": 12000, "disponivelEm": ["academia"] },
+    "estudio": { "nome": "Kit estúdio/kitnet", "venda": 8000, "disponivelEm": ["estudio"] },
+    "suite": { "nome": "Kit suíte", "descricao": "Cama, colchão, criados, TV", "venda": 6500, "disponivelEm": ["suite"] },
+    "gourmet": { "nome": "Kit gourmet", "descricao": "Mesa, banquetas, frigobar", "venda": 5500, "disponivelEm": ["gourmet"] },
+    "escritorio": { "nome": "Kit escritório", "descricao": "2 mesas, cadeiras", "venda": 5000, "disponivelEm": ["escritorio"] },
+    "loja": { "nome": "Kit loja/consultório", "venda": 5000, "disponivelEm": ["loja"] },
+    "brinquedoteca": { "nome": "Kit brinquedoteca", "venda": 4000, "disponivelEm": ["brinquedoteca"] }
+  },
+  "opcionais": {
+    "deck": { "nome": "Deck WPC frontal 6 x 2 m", "venda": 7200 },
+    "pergolado": { "nome": "Pergolado sobre o deck", "venda": 6000, "exige": "deck" },
+    "fundacao": { "nome": "Fundação", "venda": 4500 },
+    "kitAirbnb": { "nome": "Kit Airbnb", "descricao": "Enxoval, utensílios, fechadura digital", "venda": 3500, "disponivelEm": ["suite", "estudio"] },
+    "freteKm": { "nome": "Frete fora de Goiânia e região", "vendaPorKm": 12 },
+    "ligacoes": { "nome": "Ligações de água, esgoto e luz", "sobConsulta": true }
+  },
+  "atalhos": [
+    { "id": "cazita", "nome": "Cazita (Airbnb)", "uso": "suite", "banheiro": "completo", "cozinha": "copa", "vivencia": "casal", "esquadria": { "face": "testada", "tamanho": "padrao" } },
+    { "id": "estudio", "nome": "Estúdio/kitnet", "uso": "estudio", "banheiro": "completo", "cozinha": "completa", "vivencia": "estar", "esquadria": { "face": "testada", "tamanho": "padrao" } },
+    { "id": "gourmet", "nome": "Gourmet", "uso": "gourmet", "banheiro": "nenhum", "cozinha": "completa", "vivencia": "estar", "esquadria": { "face": "ladoB", "tamanho": "parcial" } },
+    { "id": "caseiro", "nome": "Caseiro", "uso": "suite", "banheiro": "completo", "cozinha": "copa", "vivencia": "solteiro", "esquadria": { "face": "testada", "tamanho": "padrao" } },
+    { "id": "loja", "nome": "Loja/consultório", "uso": "loja", "banheiro": "nenhum", "cozinha": "nenhuma", "vivencia": "loja", "esquadria": { "face": "testada", "tamanho": "padrao" } },
+    { "id": "escritorio", "nome": "Escritório", "uso": "escritorio", "banheiro": "nenhum", "cozinha": "nenhuma", "vivencia": "escritorio", "esquadria": { "face": "testada", "tamanho": "padrao" } },
+    { "id": "academia", "nome": "Academia", "uso": "academia", "banheiro": "nenhum", "cozinha": "nenhuma", "vivencia": "academia", "esquadria": { "face": "testada", "tamanho": "padrao" } },
+    { "id": "brinquedoteca", "nome": "Brinquedoteca", "uso": "brinquedoteca", "banheiro": "nenhum", "cozinha": "nenhuma", "vivencia": "brinquedoteca", "esquadria": { "face": "testada", "tamanho": "padrao" } }
+  ]
+}

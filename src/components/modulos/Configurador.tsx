@@ -1,0 +1,375 @@
+import type { ReactNode } from "react";
+import { reduzir, type Acao } from "@/lib/modulos-3x6/estado";
+import { calcularPreco, formatarReais } from "@/lib/modulos-3x6/preco";
+import { opcoesEsquadria } from "@/lib/modulos-3x6/regras";
+import {
+  tabela,
+  type Banheiro,
+  type Config,
+  type CorTextura,
+  type Cozinha,
+  type FaceEsquadria,
+  type TipoFachada,
+  type TomWpc,
+  type Vivencia,
+} from "@/lib/modulos-3x6/tipos";
+
+export type Etapa = "atalho" | "banheiro" | "cozinha" | "vivencia" | "esquadria" | "fachada";
+
+export const ETAPAS: { id: Etapa; nome: string }[] = [
+  { id: "atalho", nome: "Atalhos" },
+  { id: "banheiro", nome: "Banheiro" },
+  { id: "cozinha", nome: "Cozinha" },
+  { id: "vivencia", nome: "Vivência" },
+  { id: "esquadria", nome: "Esquadria" },
+  { id: "fachada", nome: "Fachada" },
+];
+
+/** Nome da face como a pessoa vê o módulo de frente (da testada). */
+export const NOME_FACE: Record<FaceEsquadria, string> = {
+  testada: "Frente (testada)",
+  ladoA: "Lateral direita",
+  ladoB: "Lateral esquerda",
+};
+
+const ACENTO = "#22D3EE";
+const TEXTO_FRACO = "rgba(249,250,251,0.5)";
+const metros = (m: number) => `${m.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m`;
+
+function Diferenca({ config, acao }: { config: Config; acao: Acao }) {
+  const atual = calcularPreco(config).total;
+  const novo = calcularPreco(reduzir(config, acao)).total;
+  const d = novo - atual;
+  if (d === 0) return null;
+  return (
+    <span className="font-dm tabular-nums" style={{ fontSize: 12, color: d > 0 ? "rgba(249,250,251,0.7)" : ACENTO }}>
+      {d > 0 ? "+ " : "− "}
+      {formatarReais(Math.abs(d))}
+    </span>
+  );
+}
+
+function Opcao({
+  ativo,
+  titulo,
+  detalhe,
+  direita,
+  selo,
+  onClick,
+}: {
+  ativo: boolean;
+  titulo: string;
+  detalhe?: string;
+  direita?: ReactNode;
+  selo?: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={ativo}
+      className="w-full text-left transition-colors duration-200 flex flex-col justify-center"
+      style={{
+        minHeight: 56,
+        padding: "10px 12px",
+        borderRadius: 8,
+        border: `1px solid ${ativo ? ACENTO : "rgba(34,211,238,0.13)"}`,
+        background: ativo ? "rgba(34,211,238,0.08)" : "rgba(255,255,255,0.02)",
+      }}
+    >
+      <span className="flex items-center justify-between gap-2">
+        <span className="font-dm font-medium" style={{ fontSize: 14, color: "#F9FAFB" }}>
+          {titulo}
+        </span>
+        {direita}
+      </span>
+      {detalhe && (
+        <span className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 2 }}>
+          {detalhe}
+        </span>
+      )}
+      {selo && (
+        <span
+          className="font-dm self-start"
+          style={{ fontSize: 10, letterSpacing: 0.5, color: ACENTO, border: `1px solid rgba(34,211,238,0.35)`, borderRadius: 4, padding: "1px 6px", marginTop: 6 }}
+        >
+          {selo}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function Amostra({ ativo, hex, nome, onClick }: { ativo: boolean; hex: string; nome: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={ativo} className="flex flex-col items-center gap-1.5" style={{ minWidth: 64 }}>
+      <span
+        className="block rounded-full transition-all"
+        style={{
+          width: 40,
+          height: 40,
+          background: hex,
+          boxShadow: ativo ? `0 0 0 2px #0D0D0D, 0 0 0 4px ${ACENTO}` : "inset 0 0 0 1px rgba(255,255,255,0.15)",
+        }}
+      />
+      <span className="font-dm" style={{ fontSize: 11, color: ativo ? "#F9FAFB" : TEXTO_FRACO }}>
+        {nome}
+      </span>
+    </button>
+  );
+}
+
+function Rotulo({ children }: { children: ReactNode }) {
+  return (
+    <p className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 2, color: ACENTO, margin: "18px 0 10px" }}>
+      {children}
+    </p>
+  );
+}
+
+interface Props {
+  config: Config;
+  etapa: Etapa;
+  onEtapa: (e: Etapa) => void;
+  despachar: (a: Acao) => void;
+}
+
+/** Escolhas na ordem do briefing (passos 1 a 6 da fase 1). Cada opção mostra quanto muda no total. */
+export function Configurador({ config, etapa, onEtapa, despachar }: Props) {
+  const op = (acao: Acao) => () => despachar(acao);
+
+  return (
+    <div>
+      <nav aria-label="Etapas" className="flex gap-2 overflow-x-auto -mx-4 px-4 pb-1" style={{ scrollbarWidth: "none" }}>
+        {ETAPAS.map((e, i) => {
+          const ativo = e.id === etapa;
+          return (
+            <button
+              key={e.id}
+              type="button"
+              onClick={() => onEtapa(e.id)}
+              aria-current={ativo ? "step" : undefined}
+              className="shrink-0 font-dm font-medium transition-colors"
+              style={{
+                minHeight: 40,
+                padding: "8px 14px",
+                borderRadius: 999,
+                fontSize: 13,
+                background: ativo ? ACENTO : "rgba(255,255,255,0.04)",
+                color: ativo ? "#050505" : "rgba(249,250,251,0.7)",
+                border: `1px solid ${ativo ? ACENTO : "rgba(255,255,255,0.08)"}`,
+              }}
+            >
+              <span style={{ opacity: 0.6, marginRight: 6 }}>{i + 1}</span>
+              {e.nome}
+            </button>
+          );
+        })}
+      </nav>
+
+      {etapa === "atalho" && (
+        <>
+          <Rotulo>Comece por um atalho</Rotulo>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {tabela.atalhos.map((a) => {
+              const partes = [
+                a.banheiro !== "nenhum" ? tabela.banheiro[a.banheiro as Banheiro].nome : null,
+                a.cozinha !== "nenhuma" ? tabela.cozinha[a.cozinha as Cozinha].nome : null,
+                tabela.vivencia[a.vivencia as Vivencia].nome,
+                a.esquadria.face !== "testada" ? "esquadria lateral 3 m" : null,
+              ].filter(Boolean);
+              const total = calcularPreco(reduzir(config, { tipo: "atalho", id: a.id })).total;
+              return (
+                <Opcao
+                  key={a.id}
+                  ativo={config.atalho === a.id}
+                  titulo={a.nome}
+                  detalhe={partes.join(" + ")}
+                  direita={
+                    <span className="font-dm tabular-nums" style={{ fontSize: 13, color: "#F9FAFB" }}>
+                      {formatarReais(total)}
+                    </span>
+                  }
+                  onClick={op({ tipo: "atalho", id: a.id })}
+                />
+              );
+            })}
+            <Opcao
+              ativo={false}
+              titulo="Começar do zero"
+              detalhe="Módulo vazio, você monta cada zona"
+              onClick={() => {
+                despachar({ tipo: "zerar" });
+                onEtapa("banheiro");
+              }}
+            />
+          </div>
+          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
+            O atalho só pré-seleciona as escolhas. Depois é só ajustar.
+          </p>
+        </>
+      )}
+
+      {etapa === "banheiro" && (
+        <>
+          <Rotulo>Banheiro no fundo, junto à parede hidráulica</Rotulo>
+          <div className="grid gap-2">
+            {(Object.keys(tabela.banheiro) as Banheiro[]).map((b) => (
+              <Opcao
+                key={b}
+                ativo={config.banheiro === b}
+                titulo={tabela.banheiro[b].nome}
+                detalhe={b === "completo" ? "Box com seixo, bancada, louças e metais" : b === "lavabo" ? "Bacia e bancada, sem box" : undefined}
+                direita={<Diferenca config={config} acao={{ tipo: "banheiro", valor: b }} />}
+                onClick={op({ tipo: "banheiro", valor: b })}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {etapa === "cozinha" && (
+        <>
+          <Rotulo>Cozinha colada ao banheiro</Rotulo>
+          <div className="grid gap-2">
+            {(Object.keys(tabela.cozinha) as Cozinha[]).map((k) => {
+              const item = tabela.cozinha[k];
+              return (
+                <Opcao
+                  key={k}
+                  ativo={config.cozinha === k}
+                  titulo={item.nome}
+                  detalhe={"descricao" in item ? item.descricao : undefined}
+                  direita={<Diferenca config={config} acao={{ tipo: "cozinha", valor: k }} />}
+                  onClick={op({ tipo: "cozinha", valor: k })}
+                />
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {etapa === "vivencia" && (
+        <>
+          <Rotulo>O que é o espaço que sobra</Rotulo>
+          <div className="grid grid-cols-2 gap-2">
+            {(Object.keys(tabela.vivencia) as Vivencia[]).map((v) => (
+              <Opcao
+                key={v}
+                ativo={config.vivencia === v}
+                titulo={tabela.vivencia[v].nome}
+                direita={<Diferenca config={config} acao={{ tipo: "vivencia", valor: v }} />}
+                onClick={op({ tipo: "vivencia", valor: v })}
+              />
+            ))}
+          </div>
+          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
+            O módulo aparece mobiliado; a mobília solta vira um kit opcional na próxima etapa do simulador.
+          </p>
+        </>
+      )}
+
+      {etapa === "esquadria" && (
+        <>
+          <Rotulo>Porta de correr de vidro: face e tamanho</Rotulo>
+          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginBottom: 10 }}>
+            Toque numa face do módulo ou escolha abaixo. A parede do banheiro nunca recebe vidro.
+          </p>
+          <div className="grid gap-2">
+            {opcoesEsquadria(config).map((o) => {
+              const ativo = config.esquadria.face === o.face && config.esquadria.tamanho === o.tamanho;
+              const titulo =
+                o.tamanho === "padrao"
+                  ? `Padrão Cazita · ${metros(o.largura)}`
+                  : o.tamanho === "parcial"
+                    ? `Parcial · ${metros(o.largura)}`
+                    : `Fora a fora · ${metros(o.largura)}`;
+              return (
+                <Opcao
+                  key={`${o.face}-${o.tamanho}`}
+                  ativo={ativo}
+                  titulo={titulo}
+                  detalhe={NOME_FACE[o.face]}
+                  selo={o.variante === "fora450" || o.variante === "fora600" ? "Verga reforçada inclusa" : undefined}
+                  direita={
+                    o.variante === "padrao" ? (
+                      <span className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO }}>
+                        Inclusa
+                      </span>
+                    ) : (
+                      <Diferenca config={config} acao={{ tipo: "esquadria", face: o.face, tamanho: o.tamanho }} />
+                    )
+                  }
+                  onClick={op({ tipo: "esquadria", face: o.face, tamanho: o.tamanho })}
+                />
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {etapa === "fachada" && (
+        <>
+          <Rotulo>Acabamento da fachada</Rotulo>
+          <div className="grid gap-2">
+            {(["textura", "ripadoFrontal", "ripadoCompleto"] as TipoFachada[]).map((t) => (
+              <Opcao
+                key={t}
+                ativo={config.fachada.tipo === t}
+                titulo={tabela.fachada[t].nome}
+                detalhe={
+                  t === "textura"
+                    ? "Casca lisa na cor escolhida"
+                    : t === "ripadoFrontal"
+                      ? `Na face da porta (${NOME_FACE[config.esquadria.face].toLowerCase()}), R$ ${tabela.fachada.ripadoFrontal.vendaM2}/m²`
+                      : "As quatro faces"
+                }
+                direita={
+                  t === "textura" ? (
+                    <span className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO }}>
+                      Inclusa
+                    </span>
+                  ) : (
+                    <Diferenca config={config} acao={{ tipo: "fachada", valor: t }} />
+                  )
+                }
+                onClick={op({ tipo: "fachada", valor: t })}
+              />
+            ))}
+          </div>
+
+          <Rotulo>Cor da textura</Rotulo>
+          <div className="flex gap-2 flex-wrap">
+            {(Object.keys(tabela.cores.textura) as CorTextura[]).map((c) => (
+              <Amostra
+                key={c}
+                ativo={config.fachada.cor === c}
+                hex={tabela.cores.textura[c].hex}
+                nome={tabela.cores.textura[c].nome}
+                onClick={op({ tipo: "cor", valor: c })}
+              />
+            ))}
+          </div>
+
+          {config.fachada.tipo !== "textura" && (
+            <>
+              <Rotulo>Tom do WPC</Rotulo>
+              <div className="flex gap-2 flex-wrap">
+                {(Object.keys(tabela.cores.wpc) as TomWpc[]).map((w) => (
+                  <Amostra
+                    key={w}
+                    ativo={config.fachada.wpc === w}
+                    hex={tabela.cores.wpc[w].hex}
+                    nome={tabela.cores.wpc[w].nome}
+                    onClick={op({ tipo: "wpc", valor: w })}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
