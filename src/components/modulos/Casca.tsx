@@ -137,6 +137,9 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
   const [faceU0, faceU1] = paraLocal(quadroPrincipal, quadroPrincipal.u[0], quadroPrincipal.u[1]);
   const margemArandela = principal.face === "testada" ? MOLDURA.lado + 0.06 : 0.12;
   const sombra = useSombraCasca();
+  // Com o ripado completo, a moldura é a única parte de textura que sobraria: vira arremate preto,
+  // como as quinas e o rufo, para não deixar uma faixa na cor da textura em volta do ripado.
+  const matMoldura = tipoFachada === "ripadoCompleto" ? MAT.perfil() : matFachada;
 
   return (
     <group>
@@ -176,16 +179,17 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
             key={lado}
             p={[lado * (LARGURA / 2 - MOLDURA.lado / 2), (CHASSI + H) / 2, MOLDURA.profundidade / 2]}
             s={[MOLDURA.lado, H - CHASSI, MOLDURA.profundidade]}
-            mat={matFachada}
+            mat={matMoldura}
             raio={0.01}
             sombra={sombra}
             contato={false}
           />
         ))}
+        {/* A peça de cima também cobre o topo da parede (5 mm acima, para não disputar o plano com ela). */}
         <Caixa
-          p={[0, H - MOLDURA.topo / 2, MOLDURA.profundidade / 2]}
-          s={[LARGURA, MOLDURA.topo, MOLDURA.profundidade]}
-          mat={matFachada}
+          p={[0, H - MOLDURA.topo / 2 + 0.005, (MOLDURA.profundidade - T) / 2]}
+          s={[LARGURA, MOLDURA.topo, MOLDURA.profundidade + T]}
+          mat={matMoldura}
           raio={0.01}
           sombra={sombra}
           contato={false}

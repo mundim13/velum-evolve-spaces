@@ -139,11 +139,13 @@ function RipasDaFace({ segmentos, material, progresso }: {
 }
 
 /**
- * Arremates pretos do ripado: perfis nas quinas das faces revestidas e rufo no topo.
+ * Arremates pretos do ripado: perfis nas quinas das faces revestidas, rufo no topo e requadro em volta
+ * de cada vão (cobre a folga entre as ripas e a esquadria).
  * Assim nenhuma faixa da textura (na cor escolhida) aparece entre o ripado e a quina ou o beiral.
  */
-function Arremates({ faces, comprimento, altura, progresso }: {
+function Arremates({ faces, aberturas, comprimento, altura, progresso }: {
   faces: Face[];
+  aberturas: Abertura[];
   comprimento: number;
   altura: number;
   progresso: React.MutableRefObject<number>;
@@ -159,8 +161,37 @@ function Arremates({ faces, comprimento, altura, progresso }: {
     g.scale.set(1, Math.max(0.001, e), 1);
     g.visible = progresso.current > 0.001;
   });
+  const largura = 0.05;
   return (
     <group ref={ref}>
+      {faces.map((face) => {
+        const q = quadroFace(face, comprimento);
+        return (
+          <group key={`vaos-${face}`} position={q.pos} rotation={[0, q.rotY, 0]}>
+            {aberturas
+              .filter((a) => a.face === face && a.u1 - a.u0 > 0.01)
+              .map((a) => {
+                const [x0, x1] = paraLocal(q, a.u0, a.u1);
+                const w = x1 - x0 + 2 * largura;
+                const h = a.y1 - a.y0 + 2 * largura;
+                const xc = (x0 + x1) / 2;
+                const yc = (a.y0 + a.y1) / 2;
+                const pecas: [number, number, number, number][] = [
+                  [xc, a.y1 + largura / 2, w, largura],
+                  [x0 - largura / 2, yc, largura, h],
+                  [x1 + largura / 2, yc, largura, h],
+                ];
+                // A porta nasce no piso: sem peça embaixo dela.
+                if (a.y0 > CHASSI + 0.01) pecas.push([xc, a.y0 - largura / 2, w, largura]);
+                return pecas.map(([x, y, pw, ph], i) => (
+                  <mesh key={`${a.id}-${i}`} position={[x, y, prof / 2]} material={perfil} castShadow={sombra} receiveShadow>
+                    <boxGeometry args={[pw, ph, prof]} />
+                  </mesh>
+                ));
+              })}
+          </group>
+        );
+      })}
       {faces
         .filter((f) => f !== "testada")
         .map((face) => {
@@ -175,7 +206,8 @@ function Arremates({ faces, comprimento, altura, progresso }: {
                   <boxGeometry args={[0.044, hQuina, prof]} />
                 </mesh>
               ))}
-              <mesh position={[0, altura - RUFO / 2, (prof - T - 0.01) / 2]} material={perfil} castShadow={sombra} receiveShadow>
+              {/* Topo 5 mm acima da parede, para não disputar o mesmo plano com ela. */}
+              <mesh position={[0, altura - RUFO / 2 + 0.005, (prof - T - 0.01) / 2]} material={perfil} castShadow={sombra} receiveShadow>
                 <boxGeometry args={[2 * meioFace + 0.02, RUFO, prof + T + 0.01]} />
               </mesh>
             </group>
@@ -254,7 +286,7 @@ export function Ripado({ ativo, faces, aberturas, comprimento, altura, cor }: Pr
           </group>
         );
       })}
-      <Arremates faces={atual.faces} comprimento={comprimento} altura={altura} progresso={progresso} />
+      <Arremates faces={atual.faces} aberturas={atual.aberturas} comprimento={comprimento} altura={altura} progresso={progresso} />
     </>
   );
 }
