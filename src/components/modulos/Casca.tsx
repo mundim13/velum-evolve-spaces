@@ -15,6 +15,7 @@ import { FACES, paraLocal, quadroFace } from "./faces";
 import { MOLDURA, Ripado, useMaterialFachada } from "./Fachada";
 import { COR, MAT } from "./materiais";
 import { Parede } from "./Parede";
+import { SombraContato, useSombraCasca } from "./sombra";
 import { Banheiro } from "./zonas/Banheiro";
 import { Cozinha } from "./zonas/Cozinha";
 import { Divisorias, TETO } from "./zonas/Divisorias";
@@ -135,17 +136,24 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
   const [px0, px1] = paraLocal(quadroPrincipal, principal.u0, principal.u1);
   const [faceU0, faceU1] = paraLocal(quadroPrincipal, quadroPrincipal.u[0], quadroPrincipal.u[1]);
   const margemArandela = principal.face === "testada" ? MOLDURA.lado + 0.06 : 0.12;
+  const sombra = useSombraCasca();
 
   return (
     <group>
       {/* Base preta do chassi e soleira saliente da testada. */}
-      <Caixa p={[0, (CHASSI - 0.03) / 2, 0]} s={[L + 0.03, CHASSI - 0.03, LARGURA + 0.03]} mat={MAT.laca(COR.base)} />
-      <Caixa p={[meio + 0.08, CHASSI - 0.02, 0]} s={[0.16, 0.05, LARGURA - 2 * MOLDURA.lado + 0.02]} mat={MAT.granito()} raio={0.006} />
+      <Caixa p={[0, (CHASSI - 0.03) / 2, 0]} s={[L + 0.03, CHASSI - 0.03, LARGURA + 0.03]} mat={MAT.laca(COR.base)} sombra={sombra} contato={false} />
+      <Caixa p={[meio + 0.08, CHASSI - 0.02, 0]} s={[0.16, 0.05, LARGURA - 2 * MOLDURA.lado + 0.02]} mat={MAT.granito()} raio={0.006} sombra={sombra} contato={false} />
 
       {/* Piso em porcelanato, forro e cobertura. */}
-      <Caixa p={[0, CHASSI - 0.02, 0]} s={[L - 2 * T, 0.04, LARGURA - 2 * T]} mat={MAT.piso()} />
+      <Caixa p={[0, CHASSI - 0.02, 0]} s={[L - 2 * T, 0.04, LARGURA - 2 * T]} mat={MAT.piso()} contato={false} />
       <mesh position={[0, TETO, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[L - 2 * T, LARGURA - 2 * T, 1]} geometry={geometriaPlano} material={MAT.pintura(COR.forro)} receiveShadow />
-      <Caixa p={[0, (TETO + H) / 2 + 0.005, 0]} s={[L - 2 * T, H - TETO - 0.01, LARGURA - 2 * T]} mat={MAT.pintura("#7A7975")} />
+      <Caixa p={[0, (TETO + H) / 2 + 0.005, 0]} s={[L - 2 * T, H - TETO - 0.01, LARGURA - 2 * T]} mat={MAT.pintura("#7A7975")} sombra={sombra} contato={false} />
+
+      {/* Sombra pré-calculada na junta das paredes com o piso, para nada parecer flutuar. */}
+      <SombraContato x={0} z={-LARGURA / 2 + T} w={L - 2 * T} d={0.3} />
+      <SombraContato x={0} z={LARGURA / 2 - T} w={L - 2 * T} d={0.3} />
+      <SombraContato x={-meio + T} z={0} w={0.3} d={LARGURA - 2 * T} />
+      <SombraContato x={meio - T} z={0} w={0.3} d={LARGURA - 2 * T} />
 
       {/* As quatro faces, com vãos e esquadrias. */}
       {FACES.map((face) => {
@@ -161,7 +169,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
         );
       })}
 
-      {/* Moldura saliente em textura emoldurando a testada. */}
+      {/* Moldura saliente em textura (requadro de ~15 cm) emoldurando a testada e a porta, como na foto da fachada. */}
       <group position={[meio, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
         {[-1, 1].map((lado) => (
           <Caixa
@@ -169,16 +177,18 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
             p={[lado * (LARGURA / 2 - MOLDURA.lado / 2), (CHASSI + H) / 2, MOLDURA.profundidade / 2]}
             s={[MOLDURA.lado, H - CHASSI, MOLDURA.profundidade]}
             mat={matFachada}
-            raio={0.012}
-           
+            raio={0.01}
+            sombra={sombra}
+            contato={false}
           />
         ))}
         <Caixa
           p={[0, H - MOLDURA.topo / 2, MOLDURA.profundidade / 2]}
           s={[LARGURA, MOLDURA.topo, MOLDURA.profundidade]}
           mat={matFachada}
-          raio={0.012}
-         
+          raio={0.01}
+          sombra={sombra}
+          contato={false}
         />
       </group>
 
@@ -197,7 +207,6 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
         comprimento={L}
         altura={H}
         cor={corWpc}
-       
       />
 
       <Divisorias config={config} />

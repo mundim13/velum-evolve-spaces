@@ -53,7 +53,7 @@
   },
   "cores": {
     "textura": {
-      "offwhite": { "nome": "Off-white", "hex": "#E9E7E1" },
+      "offwhite": { "nome": "Off-white", "hex": "#EFEEEA" },
       "grafite": { "nome": "Grafite", "hex": "#3B3D40" },
       "areia": { "nome": "Areia", "hex": "#CBB896" },
       "musgo": { "nome": "Musgo", "hex": "#5C6A4C" }

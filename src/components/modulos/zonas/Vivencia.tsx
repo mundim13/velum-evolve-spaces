@@ -3,6 +3,7 @@ import type { Config, Vivencia as TipoVivencia } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
 import { Entrada } from "../Entrada";
 import { COR, MAT } from "../materiais";
+import { SombraContato, useSombraCasca } from "../sombra";
 import { TETO } from "./Divisorias";
 
 const P = CHASSI;
@@ -42,6 +43,7 @@ function Planta({ x, z, altura = 1.1, escala = 1 }: { x: number; z: number; altu
   ];
   return (
     <group position={[x, P, z]} scale={escala}>
+      <SombraContato x={0} z={0} w={0.4} d={0.4} y={0} />
       <Caixa p={[0, 0.16, 0]} s={[0.32, 0.32, 0.32]} mat={MAT.laca(TOM.vaso)} cilindro />
       <Caixa p={[0, altura * 0.3, 0]} s={[0.025, altura * 0.5, 0.025]} mat={MAT.madeiraMovel()} cilindro />
       {folhas.map(([fx, fy, fz, r, cor], i) => (
@@ -245,10 +247,11 @@ function Brinquedoteca({ c }: Area) {
       {cores.map((cor, i) => (
         <Caixa key={cor} p={[c - 0.95 + i * 0.5, P + 1.03, Z_B - 0.2]} s={[0.26, 0.26, 0.26]} mat={MAT.laca(cor)} raio={0.04} />
       ))}
-      <mesh position={[c - 1.35, P + 0.8, Z_A + 0.75]} castShadow receiveShadow material={MAT.tecido("#EFE6D6")}>
-        <coneGeometry args={[0.6, 1.6, 6, 1, true]} />
+      {/* Tenda fechada e mais baixa que o corte da vista por dentro (aberta, virava um triângulo solto). */}
+      <mesh position={[c - 1.35, P + 0.65, Z_A + 0.75]} castShadow receiveShadow material={MAT.tecido("#EFE6D6")}>
+        <coneGeometry args={[0.6, 1.3, 6]} />
       </mesh>
-      <Caixa p={[c - 1.35, P + 0.1, Z_A + 0.75]} s={[0.8, 0.12, 0.8]} mat={MAT.tecido("#D9CBB4")} raio={0.05} cilindro />
+      <SombraContato x={c - 1.35} z={Z_A + 0.75} w={1.1} d={1.1} />
     </>
   );
 }
@@ -310,6 +313,7 @@ const MOVEIS: Record<TipoVivencia, (area: Area) => JSX.Element> = {
  * O módulo aparece sempre mobiliado; o mobiliário muda com a aplicação e entra animado.
  */
 export function Vivencia({ config }: { config: Config }) {
+  const sombra = useSombraCasca();
   const [x0, x1] = trechoVivencia(config);
   const a = x0 + 0.06;
   const b = x1 - T;
@@ -324,7 +328,7 @@ export function Vivencia({ config }: { config: Config }) {
     <>
       {face !== "ladoA" && (
         <Entrada modo="subir" key={`cabeceira-${x0}`}>
-          <Caixa p={[(a + b - 0.35) / 2, (P + TETO) / 2, Z_A + 0.012]} s={[b - 0.35 - a, TETO - P, 0.024]} mat={MAT.madeira()} />
+          <Caixa p={[(a + b - 0.35) / 2, (P + TETO) / 2, Z_A + 0.012]} s={[b - 0.35 - a, TETO - P, 0.024]} mat={MAT.madeira()} sombra={sombra} />
           <Caixa p={[(a + b - 0.35) / 2, P + 0.025, Z_A + 0.026]} s={[b - 0.35 - a, 0.05, 0.004]} mat={MAT.perfil()} sombra={false} />
           {/* Tomadas e interruptor sobre o painel, como nas fotos. */}
           {[a + 0.9, b - 1.3].map((x) => (

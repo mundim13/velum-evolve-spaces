@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { ESPESSURA_PAREDE, type Abertura } from "@/lib/modulos-3x6/regras";
 import { paraLocal, type QuadroFace } from "./faces";
+import { useSombraCasca } from "./sombra";
 
 interface Props {
   quadro: QuadroFace;
@@ -35,6 +36,7 @@ function forma(quadro: QuadroFace, altura: number, aberturas: Abertura[]) {
 
 /** Uma face da casca: parede extrudada com os vãos recortados e o revestimento interno do lado de dentro. */
 export function Parede({ quadro, altura, aberturas, materialExterno, materialInterno }: Props) {
+  const sombra = useSombraCasca();
   const { externa, interna } = useMemo(() => {
     const f = forma(quadro, altura, aberturas);
     const externa = new THREE.ExtrudeGeometry(f, { depth: ESPESSURA_PAREDE, bevelEnabled: false });
@@ -54,7 +56,7 @@ export function Parede({ quadro, altura, aberturas, materialExterno, materialInt
 
   return (
     <>
-      <mesh geometry={externa} material={materialExterno} castShadow receiveShadow />
+      <mesh geometry={externa} material={materialExterno} castShadow={sombra} receiveShadow />
       <mesh geometry={interna} material={materialInterno} receiveShadow />
     </>
   );

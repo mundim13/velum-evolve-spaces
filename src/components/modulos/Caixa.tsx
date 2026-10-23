@@ -1,7 +1,9 @@
 import * as THREE from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import { CHASSI } from "@/lib/modulos-3x6/regras";
 import { material, uvEmMetros } from "./materiais";
+import { SombraContato } from "./sombra";
 
 type Vec3 = [number, number, number];
 
@@ -43,12 +45,15 @@ interface Props {
   raio?: number;
   rotY?: number;
   sombra?: boolean;
+  /** Sombra de contato no piso. Por padrão, toda peça apoiada no piso interno ganha uma. */
+  contato?: boolean;
   onClick?: (e: ThreeEvent<MouseEvent>) => void;
 }
 
 /** Bloco básico de todo o mobiliário e acabamento. */
-export function Caixa({ p, s, cor = "#ffffff", mat, rugosidade, metal, emissivo, cilindro, raio = 0, rotY = 0, sombra = true, onClick }: Props) {
-  return (
+export function Caixa({ p, s, cor = "#ffffff", mat, rugosidade, metal, emissivo, cilindro, raio = 0, rotY = 0, sombra = true, contato, onClick }: Props) {
+  const apoiada = Math.abs(p[1] - s[1] / 2 - CHASSI) < 0.03 && s[1] > 0.08 && s[0] * s[2] > 0.015;
+  const malha = (
     <mesh
       position={p}
       rotation={[0, rotY, 0]}
@@ -58,5 +63,13 @@ export function Caixa({ p, s, cor = "#ffffff", mat, rugosidade, metal, emissivo,
       receiveShadow={!emissivo}
       onClick={onClick}
     />
+  );
+  if (!(contato ?? (apoiada && !emissivo))) return malha;
+  return (
+    <>
+      {malha}
+      {/* Peças finas (divisórias, painéis) ganham uma faixa mínima, que vira a sombra da junta com o piso. */}
+      <SombraContato x={p[0]} z={p[2]} w={Math.max(s[0], 0.22)} d={Math.max(s[2], 0.22)} rotY={rotY} />
+    </>
   );
 }

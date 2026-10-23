@@ -4,7 +4,7 @@ Gera as texturas PBR do showroom /modulos (cor, normal e rugosidade), todas repe
 
 São procedurais (ruído espectral e Worley periódicos), sem licença de terceiros, e foram calibradas pelas
 fotos do Cazita real: porcelanato grande cinza-claro, painel de carvalho, textura acrílica off-white,
-seixo verde-acinzentado no box, granito preto e brita em volta do módulo.
+seixo verde-acinzentado no box e granito preto.
 
 Uso:  python3 scripts/gerar-texturas-modulos.py
 Saída: public/modulos/texturas/*.webp  (o metro coberto por cada textura está em src/components/modulos/materiais.ts)
@@ -93,17 +93,23 @@ def salvar(arr, nome, qualidade=82):
 # ---------- materiais ----------
 
 def reboco():
-    """Textura acrílica da fachada (0,5 m). A cor é neutra: o material tinge com a cor escolhida."""
-    # Gerado em 1024 e recortado em 512 (0,5 m): o grão continua com ~1 mm por pixel.
+    """
+    Textura acrílica da fachada (0,5 m): grãos de areia de 2 a 4 mm com alturas diferentes, vales mais
+    escuros e pintas finas, como na foto. A cor é neutra (quase branca): o material tinge com a cor escolhida.
+    """
     n = 512
-    grao = ruido(n, 0.35, 1)
-    medio = ruido(n, 1.4, 2)
-    f1, f2, _ = worley(n, 90, 3, 0.9)
-    pedrinhas = np.clip(1 - f1 * 1.6, 0, 1) ** 2
-    altura = 0.45 * grao + 0.35 * pedrinhas + 0.2 * medio
-    cor = 0.9 + 0.07 * (medio - 0.5) + 0.06 * (altura - 0.5)
-    salvar(cor[:512, :512], "reboco_cor")
-    salvar(normal(altura, 5.0)[:512, :512], "reboco_normal", 72)
+    f1, f2, idv = worley(n, 140, 3, 0.95)
+    grao = np.clip(1 - f1 / (0.5 * (f1 + f2)), 0, 1)
+    grao = np.sqrt(grao) * (0.55 + 0.45 * idv)
+    fino = ruido(n, 0.3, 1)
+    medio = ruido(n, 1.5, 2)
+    altura = 0.6 * grao + 0.25 * fino + 0.15 * medio
+    pintas = ruido(n, 0.05, 4)
+    cor = 0.95 + 0.05 * (altura - 0.5) + 0.03 * (medio - 0.5)
+    cor = np.where(grao < 0.12, cor - 0.05, cor)
+    cor = np.where(pintas > 0.83, cor - 0.07, cor)
+    salvar(np.clip(cor, 0, 1), "reboco_cor")
+    salvar(normal(altura, 6.5), "reboco_normal", 74)
 
 
 def porcelanato(nome, n, metros, ladrilho, base, escura, semente):
@@ -155,21 +161,8 @@ def wpc():
     salvar(normal(0.7 * estria + 0.3 * fino, 3.0), "wpc_normal", 78)
 
 
-def grama():
-    """Gramado (1,5 m): folhas finas em várias direções sobre manchas de tom."""
-    n = 512
-    folhas = sum(ruido(n, 0.15, 31 + k, ax=ax, ay=ay) for k, (ax, ay) in enumerate([(1, 4), (4, 1), (2, 3), (3, 2)])) / 4
-    folhas = (folhas - folhas.min()) / (folhas.max() - folhas.min())
-    folhas = np.clip((folhas - 0.5) * 2.2 + 0.5, 0, 1)
-    manchas = ruido(n, 2.0, 36)
-    t = np.clip(0.65 * folhas + 0.35 * manchas, 0, 1)
-    cor = rampa(t, ["#22351A", "#3E5C27", "#5C7D33", "#7E9447", "#A3A866"])
-    salvar(cor, "grama_cor", 76)
-    salvar(normal(folhas, 5.0), "grama_normal", 70)
-
-
 def pedras(nome, n, celulas, cores, semente, junta, cor_junta):
-    """Pedras arredondadas (brita ou seixo): domo por célula de Worley, com junta entre elas."""
+    """Pedras arredondadas (seixo do box): domo por célula de Worley, com junta entre elas."""
     f1, f2, idv = worley(n, celulas, semente, 0.95)
     # 0 na borda da célula, 1 no centro: vira um domo com a raiz quadrada.
     t = np.clip(1 - f1 / (0.5 * (f1 + f2)), 0, 1)
@@ -216,8 +209,6 @@ if __name__ == "__main__":
     porcelanato("parede_banheiro", 1024, 1.2, (0.6, 1.2), "#C9C2B7", "#B3AA9D", 71)
     madeira()
     wpc()
-    grama()
-    pedras("brita", 512, 36, ["#5E5C58", "#7D7A74", "#9C9890", "#B3AEA5"], 81, 0.12, "#2E2C2A")
     pedras("seixo", 1024, 26, ["#6F7F6E", "#8FA08C", "#A7B3A1", "#C2C6B8"], 91, 0.16, "#B8B4AA")
     granito()
     tecido()

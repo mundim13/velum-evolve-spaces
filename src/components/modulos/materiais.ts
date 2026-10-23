@@ -16,7 +16,6 @@ export const COR = {
   inox: "#C4C7CA",
   led: "#FFD9A0",
   vidro: "#C9DDE3",
-  gramado: "#4E6A35",
 } as const;
 
 /* ---------------------------------------------------------------------------------------------
@@ -121,8 +120,6 @@ export const MAT = {
   madeira: () => unico("madeira", () => pbr({ cor: "#FFFFFF", corPrevia: COR.madeira, rugosidade: 0.55, conjunto: "madeira", metros: 1.2, normal: 0.35 })),
   madeiraMovel: () =>
     unico("madeiraMovel", () => pbr({ cor: "#B48A66", rugosidade: 0.5, conjunto: "madeira", metros: 1.2, normal: 0.35 })),
-  grama: () => unico("grama", () => pbr({ cor: "#FFFFFF", corPrevia: COR.gramado, rugosidade: 1, conjunto: "grama", metros: 1.5, normal: 1 })),
-  brita: () => unico("brita", () => pbr({ cor: "#FFFFFF", corPrevia: "#85827C", rugosidade: 0.95, conjunto: "brita", metros: 1.0, normal: 1.2 })),
   seixo: () => unico("seixo", () => pbr({ cor: "#FFFFFF", corPrevia: COR.seixo, rugosidade: 0.55, conjunto: "seixo", metros: 0.8, normal: 1.2 })),
   granito: () => unico("granito", () => pbr({ cor: "#FFFFFF", corPrevia: COR.granitoPreto, rugosidade: 0.22, conjunto: "granito", metros: 0.6, mapas: ["cor"] })),
   tecido: (cor: string) => unico(`tecido-${cor}`, () => pbr({ cor, rugosidade: 0.95, conjunto: "tecido", metros: 0.25, normal: 0.6 })),
@@ -162,7 +159,7 @@ export const MAT = {
 
 /** Material da textura acrílica da casca. Um por instância de Casca, porque a cor é animada. */
 export function criarMaterialReboco(cor: string) {
-  const m = pbr({ cor, rugosidade: 0.93, conjunto: "reboco", metros: 0.5, normal: 0.9 });
+  const m = pbr({ cor, rugosidade: 0.93, conjunto: "reboco", metros: 0.5, normal: 1.1 });
   m.side = THREE.DoubleSide;
   return m;
 }
@@ -210,22 +207,4 @@ export function uvEmMetros(geo: THREE.BufferGeometry) {
   }
   geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
   return geo;
-}
-
-/** Disco que esconde a borda do gramado no preto do site. */
-let degrade: THREE.CanvasTexture | null = null;
-export function texturaDegradeChao() {
-  if (!degrade) {
-    const c = document.createElement("canvas");
-    c.width = c.height = 256;
-    const ctx = c.getContext("2d")!;
-    const g = ctx.createRadialGradient(128, 128, 40, 128, 128, 128);
-    g.addColorStop(0, "rgba(13,13,13,0)");
-    g.addColorStop(0.55, "rgba(13,13,13,0.15)");
-    g.addColorStop(1, "rgba(13,13,13,1)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 256, 256);
-    degrade = new THREE.CanvasTexture(c);
-  }
-  return degrade;
 }

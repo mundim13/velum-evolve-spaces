@@ -1,12 +1,13 @@
 import { Component, lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, Lightformer, OrbitControls } from "@react-three/drei";
+import { ContactShadows, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
-import { CHASSI, LARGURA } from "@/lib/modulos-3x6/regras";
+import { CHASSI } from "@/lib/modulos-3x6/regras";
 import type { Config, FaceEsquadria } from "@/lib/modulos-3x6/tipos";
 import { Casca } from "./Casca";
-import { MAT, registrarRedesenho, texturaDegradeChao, uvEmMetros } from "./materiais";
+import { registrarRedesenho } from "./materiais";
+import { SEM_CORTE, SombraCasca } from "./sombra";
 import fotoCazita from "@/assets/modulos/cazita-fachada.webp";
 
 export type ModoVista = "fora" | "dentro";
@@ -22,7 +23,7 @@ const ALVO_FORA = new THREE.Vector3(0, 1.3, 0);
 const ALVO_DENTRO = new THREE.Vector3(0, 0.5, 0);
 /** Direção da câmera por fora, virada para a face em foco (a da esquadria principal). */
 const DIRECAO_FORA: Record<FaceEsquadria, THREE.Vector3> = {
-  testada: new THREE.Vector3(0.85, 0.42, 1).normalize(),
+  testada: new THREE.Vector3(1, 0.38, 0.62).normalize(),
   ladoA: new THREE.Vector3(0.75, 0.42, -1.1).normalize(),
   ladoB: new THREE.Vector3(0.3, 0.42, 1.2).normalize(),
 };
@@ -152,7 +153,7 @@ function Corte({ modo, chave }: { modo: ModoVista; chave: string }) {
         const m = (o as THREE.Mesh).material;
         if (!m) return;
         for (const mat of Array.isArray(m) ? m : [m]) {
-          if (mat.clippingPlanes?.[0] === plano) continue;
+          if (mat.userData[SEM_CORTE] || mat.clippingPlanes?.[0] === plano) continue;
           mat.clippingPlanes = [plano];
           mat.clipShadows = true;
           mat.needsUpdate = true;
@@ -199,20 +200,24 @@ function Redesenho() {
   return null;
 }
 
+/** Tons do cenário: estúdio neutro claro, em degradê, que some no horizonte. */
+const CEU = { topo: "#F6F4F0", horizonte: "#E6E1D9" };
+const CHAO = "#E9E5DE";
+
 /** Luz de ambiente de fim de tarde montada com painéis de luz (sem baixar HDRI). */
 function Ambiente() {
   return (
-    <Environment resolution={256} frames={1} environmentIntensity={0.85}>
-      <color attach="background" args={["#2B2622"]} />
-      {/* Céu: domo claro e levemente azulado em cima. */}
-      <Lightformer form="rect" intensity={1.6} color="#E9EEF5" position={[0, 12, 0]} rotation-x={Math.PI / 2} scale={[40, 40, 1]} />
+    <Environment resolution={256} frames={1} environmentIntensity={1}>
+      <color attach="background" args={["#DCD6CC"]} />
+      {/* Céu claro em cima. */}
+      <Lightformer form="rect" intensity={1.8} color="#F2F4F7" position={[0, 12, 0]} rotation-x={Math.PI / 2} scale={[40, 40, 1]} />
       {/* Sol baixo e quente, do lado da testada. */}
-      <Lightformer form="circle" intensity={14} color="#FFD7A8" position={[14, 6, 9]} scale={[4, 4, 1]} target={[0, 0, 0]} />
+      <Lightformer form="circle" intensity={10} color="#FFE0BC" position={[14, 6, 9]} scale={[4, 4, 1]} target={[0, 0, 0]} />
       {/* Horizonte quente e preenchimento frio do lado oposto. */}
-      <Lightformer form="rect" intensity={1.4} color="#FFC79A" position={[12, 1.5, 0]} rotation-y={-Math.PI / 2} scale={[40, 3, 1]} />
-      <Lightformer form="rect" intensity={0.7} color="#AFC3E6" position={[-12, 3, -4]} rotation-y={Math.PI / 2} scale={[30, 6, 1]} />
-      {/* Rebatimento verde do gramado. */}
-      <Lightformer form="rect" intensity={0.45} color="#6F8A4A" position={[0, -1, 0]} rotation-x={-Math.PI / 2} scale={[40, 40, 1]} />
+      <Lightformer form="rect" intensity={1.2} color="#FFD9B5" position={[12, 1.5, 0]} rotation-y={-Math.PI / 2} scale={[40, 3, 1]} />
+      <Lightformer form="rect" intensity={0.8} color="#C9D6EA" position={[-12, 3, -4]} rotation-y={Math.PI / 2} scale={[30, 6, 1]} />
+      {/* Rebatimento claro do chão. */}
+      <Lightformer form="rect" intensity={0.6} color="#EDE7DD" position={[0, -1, 0]} rotation-x={-Math.PI / 2} scale={[40, 40, 1]} />
     </Environment>
   );
 }
@@ -221,9 +226,9 @@ function Sol() {
   const tamanho = MOVEL ? 1024 : 2048;
   return (
     <directionalLight
-      position={[9, 6.5, 5]}
-      intensity={2.6}
-      color="#FFE3C4"
+      position={[9, 7, 6]}
+      intensity={2.3}
+      color="#FFE6CC"
       castShadow
       shadow-mapSize={[tamanho, tamanho]}
       shadow-bias={-0.0004}
@@ -238,37 +243,45 @@ function Sol() {
   );
 }
 
-/** Gramado com brita em volta do módulo (como no lote das fotos) e bordas que somem no preto. */
-function Terreno({ comprimento }: { comprimento: number }) {
-  const gramado = useMemo(() => uvEmMetros(new THREE.CircleGeometry(18, 72)), []);
-  const brita = useMemo(() => {
-    const w = comprimento + 2.6;
-    const d = LARGURA + 2.6;
-    const r = 0.6;
-    const s = new THREE.Shape();
-    s.moveTo(-w / 2 + r, -d / 2);
-    s.lineTo(w / 2 - r, -d / 2);
-    s.quadraticCurveTo(w / 2, -d / 2, w / 2, -d / 2 + r);
-    s.lineTo(w / 2, d / 2 - r);
-    s.quadraticCurveTo(w / 2, d / 2, w / 2 - r, d / 2);
-    s.lineTo(-w / 2 + r, d / 2);
-    s.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - r);
-    s.lineTo(-w / 2, -d / 2 + r);
-    s.quadraticCurveTo(-w / 2, -d / 2, -w / 2 + r, -d / 2);
-    return new THREE.ShapeGeometry(s, 8);
-  }, [comprimento]);
-  const degrade = useMemo(
-    () => new THREE.MeshBasicMaterial({ map: texturaDegradeChao(), transparent: true, depthWrite: false, fog: false }),
-    [],
-  );
+/** Fundo em degradê vertical (domo), fora do corte e da neblina. */
+function Fundo() {
+  const mat = useMemo(() => {
+    const m = new THREE.ShaderMaterial({
+      side: THREE.BackSide,
+      depthWrite: false,
+      fog: false,
+      uniforms: { topo: { value: new THREE.Color(CEU.topo) }, horizonte: { value: new THREE.Color(CEU.horizonte) } },
+      vertexShader: `varying vec3 vPos; void main() { vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform vec3 topo; uniform vec3 horizonte; varying vec3 vPos;
+        void main() { float t = clamp(normalize(vPos).y * 1.6, 0.0, 1.0); gl_FragColor = vec4(mix(horizonte, topo, t), 1.0);
+        #include <colorspace_fragment>
+        }`,
+    });
+    m.userData[SEM_CORTE] = true;
+    return m;
+  }, []);
   return (
-    <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.002, 0]} geometry={gramado} material={MAT.grama()} receiveShadow />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]} geometry={brita} material={MAT.brita()} receiveShadow />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} material={degrade} renderOrder={2}>
-        <planeGeometry args={[36.5, 36.5]} />
+    <mesh material={mat} renderOrder={-1}>
+      <sphereGeometry args={[60, 32, 16]} />
+    </mesh>
+  );
+}
+
+/** Chão liso de estúdio, que se dissolve no horizonte pela neblina, com sombra de contato suave. */
+function Chao({ chave }: { chave: string }) {
+  const mat = useMemo(() => {
+    const m = new THREE.MeshStandardMaterial({ color: CHAO, roughness: 1 });
+    m.userData[SEM_CORTE] = true;
+    return m;
+  }, []);
+  return (
+    <>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.002, 0]} material={mat}>
+        <circleGeometry args={[58, 64]} />
       </mesh>
-    </group>
+      {/* Recalculada só nas trocas (o módulo pode ganhar ripado, mudar a porta etc.). */}
+      <ContactShadows key={chave} position={[0, 0.001, 0]} scale={16} blur={2.6} far={3} opacity={0.5} resolution={1024} frames={90} color="#2B2117" />
+    </>
   );
 }
 
@@ -339,15 +352,18 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
         }}
         style={{ touchAction: "none" }}
       >
-        <color attach="background" args={["#0D0D0D"]} />
-        <fog attach="fog" args={["#0D0D0D", 18, 34]} />
+        <color attach="background" args={[CEU.horizonte]} />
+        <fog attach="fog" args={[CEU.horizonte, 20, 48]} />
+        <Fundo />
         <Redesenho />
         <Ambiente />
         <Sol />
         <SombraSobDemanda chave={`${JSON.stringify(config)}|${modo}`} />
-        <Terreno comprimento={config.comprimento} />
+        <Chao chave={`${JSON.stringify(config)}|${modo}`} />
         <Corte modo={modo} chave={JSON.stringify(config)} />
-        <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} />
+        <SombraCasca.Provider value={modo === "fora"}>
+          <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} />
+        </SombraCasca.Provider>
         <Camera modo={modo} foco={foco} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
         <Suspense fallback={null}>
           <Efeitos />

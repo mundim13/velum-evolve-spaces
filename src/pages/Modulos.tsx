@@ -56,8 +56,8 @@ export default function Modulos() {
       <main id="main" className="pt-[60px] lg:grid lg:grid-cols-[minmax(0,1fr)_440px] lg:h-screen">
         <section
           aria-label="Módulo 3x6 em 3D"
-          // No celular o 3D fica fixo na metade de cima (o CSS global usa overflow-x: hidden, que anula o sticky).
-          className="fixed top-[60px] inset-x-0 z-30 h-[min(48svh,520px)] lg:static lg:h-[calc(100vh-60px)]"
+          // No celular o 3D fica fixo no topo, com 55% da altura da tela (o CSS global usa overflow-x: hidden, que anula o sticky).
+          className="fixed top-[60px] inset-x-0 z-30 h-[55svh] lg:static lg:h-[calc(100vh-60px)]"
         >
           <div className="relative w-full h-full">
             <Suspense fallback={<CarregandoShowroom />}>
@@ -110,7 +110,7 @@ export default function Modulos() {
           </div>
         </section>
 
-        <section className="mt-[min(48svh,520px)] lg:mt-0 px-4 pt-6 pb-36 lg:pb-0 lg:pt-8 lg:px-6 lg:h-[calc(100vh-60px)] lg:overflow-y-auto lg:flex lg:flex-col" style={{ background: "#0A0A0A" }}>
+        <section className="mt-[55svh] lg:mt-0 px-4 pt-6 pb-36 lg:pb-0 lg:pt-8 lg:px-6 lg:h-[calc(100vh-60px)] lg:overflow-y-auto lg:flex lg:flex-col" style={{ background: "#0A0A0A" }}>
           <div className="flex items-center gap-2" style={{ marginBottom: 10 }}>
             <div style={{ width: 16, height: 1, background: "#22D3EE" }} />
             <span className="font-syncopate font-bold uppercase" style={{ fontSize: 10, letterSpacing: 2, color: "#22D3EE" }}>

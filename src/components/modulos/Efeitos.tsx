@@ -40,17 +40,17 @@ export default function Efeitos() {
     <EffectComposer ref={compositor} multisampling={MOVEL ? 0 : 4} enableNormalPass={false}>
       <N8AO
         ref={configurarAO}
-        aoRadius={0.55}
-        distanceFalloff={0.6}
-        intensity={2.4}
-        quality={MOVEL ? "low" : "high"}
+        aoRadius={0.8}
+        distanceFalloff={1}
+        intensity={3.2}
+        quality={MOVEL ? "medium" : "high"}
         halfRes={MOVEL}
         depthAwareUpsampling
         color="#140F0A"
       />
-      <Bloom mipmapBlur luminanceThreshold={0.95} luminanceSmoothing={0.2} intensity={0.55} radius={0.6} />
+      <Bloom mipmapBlur luminanceThreshold={1.25} luminanceSmoothing={0.2} intensity={0.55} radius={0.6} />
       <ToneMapping mode={ToneMappingMode.NEUTRAL} />
-      <Vignette offset={0.3} darkness={0.45} />
+      <Vignette offset={0.35} darkness={0.2} />
       {MOVEL ? <SMAA /> : <></>}
     </EffectComposer>
   );

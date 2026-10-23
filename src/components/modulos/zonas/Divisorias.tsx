@@ -4,6 +4,7 @@ import type { Config } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
 import { Entrada } from "../Entrada";
 import { COR, MAT } from "../materiais";
+import { useSombraCasca } from "../sombra";
 
 export const TETO = 2.78;
 export const ALTURA_PORTA_INTERNA = 2.15;
@@ -32,6 +33,7 @@ export function PainelComFuro({
   mat: THREE.Material;
   espessura?: number;
 }) {
+  const sombra = useSombraCasca();
   const pecas: { a: number; b: number; ya: number; yb: number }[] = [];
   if (!furo) pecas.push({ a: de, b: ate, ya: y0, yb: y1 });
   else {
@@ -50,7 +52,7 @@ export function PainelComFuro({
           const pos: [number, number, number] = eixo === "x" ? [centro, yc, plano] : [plano, yc, centro];
           const tam: [number, number, number] =
             eixo === "x" ? [p.b - p.a, p.yb - p.ya, espessura] : [espessura, p.yb - p.ya, p.b - p.a];
-          return <Caixa key={i} p={pos} s={tam} mat={mat} />;
+          return <Caixa key={i} p={pos} s={tam} mat={mat} sombra={sombra} />;
         })}
     </>
   );
@@ -67,6 +69,7 @@ export function Divisorias({ config }: { config: Config }) {
   const zMax = 1.5 - T;
   const temBanheiro = config.banheiro !== "nenhum";
   const temCozinha = config.cozinha !== "nenhuma";
+  const sombra = useSombraCasca();
   if (!temBanheiro && !temCozinha) return null;
 
   const madeira = MAT.madeira();
@@ -85,13 +88,14 @@ export function Divisorias({ config }: { config: Config }) {
   return (
     <Entrada modo="subir" duracao={0.7} key={`${temBanheiro}-${temCozinha}`}>
       {trechos.map(([a, b]) => (
-        <Caixa key={`${a}`} p={[xF, piso + alturaTotal / 2, (a + b) / 2]} s={[espessura, alturaTotal, b - a]} mat={madeira} />
+        <Caixa key={`${a}`} p={[xF, piso + alturaTotal / 2, (a + b) / 2]} s={[espessura, alturaTotal, b - a]} mat={madeira} sombra={sombra} />
       ))}
       {/* Bandeira acima dos vãos e bandô do trilho, como no Cazita. */}
       <Caixa
         p={[xF, (piso + ALTURA_PORTA_INTERNA + TETO) / 2, (zIni + zFim) / 2]}
         s={[espessura, TETO - piso - ALTURA_PORTA_INTERNA, zFim - zIni]}
         mat={madeira}
+        sombra={sombra}
       />
       <Caixa p={[xF + 0.07, TETO - 0.06, (zIni + zFim) / 2]} s={[0.08, 0.12, zFim - zIni]} mat={madeira} raio={0.004} />
       {/* Rodapé preto fino, como nas fotos. */}
@@ -112,8 +116,8 @@ export function Divisorias({ config }: { config: Config }) {
       {/* Parede entre banheiro e cozinha: porcelanato do lado do banheiro, branca do lado da cozinha. */}
       {temBanheiro && (
         <>
-          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, -0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} mat={MAT.paredeBanheiro()} />
-          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, 0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} mat={MAT.pintura(COR.paredeInterna)} />
+          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, -0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} mat={MAT.paredeBanheiro()} sombra={sombra} />
+          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, 0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} mat={MAT.pintura(COR.paredeInterna)} sombra={sombra} />
         </>
       )}
     </Entrada>

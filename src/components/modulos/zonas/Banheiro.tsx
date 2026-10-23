@@ -3,6 +3,7 @@ import type { Config } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
 import { Entrada } from "../Entrada";
 import { MAT } from "../materiais";
+import { SombraContato } from "../sombra";
 import { PainelComFuro, TETO } from "./Divisorias";
 
 /** Bacia com caixa acoplada, virada para -z, encostada na parede da cozinha. */
@@ -11,6 +12,7 @@ function Bacia({ x, z }: { x: number; z: number }) {
   const p = CHASSI;
   return (
     <group position={[x, p, z]}>
+      <SombraContato x={0} z={-0.2} w={0.34} d={0.42} y={0} />
       <Caixa p={[0, 0.17, -0.2]} s={[0.26, 0.34, 0.36]} mat={louca} raio={0.06} />
       <Caixa p={[0, 0.37, -0.26]} s={[0.36, 0.08, 0.5]} mat={louca} raio={0.035} />
       <Caixa p={[0, 0.425, -0.27]} s={[0.35, 0.025, 0.47]} mat={louca} raio={0.012} />
