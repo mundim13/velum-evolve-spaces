@@ -1,8 +1,9 @@
+import type * as THREE from "three";
 import { CHASSI, ESPESSURA_PAREDE as T, FAIXA } from "@/lib/modulos-3x6/regras";
 import type { Config } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
 import { Entrada } from "../Entrada";
-import { COR, materialMadeira } from "../materiais";
+import { COR, MAT } from "../materiais";
 
 export const TETO = 2.78;
 export const ALTURA_PORTA_INTERNA = 2.15;
@@ -18,7 +19,7 @@ export function PainelComFuro({
   y0,
   y1,
   furo,
-  cor,
+  mat,
   espessura = 0.012,
 }: {
   eixo: "x" | "z";
@@ -28,7 +29,7 @@ export function PainelComFuro({
   y0: number;
   y1: number;
   furo?: { de: number; ate: number; y0: number; y1: number };
-  cor: string;
+  mat: THREE.Material;
   espessura?: number;
 }) {
   const pecas: { a: number; b: number; ya: number; yb: number }[] = [];
@@ -49,7 +50,7 @@ export function PainelComFuro({
           const pos: [number, number, number] = eixo === "x" ? [centro, yc, plano] : [plano, yc, centro];
           const tam: [number, number, number] =
             eixo === "x" ? [p.b - p.a, p.yb - p.ya, espessura] : [espessura, p.yb - p.ya, p.b - p.a];
-          return <Caixa key={i} p={pos} s={tam} cor={cor} rugosidade={0.5} />;
+          return <Caixa key={i} p={pos} s={tam} mat={mat} />;
         })}
     </>
   );
@@ -68,7 +69,8 @@ export function Divisorias({ config }: { config: Config }) {
   const temCozinha = config.cozinha !== "nenhuma";
   if (!temBanheiro && !temCozinha) return null;
 
-  const madeira = materialMadeira();
+  const madeira = MAT.madeira();
+  const perfil = MAT.perfil();
   const piso = CHASSI;
   const espessura = 0.06;
 
@@ -91,15 +93,17 @@ export function Divisorias({ config }: { config: Config }) {
         s={[espessura, TETO - piso - ALTURA_PORTA_INTERNA, zFim - zIni]}
         mat={madeira}
       />
-      <Caixa p={[xF + 0.07, TETO - 0.06, (zIni + zFim) / 2]} s={[0.08, 0.12, zFim - zIni]} mat={madeira} />
+      <Caixa p={[xF + 0.07, TETO - 0.06, (zIni + zFim) / 2]} s={[0.08, 0.12, zFim - zIni]} mat={madeira} raio={0.004} />
+      {/* Rodapé preto fino, como nas fotos. */}
+      <Caixa p={[xF + 0.032, piso + 0.025, (zIni + zFim) / 2]} s={[0.004, 0.05, zFim - zIni]} mat={perfil} sombra={false} />
 
       {/* As duas folhas ficam estacionadas no meio, deixando banheiro e cozinha abertos. */}
       {temBanheiro && temCozinha && (
         <>
           {[0.05, 0.1].map((dx, i) => (
             <group key={dx}>
-              <Caixa p={[xF + dx, piso + 1.11, i === 0 ? -0.02 : 0.03]} s={[0.035, 2.2, 0.82]} mat={madeira} />
-              <Caixa p={[xF + dx + 0.02, piso + 1.05, i === 0 ? -0.36 : 0.37]} s={[0.012, 0.18, 0.03]} cor={COR.perfil} />
+              <Caixa p={[xF + dx, piso + 1.11, i === 0 ? -0.02 : 0.03]} s={[0.035, 2.2, 0.82]} mat={madeira} raio={0.004} />
+              <Caixa p={[xF + dx + 0.02, piso + 1.05, i === 0 ? -0.36 : 0.37]} s={[0.012, 0.2, 0.03]} mat={perfil} raio={0.004} />
             </group>
           ))}
         </>
@@ -108,8 +112,8 @@ export function Divisorias({ config }: { config: Config }) {
       {/* Parede entre banheiro e cozinha: porcelanato do lado do banheiro, branca do lado da cozinha. */}
       {temBanheiro && (
         <>
-          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, -0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} cor={COR.porcelanatoBanheiro} rugosidade={0.45} />
-          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, 0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} cor={COR.paredeInterna} />
+          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, -0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} mat={MAT.paredeBanheiro()} />
+          <Caixa p={[(-meio + T + xF) / 2, piso + alturaTotal / 2, 0.02]} s={[xF - (-meio + T), alturaTotal, 0.04]} mat={MAT.pintura(COR.paredeInterna)} />
         </>
       )}
     </Entrada>

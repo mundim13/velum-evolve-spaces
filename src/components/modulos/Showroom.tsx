@@ -1,15 +1,22 @@
-import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Component, lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, OrbitControls } from "@react-three/drei";
+import { Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
-import { CHASSI } from "@/lib/modulos-3x6/regras";
+import { CHASSI, LARGURA } from "@/lib/modulos-3x6/regras";
 import type { Config, FaceEsquadria } from "@/lib/modulos-3x6/tipos";
 import { Casca } from "./Casca";
-import { texturaGramado } from "./materiais";
+import { MAT, registrarRedesenho, texturaDegradeChao, uvEmMetros } from "./materiais";
 import fotoCazita from "@/assets/modulos/cazita-fachada.webp";
 
 export type ModoVista = "fora" | "dentro";
+
+import { MOVEL } from "./dispositivo";
+
+// Oclusão de ambiente, bloom e tone mapping chegam num pedaço separado, depois do primeiro quadro.
+const Efeitos = lazy(() => import("./Efeitos"));
+const DPR_MOVENDO = MOVEL ? 1 : 1.25;
+const DPR_PARADO = typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1;
 
 const ALVO_FORA = new THREE.Vector3(0, 1.3, 0);
 const ALVO_DENTRO = new THREE.Vector3(0, 0.5, 0);
@@ -35,7 +42,10 @@ function preset(modo: ModoVista, aspecto: number, foco: FaceEsquadria = "testada
     : { alvo: ALVO_DENTRO.clone(), pos: ALVO_DENTRO.clone().addScaledVector(DIRECAO_DENTRO, d * 0.95) };
 }
 
-/** Câmera orbital com transição suave entre a vista de fora e a de dentro (corte). */
+/**
+ * Câmera orbital com transição suave entre a vista de fora e a de dentro (corte).
+ * Enquanto a pessoa gira, a resolução cai; quando a câmera para, o quadro é refeito em alta resolução.
+ */
 function Camera({
   modo,
   foco,
@@ -48,10 +58,17 @@ function Camera({
   onInteragir: () => void;
 }) {
   const controles = useRef<OrbitControlsImpl>(null);
-  const { camera, size, invalidate } = useThree();
+  const { camera, size, invalidate, setDpr } = useThree();
   const aspecto = size.width / Math.max(1, size.height);
   const faixaAspecto = distancia(aspecto);
+  const [movendo, setMovendo] = useState(false);
+  const espera = useRef<number>();
   const anim = useRef<{ t: number; de: { pos: THREE.Vector3; alvo: THREE.Vector3 }; para: { pos: THREE.Vector3; alvo: THREE.Vector3 } } | null>(null);
+
+  useEffect(() => {
+    setDpr(movendo || girar ? DPR_MOVENDO : DPR_PARADO);
+    invalidate();
+  }, [movendo, girar, setDpr, invalidate]);
 
   useEffect(() => {
     const c = controles.current;
@@ -70,7 +87,7 @@ function Camera({
     const a = anim.current;
     const c = controles.current;
     if (!a || !c) return;
-    a.t = Math.min(1, a.t + Math.min(dt, 1 / 30) / 0.9);
+    a.t = Math.min(1, a.t + Math.min(dt, 1 / 15) / 0.9);
     const e = 1 - Math.pow(1 - a.t, 3);
     camera.position.lerpVectors(a.de.pos, a.para.pos, e);
     c.target.lerpVectors(a.de.alvo, a.para.alvo, e);
@@ -105,49 +122,153 @@ function Camera({
       autoRotateSpeed={0.5}
       onStart={() => {
         anim.current = null;
+        window.clearTimeout(espera.current);
+        setMovendo(true);
         onInteragir();
+      }}
+      onEnd={() => {
+        window.clearTimeout(espera.current);
+        espera.current = window.setTimeout(() => setMovendo(false), 350);
       }}
     />
   );
 }
 
-/** Corte horizontal (clipping global): na vista de dentro, cobertura e topo das paredes saem para mostrar o interior. */
-function Corte({ modo }: { modo: ModoVista }) {
-  const { gl } = useThree();
+/**
+ * Corte horizontal: na vista de dentro, cobertura e topo das paredes saem para mostrar o interior.
+ * O plano vai em cada material (com clipShadows), e não no renderer, porque o corte global
+ * do three.js não vale para as sombras: as paredes cortadas continuariam sombreando o interior.
+ */
+function Corte({ modo, chave }: { modo: ModoVista; chave: string }) {
+  const { gl, scene, invalidate } = useThree();
   const plano = useMemo(() => new THREE.Plane(new THREE.Vector3(0, -1, 0), 6), []);
   useEffect(() => {
-    gl.clippingPlanes = [plano];
-    return () => {
-      gl.clippingPlanes = [];
-    };
-  }, [gl, plano]);
+    gl.localClippingEnabled = true;
+  }, [gl]);
+  // Materiais novos entram na cena a cada troca; todos recebem o mesmo plano.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      scene.traverse((o) => {
+        const m = (o as THREE.Mesh).material;
+        if (!m) return;
+        for (const mat of Array.isArray(m) ? m : [m]) {
+          if (mat.clippingPlanes?.[0] === plano) continue;
+          mat.clippingPlanes = [plano];
+          mat.clipShadows = true;
+          mat.needsUpdate = true;
+        }
+      });
+      invalidate();
+    }, 0);
+    return () => window.clearTimeout(t);
+  }, [chave, scene, plano, invalidate]);
   useFrame((state, dt) => {
     const alvo = modo === "dentro" ? CHASSI + 1.55 : 6;
     const d = alvo - plano.constant;
     if (Math.abs(d) < 0.002) return;
-    plano.constant += d * Math.min(1, Math.min(dt, 1 / 30) * 5);
+    plano.constant += d * Math.min(1, Math.min(dt, 1 / 15) * 5);
+    // A sombra acompanha o corte enquanto ele se move.
+    state.gl.shadowMap.needsUpdate = true;
     state.invalidate();
   });
   return null;
 }
 
-function Cenario() {
-  const mat = useMemo(() => new THREE.MeshStandardMaterial({ map: texturaGramado(), roughness: 1 }), []);
+/**
+ * Sombra do sol "pré-calculada": o shadow map só é refeito durante as trocas (móveis entrando,
+ * ripas crescendo, vão abrindo). Girando a câmera, a sombra não é recalculada.
+ */
+function SombraSobDemanda({ chave }: { chave: string }) {
+  const { gl, invalidate } = useThree();
+  useEffect(() => {
+    gl.shadowMap.autoUpdate = true;
+    invalidate();
+    const t = window.setTimeout(() => {
+      gl.shadowMap.autoUpdate = false;
+      gl.shadowMap.needsUpdate = true;
+      invalidate();
+    }, 2600);
+    return () => window.clearTimeout(t);
+  }, [chave, gl, invalidate]);
+  return null;
+}
+
+function Redesenho() {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => registrarRedesenho(invalidate), [invalidate]);
+  return null;
+}
+
+/** Luz de ambiente de fim de tarde montada com painéis de luz (sem baixar HDRI). */
+function Ambiente() {
   return (
-    <>
-      <color attach="background" args={["#0D0D0D"]} />
-      <fog attach="fog" args={["#0D0D0D", 18, 34]} />
-      <hemisphereLight args={["#FFFFFF", "#3A4630", 1.1]} />
-      <ambientLight intensity={0.25} />
-      {/* Sol de fim de tarde, baixo e quente. */}
-      <directionalLight position={[9, 5.5, 7]} intensity={2.0} color="#FFE7CF" />
-      <directionalLight position={[-6, 4, -5]} intensity={0.35} color="#A9C4FF" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.001, 0]} material={mat}>
-        <circleGeometry args={[16, 64]} />
+    <Environment resolution={256} frames={1} environmentIntensity={0.85}>
+      <color attach="background" args={["#2B2622"]} />
+      {/* Céu: domo claro e levemente azulado em cima. */}
+      <Lightformer form="rect" intensity={1.6} color="#E9EEF5" position={[0, 12, 0]} rotation-x={Math.PI / 2} scale={[40, 40, 1]} />
+      {/* Sol baixo e quente, do lado da testada. */}
+      <Lightformer form="circle" intensity={14} color="#FFD7A8" position={[14, 6, 9]} scale={[4, 4, 1]} target={[0, 0, 0]} />
+      {/* Horizonte quente e preenchimento frio do lado oposto. */}
+      <Lightformer form="rect" intensity={1.4} color="#FFC79A" position={[12, 1.5, 0]} rotation-y={-Math.PI / 2} scale={[40, 3, 1]} />
+      <Lightformer form="rect" intensity={0.7} color="#AFC3E6" position={[-12, 3, -4]} rotation-y={Math.PI / 2} scale={[30, 6, 1]} />
+      {/* Rebatimento verde do gramado. */}
+      <Lightformer form="rect" intensity={0.45} color="#6F8A4A" position={[0, -1, 0]} rotation-x={-Math.PI / 2} scale={[40, 40, 1]} />
+    </Environment>
+  );
+}
+
+function Sol() {
+  const tamanho = MOVEL ? 1024 : 2048;
+  return (
+    <directionalLight
+      position={[9, 6.5, 5]}
+      intensity={2.6}
+      color="#FFE3C4"
+      castShadow
+      shadow-mapSize={[tamanho, tamanho]}
+      shadow-bias={-0.0004}
+      shadow-normalBias={0.025}
+      shadow-camera-left={-9}
+      shadow-camera-right={9}
+      shadow-camera-top={9}
+      shadow-camera-bottom={-9}
+      shadow-camera-near={1}
+      shadow-camera-far={30}
+    />
+  );
+}
+
+/** Gramado com brita em volta do módulo (como no lote das fotos) e bordas que somem no preto. */
+function Terreno({ comprimento }: { comprimento: number }) {
+  const gramado = useMemo(() => uvEmMetros(new THREE.CircleGeometry(18, 72)), []);
+  const brita = useMemo(() => {
+    const w = comprimento + 2.6;
+    const d = LARGURA + 2.6;
+    const r = 0.6;
+    const s = new THREE.Shape();
+    s.moveTo(-w / 2 + r, -d / 2);
+    s.lineTo(w / 2 - r, -d / 2);
+    s.quadraticCurveTo(w / 2, -d / 2, w / 2, -d / 2 + r);
+    s.lineTo(w / 2, d / 2 - r);
+    s.quadraticCurveTo(w / 2, d / 2, w / 2 - r, d / 2);
+    s.lineTo(-w / 2 + r, d / 2);
+    s.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - r);
+    s.lineTo(-w / 2, -d / 2 + r);
+    s.quadraticCurveTo(-w / 2, -d / 2, -w / 2 + r, -d / 2);
+    return new THREE.ShapeGeometry(s, 8);
+  }, [comprimento]);
+  const degrade = useMemo(
+    () => new THREE.MeshBasicMaterial({ map: texturaDegradeChao(), transparent: true, depthWrite: false, fog: false }),
+    [],
+  );
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.002, 0]} geometry={gramado} material={MAT.grama()} receiveShadow />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]} geometry={brita} material={MAT.brita()} receiveShadow />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} material={degrade} renderOrder={2}>
+        <planeGeometry args={[36.5, 36.5]} />
       </mesh>
-      {/* Sombra de contato calculada uma vez (pré-calculada), sem shadow map em tempo real. */}
-      <ContactShadows position={[0, 0.003, 0]} scale={14} blur={2.4} far={3.5} opacity={0.6} resolution={512} frames={1} />
-    </>
+    </group>
   );
 }
 
@@ -207,19 +328,30 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
     <LimiteErro>
       <Canvas
         frameloop="demand"
-        dpr={[1, 1.5]}
+        shadows="soft"
+        dpr={DPR_MOVENDO}
         camera={{ fov: 38, near: 0.1, far: 80, position: preset("fora", 1).pos.toArray() }}
-        gl={{ antialias: true, powerPreference: "high-performance" }}
+        gl={{ antialias: false, powerPreference: "high-performance", stencil: false }}
         onCreated={({ gl }) => {
-          // Tone mapping neutro para o off-white e os tons de WPC saírem fiéis à amostra.
+          // Tone mapping neutro, para as cores saírem fiéis às amostras. Quando o pós-processamento
+          // carrega, ele assume essa etapa (ver Efeitos.tsx).
           gl.toneMapping = THREE.NeutralToneMapping;
         }}
         style={{ touchAction: "none" }}
       >
-        <Cenario />
-        <Corte modo={modo} />
+        <color attach="background" args={["#0D0D0D"]} />
+        <fog attach="fog" args={["#0D0D0D", 18, 34]} />
+        <Redesenho />
+        <Ambiente />
+        <Sol />
+        <SombraSobDemanda chave={`${JSON.stringify(config)}|${modo}`} />
+        <Terreno comprimento={config.comprimento} />
+        <Corte modo={modo} chave={JSON.stringify(config)} />
         <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} />
         <Camera modo={modo} foco={foco} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
+        <Suspense fallback={null}>
+          <Efeitos />
+        </Suspense>
       </Canvas>
     </LimiteErro>
   );

@@ -30,7 +30,7 @@ export function Entrada({ children, modo = "cair", duracao = 0.6, atraso = 0 }: 
   useFrame((state, dt) => {
     const g = ref.current;
     if (!g || t.current >= duracao) return;
-    t.current = Math.min(duracao, t.current + Math.min(dt, 1 / 30));
+    t.current = Math.min(duracao, t.current + Math.min(dt, 1 / 15));
     aplicar(g, Math.max(0, t.current) / duracao);
     state.invalidate();
   });

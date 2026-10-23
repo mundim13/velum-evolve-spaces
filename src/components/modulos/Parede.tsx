@@ -54,8 +54,8 @@ export function Parede({ quadro, altura, aberturas, materialExterno, materialInt
 
   return (
     <>
-      <mesh geometry={externa} material={materialExterno} />
-      <mesh geometry={interna} material={materialInterno} />
+      <mesh geometry={externa} material={materialExterno} castShadow receiveShadow />
+      <mesh geometry={interna} material={materialInterno} receiveShadow />
     </>
   );
 }

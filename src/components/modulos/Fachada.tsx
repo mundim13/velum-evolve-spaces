@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { CHASSI, LARGURA, type Abertura } from "@/lib/modulos-3x6/regras";
 import type { Face } from "@/lib/modulos-3x6/tipos";
 import { paraLocal, quadroFace } from "./faces";
-import { texturaRuido } from "./materiais";
+import { criarMaterialReboco, criarMaterialWpc } from "./materiais";
 
 /** Moldura saliente da testada: o ripado frontal fica dentro dela. */
 export const MOLDURA = { lado: 0.18, topo: 0.3, profundidade: 0.14 };
@@ -14,23 +14,13 @@ const DURACAO = 1.1;
 
 /** Material da textura acrílica da casca, com troca de cor animada. */
 export function useMaterialFachada(cor: string) {
-  const mat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: cor,
-        roughness: 0.95,
-        bumpMap: texturaRuido(),
-        bumpScale: 0.6,
-        side: THREE.DoubleSide,
-      }),
-    // A cor inicial só vale na criação; as trocas seguintes são animadas abaixo.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  // A cor inicial só vale na criação; as trocas seguintes são animadas abaixo.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const mat = useMemo(() => criarMaterialReboco(cor), []);
   const alvo = useMemo(() => new THREE.Color(cor), [cor]);
   useFrame((state, dt) => {
     if (mat.color.equals(alvo)) return;
-    mat.color.lerp(alvo, Math.min(1, Math.min(dt, 1 / 30) * 5));
+    mat.color.lerp(alvo, Math.min(1, Math.min(dt, 1 / 15) * 5));
     if (Math.abs(mat.color.r - alvo.r) + Math.abs(mat.color.g - alvo.g) + Math.abs(mat.color.b - alvo.b) < 0.004) {
       mat.color.copy(alvo);
     }
@@ -95,8 +85,7 @@ const geometriaRipa = new THREE.BoxGeometry(1, 1, 1);
 const auxiliar = new THREE.Object3D();
 const suave = (t: number) => t * t * (3 - 2 * t);
 
-function RipasDaFace({ face, segmentos, material, progresso }: {
-  face: Face;
+function RipasDaFace({ segmentos, material, progresso }: {
   segmentos: Segmento[];
   material: THREE.Material;
   progresso: React.MutableRefObject<number>;
@@ -125,7 +114,16 @@ function RipasDaFace({ face, segmentos, material, progresso }: {
     if (ultimo.current !== progresso.current) aplicar(progresso.current);
   });
 
-  return <instancedMesh ref={ref} args={[geometriaRipa, material, segmentos.length]} frustumCulled={false} key={segmentos.length} />;
+  return (
+    <instancedMesh
+      ref={ref}
+      args={[geometriaRipa, material, segmentos.length]}
+      frustumCulled={false}
+      key={segmentos.length}
+      castShadow
+      receiveShadow
+    />
+  );
 }
 
 interface Props {
@@ -166,19 +164,19 @@ export function Ripado({ ativo, faces, aberturas, comprimento, altura, cor }: Pr
 
   // A cor inicial só vale na criação; as trocas de tom são animadas no useFrame.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const material = useMemo(() => new THREE.MeshStandardMaterial({ color: cor, roughness: 0.7 }), []);
+  const material = useMemo(() => criarMaterialWpc(cor), []);
   const corAlvo = useMemo(() => new THREE.Color(cor), [cor]);
 
   useFrame((state, dt) => {
     const alvo = ativo ? 1 : 0;
     let mexeu = false;
     if (progresso.current !== alvo) {
-      const passo = Math.min(dt, 1 / 30) / DURACAO;
+      const passo = Math.min(dt, 1 / 15) / DURACAO;
       progresso.current = alvo > progresso.current ? Math.min(1, progresso.current + passo) : Math.max(0, progresso.current - passo);
       mexeu = true;
     }
     if (!material.color.equals(corAlvo)) {
-      material.color.lerp(corAlvo, Math.min(1, Math.min(dt, 1 / 30) * 5));
+      material.color.lerp(corAlvo, Math.min(1, Math.min(dt, 1 / 15) * 5));
       if (Math.abs(material.color.r - corAlvo.r) + Math.abs(material.color.g - corAlvo.g) + Math.abs(material.color.b - corAlvo.b) < 0.004) {
         material.color.copy(corAlvo);
       }
@@ -193,7 +191,7 @@ export function Ripado({ ativo, faces, aberturas, comprimento, altura, cor }: Pr
         const q = quadroFace(face, comprimento);
         return (
           <group key={face} position={q.pos} rotation={[0, q.rotY, 0]}>
-            <RipasDaFace face={face} segmentos={segmentos} material={material} progresso={progresso} />
+            <RipasDaFace segmentos={segmentos} material={material} progresso={progresso} />
           </group>
         );
       })}

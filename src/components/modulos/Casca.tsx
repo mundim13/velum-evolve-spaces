@@ -13,7 +13,7 @@ import { Caixa } from "./Caixa";
 import { Arandela, Esquadria } from "./Esquadria";
 import { FACES, paraLocal, quadroFace } from "./faces";
 import { MOLDURA, Ripado, useMaterialFachada } from "./Fachada";
-import { COR, material, texturaPiso } from "./materiais";
+import { COR, MAT } from "./materiais";
 import { Parede } from "./Parede";
 import { Banheiro } from "./zonas/Banheiro";
 import { Cozinha } from "./zonas/Cozinha";
@@ -43,7 +43,7 @@ function useVaoAnimado(alvo: Abertura): Abertura {
       if (a.u0 !== alvo.u0 || a.u1 !== alvo.u1) setAtual(alvo);
       return;
     }
-    const k = Math.min(1, Math.min(dt, 1 / 30) * 7);
+    const k = Math.min(1, Math.min(dt, 1 / 15) * 7);
     setAtual({ ...alvo, u0: a.u0 + d0 * k, u1: a.u1 + d1 * k });
     state.invalidate();
   });
@@ -123,13 +123,6 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
     () => new THREE.MeshStandardMaterial({ color: COR.paredeInterna, roughness: 0.9, side: THREE.BackSide }),
     [],
   );
-  const matPiso = useMemo(() => {
-    const map = texturaPiso().clone();
-    map.repeat.set((L - 2 * T) / 0.9, (LARGURA - 2 * T) / 0.9);
-    map.colorSpace = THREE.SRGBColorSpace;
-    map.needsUpdate = true;
-    return new THREE.MeshStandardMaterial({ map, roughness: 0.45 });
-  }, [L]);
 
   const tipoFachada = config.fachada.tipo;
   const facePrincipal = principalAlvo.face;
@@ -146,13 +139,13 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
   return (
     <group>
       {/* Base preta do chassi e soleira saliente da testada. */}
-      <Caixa p={[0, (CHASSI - 0.03) / 2, 0]} s={[L + 0.03, CHASSI - 0.03, LARGURA + 0.03]} cor={COR.base} rugosidade={0.6} />
-      <Caixa p={[meio + 0.08, CHASSI - 0.02, 0]} s={[0.16, 0.05, LARGURA - 2 * MOLDURA.lado + 0.02]} cor={COR.granitoPreto} rugosidade={0.35} />
+      <Caixa p={[0, (CHASSI - 0.03) / 2, 0]} s={[L + 0.03, CHASSI - 0.03, LARGURA + 0.03]} mat={MAT.laca(COR.base)} />
+      <Caixa p={[meio + 0.08, CHASSI - 0.02, 0]} s={[0.16, 0.05, LARGURA - 2 * MOLDURA.lado + 0.02]} mat={MAT.granito()} raio={0.006} />
 
-      {/* Piso, forro e cobertura. */}
-      <Caixa p={[0, CHASSI - 0.02, 0]} s={[L - 2 * T, 0.04, LARGURA - 2 * T]} mat={matPiso} />
-      <mesh position={[0, TETO, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[L - 2 * T, LARGURA - 2 * T, 1]} geometry={geometriaPlano} material={material(COR.forro)} />
-      <Caixa p={[0, (TETO + H) / 2 + 0.005, 0]} s={[L - 2 * T, H - TETO - 0.01, LARGURA - 2 * T]} cor="#8C8B87" rugosidade={0.9} />
+      {/* Piso em porcelanato, forro e cobertura. */}
+      <Caixa p={[0, CHASSI - 0.02, 0]} s={[L - 2 * T, 0.04, LARGURA - 2 * T]} mat={MAT.piso()} />
+      <mesh position={[0, TETO, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[L - 2 * T, LARGURA - 2 * T, 1]} geometry={geometriaPlano} material={MAT.pintura(COR.forro)} receiveShadow />
+      <Caixa p={[0, (TETO + H) / 2 + 0.005, 0]} s={[L - 2 * T, H - TETO - 0.01, LARGURA - 2 * T]} mat={MAT.pintura("#7A7975")} />
 
       {/* As quatro faces, com vãos e esquadrias. */}
       {FACES.map((face) => {
@@ -176,12 +169,16 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
             p={[lado * (LARGURA / 2 - MOLDURA.lado / 2), (CHASSI + H) / 2, MOLDURA.profundidade / 2]}
             s={[MOLDURA.lado, H - CHASSI, MOLDURA.profundidade]}
             mat={matFachada}
+            raio={0.012}
+           
           />
         ))}
         <Caixa
           p={[0, H - MOLDURA.topo / 2, MOLDURA.profundidade / 2]}
           s={[LARGURA, MOLDURA.topo, MOLDURA.profundidade]}
           mat={matFachada}
+          raio={0.012}
+         
         />
       </group>
 
@@ -200,6 +197,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
         comprimento={L}
         altura={H}
         cor={corWpc}
+       
       />
 
       <Divisorias config={config} />

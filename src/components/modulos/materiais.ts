@@ -2,152 +2,230 @@ import * as THREE from "three";
 
 /** Paleta tirada das fotos do Cazita real. */
 export const COR = {
-  perfil: "#151515",
-  base: "#111111",
+  perfil: "#161616",
+  base: "#101010",
   madeira: "#BC9A76",
-  madeiraEscura: "#94683F",
-  pisoPorcelanato: "#CFCCC6",
-  paredeInterna: "#EFEDE9",
+  pisoPorcelanato: "#CDCAC4",
+  paredeInterna: "#F1EFEB",
   forro: "#F4F3F0",
-  armarioVerde: "#4F6B53",
+  armarioVerde: "#4C6A51",
   granitoPreto: "#1B1B1C",
-  porcelanatoBanheiro: "#C3BDB3",
+  porcelanatoBanheiro: "#C9C2B7",
   seixo: "#9DA898",
-  louca: "#F6F6F4",
-  inox: "#B9BCBF",
+  louca: "#F7F7F5",
+  inox: "#C4C7CA",
   led: "#FFD9A0",
-  vidro: "#9FC3CF",
+  vidro: "#C9DDE3",
   gramado: "#4E6A35",
 } as const;
 
-const cacheMateriais = new Map<string, THREE.MeshStandardMaterial>();
+/* ---------------------------------------------------------------------------------------------
+ * Carregamento progressivo das texturas PBR (public/modulos/texturas, geradas por
+ * scripts/gerar-texturas-modulos.py). O material nasce só com a cor e ganha os mapas quando
+ * chegam, então o módulo aparece na hora e "revela" o acabamento em seguida.
+ * As geometrias usam UV em metros, então a repetição é 1 / (metros cobertos pela textura).
+ * ------------------------------------------------------------------------------------------- */
 
-/** Material padrão reaproveitado por cor, para manter poucas instâncias na cena. */
-export function material(cor: string, opcoes: { rugosidade?: number; metal?: number; emissivo?: boolean } = {}) {
-  const chave = `${cor}|${opcoes.rugosidade ?? 0.8}|${opcoes.metal ?? 0}|${opcoes.emissivo ? 1 : 0}`;
-  let m = cacheMateriais.get(chave);
-  if (!m) {
-    m = new THREE.MeshStandardMaterial({
-      color: cor,
-      roughness: opcoes.rugosidade ?? 0.8,
-      metalness: opcoes.metal ?? 0,
-    });
-    if (opcoes.emissivo) {
-      m.emissive = new THREE.Color(cor);
-      m.emissiveIntensity = 1.6;
-      m.toneMapped = false;
+const PASTA = "/modulos/texturas/";
+const carregador = new THREE.TextureLoader();
+const imagens = new Map<string, Promise<THREE.Texture>>();
+let pedirQuadro: () => void = () => {};
+
+/** O Canvas registra aqui o invalidate(), para redesenhar quando uma textura chega (frameloop "demand"). */
+export function registrarRedesenho(fn: () => void) {
+  pedirQuadro = fn;
+}
+
+function textura(nome: string, cor: boolean, metros: number, repeticaoExtra: [number, number] = [1, 1]) {
+  let base = imagens.get(nome);
+  if (!base) {
+    base = carregador.loadAsync(`${PASTA}${nome}.webp`);
+    imagens.set(nome, base);
+  }
+  return base.then((t) => {
+    const c = t.clone();
+    c.wrapS = c.wrapT = THREE.RepeatWrapping;
+    c.repeat.set(repeticaoExtra[0] / metros, repeticaoExtra[1] / metros);
+    c.colorSpace = cor ? THREE.SRGBColorSpace : THREE.NoColorSpace;
+    c.anisotropy = 8;
+    c.needsUpdate = true;
+    return c;
+  });
+}
+
+interface DefinicaoPBR {
+  cor: string;
+  /** Cor usada enquanto o mapa de cor não chega (quando a cor final é branca, só multiplicando o mapa). */
+  corPrevia?: string;
+  rugosidade: number;
+  metal?: number;
+  /** Nome do conjunto de texturas (prefixo dos arquivos). */
+  conjunto?: string;
+  metros?: number;
+  mapas?: ("cor" | "normal" | "rug")[];
+  normal?: number;
+  /** Repetição adicional (por exemplo, para comprimir o veio nas ripas instanciadas). */
+  repeticao?: [number, number];
+}
+
+function pbr(d: DefinicaoPBR) {
+  const m = new THREE.MeshStandardMaterial({
+    color: d.corPrevia ?? d.cor,
+    roughness: d.rugosidade,
+    metalness: d.metal ?? 0,
+  });
+  if (d.conjunto && typeof document !== "undefined") {
+    const metros = d.metros ?? 1;
+    for (const tipo of d.mapas ?? ["cor", "normal"]) {
+      textura(`${d.conjunto}_${tipo}`, tipo === "cor", metros, d.repeticao)
+        .then((t) => {
+          if (tipo === "cor") {
+            m.map = t;
+            // Só troca a cor prévia; materiais tingidos (reboco, WPC) mantêm a cor animada.
+            if (d.corPrevia) m.color.set(d.cor);
+          }
+          if (tipo === "normal") {
+            m.normalMap = t;
+            m.normalScale.setScalar(d.normal ?? 1);
+          }
+          if (tipo === "rug") m.roughnessMap = t;
+          m.needsUpdate = true;
+          pedirQuadro();
+        })
+        .catch(() => {
+          // Sem a textura, o material continua com a cor lisa.
+        });
     }
-    cacheMateriais.set(chave, m);
   }
   return m;
 }
 
-export const materialVidro = new THREE.MeshPhysicalMaterial({
-  color: COR.vidro,
-  roughness: 0.05,
-  metalness: 0.1,
-  transparent: true,
-  opacity: 0.28,
-  side: THREE.DoubleSide,
-  depthWrite: false,
-});
-
-function canvasTextura(tamanho: number, desenhar: (ctx: CanvasRenderingContext2D, t: number) => void) {
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = tamanho;
-  const ctx = canvas.getContext("2d")!;
-  desenhar(ctx, tamanho);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.anisotropy = 4;
-  return tex;
+const unicos = new Map<string, THREE.Material>();
+function unico<T extends THREE.Material>(chave: string, criar: () => T): T {
+  let m = unicos.get(chave) as T | undefined;
+  if (!m) {
+    m = criar();
+    unicos.set(chave, m);
+  }
+  return m;
 }
 
-let ruido: THREE.CanvasTexture | null = null;
-/** Ruído fino usado como bumpMap da textura acrílica da fachada. */
-export function texturaRuido() {
-  if (!ruido) {
-    ruido = canvasTextura(128, (ctx, t) => {
-      const img = ctx.createImageData(t, t);
-      for (let i = 0; i < img.data.length; i += 4) {
-        const v = 110 + Math.random() * 90;
-        img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
-        img.data[i + 3] = 255;
-      }
-      ctx.putImageData(img, 0, 0);
-    });
-    ruido.repeat.set(3, 3);
-  }
-  return ruido;
+/** Biblioteca de materiais do showroom. Cada um é criado uma vez e compartilhado. */
+export const MAT = {
+  piso: () =>
+    unico("piso", () => pbr({ cor: "#FFFFFF", corPrevia: COR.pisoPorcelanato, rugosidade: 1, conjunto: "piso", metros: 1.8, mapas: ["cor", "normal", "rug"], normal: 0.8 })),
+  paredeBanheiro: () =>
+    unico("paredeBanheiro", () =>
+      pbr({ cor: "#FFFFFF", corPrevia: COR.porcelanatoBanheiro, rugosidade: 1, conjunto: "parede_banheiro", metros: 1.2, mapas: ["cor", "normal", "rug"], normal: 0.8 }),
+    ),
+  madeira: () => unico("madeira", () => pbr({ cor: "#FFFFFF", corPrevia: COR.madeira, rugosidade: 0.55, conjunto: "madeira", metros: 1.2, normal: 0.35 })),
+  madeiraMovel: () =>
+    unico("madeiraMovel", () => pbr({ cor: "#B48A66", rugosidade: 0.5, conjunto: "madeira", metros: 1.2, normal: 0.35 })),
+  grama: () => unico("grama", () => pbr({ cor: "#FFFFFF", corPrevia: COR.gramado, rugosidade: 1, conjunto: "grama", metros: 1.5, normal: 1 })),
+  brita: () => unico("brita", () => pbr({ cor: "#FFFFFF", corPrevia: "#85827C", rugosidade: 0.95, conjunto: "brita", metros: 1.0, normal: 1.2 })),
+  seixo: () => unico("seixo", () => pbr({ cor: "#FFFFFF", corPrevia: COR.seixo, rugosidade: 0.55, conjunto: "seixo", metros: 0.8, normal: 1.2 })),
+  granito: () => unico("granito", () => pbr({ cor: "#FFFFFF", corPrevia: COR.granitoPreto, rugosidade: 0.22, conjunto: "granito", metros: 0.6, mapas: ["cor"] })),
+  tecido: (cor: string) => unico(`tecido-${cor}`, () => pbr({ cor, rugosidade: 0.95, conjunto: "tecido", metros: 0.25, normal: 0.6 })),
+  pintura: (cor: string) => unico(`pintura-${cor}`, () => pbr({ cor, rugosidade: 0.88 })),
+  laca: (cor: string) => unico(`laca-${cor}`, () => pbr({ cor, rugosidade: 0.42 })),
+  perfil: () => unico("perfil", () => pbr({ cor: COR.perfil, rugosidade: 0.38, metal: 0.55 })),
+  inox: () => unico("inox", () => pbr({ cor: COR.inox, rugosidade: 0.22, metal: 1 })),
+  espelho: () => unico("espelho", () => pbr({ cor: "#E8ECEE", rugosidade: 0.02, metal: 1 })),
+  louca: () =>
+    unico(
+      "louca",
+      () => new THREE.MeshPhysicalMaterial({ color: COR.louca, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.05 }),
+    ),
+  vidro: () =>
+    unico(
+      "vidro",
+      () =>
+        new THREE.MeshPhysicalMaterial({
+          color: COR.vidro,
+          roughness: 0.02,
+          metalness: 0,
+          ior: 1.5,
+          transparent: true,
+          opacity: 0.16,
+          envMapIntensity: 2.2,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        }),
+    ),
+  led: (cor: string = COR.led, intensidade = 2.4) =>
+    unico(`led-${cor}-${intensidade}`, () => {
+      const m = new THREE.MeshStandardMaterial({ color: cor, emissive: cor, emissiveIntensity: intensidade });
+      m.toneMapped = false;
+      return m;
+    }),
+};
+
+/** Material da textura acrílica da casca. Um por instância de Casca, porque a cor é animada. */
+export function criarMaterialReboco(cor: string) {
+  const m = pbr({ cor, rugosidade: 0.93, conjunto: "reboco", metros: 0.5, normal: 0.9 });
+  m.side = THREE.DoubleSide;
+  return m;
 }
 
-let piso: THREE.CanvasTexture | null = null;
-/** Porcelanato grande (90 cm) com rejunte fino. A repetição é ajustada por quem usa. */
-export function texturaPiso() {
-  if (!piso) {
-    piso = canvasTextura(256, (ctx, t) => {
-      ctx.fillStyle = COR.pisoPorcelanato;
-      ctx.fillRect(0, 0, t, t);
-      for (let i = 0; i < 900; i++) {
-        ctx.fillStyle = `rgba(120,118,112,${Math.random() * 0.05})`;
-        ctx.fillRect(Math.random() * t, Math.random() * t, 6 + Math.random() * 18, 2 + Math.random() * 8);
-      }
-      ctx.strokeStyle = "rgba(140,138,132,0.8)";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(0, 0, t, t);
-    });
-  }
-  return piso;
+/** WPC do ripado: veio neutro tingido pelo tom; a repetição vertical compensa a ripa esticada. */
+export function criarMaterialWpc(cor: string) {
+  return pbr({ cor, rugosidade: 0.62, conjunto: "wpc", metros: 0.5, normal: 0.8, repeticao: [0.12, 2.6] });
 }
 
-let madeira: THREE.CanvasTexture | null = null;
-/** Veio vertical do painel amadeirado. */
-export function texturaMadeira() {
-  if (!madeira) {
-    madeira = canvasTextura(256, (ctx, t) => {
-      ctx.fillStyle = COR.madeira;
-      ctx.fillRect(0, 0, t, t);
-      for (let x = 0; x < t; x += 1) {
-        const a = 0.04 + Math.abs(Math.sin(x * 0.21) * Math.sin(x * 0.037)) * 0.12;
-        ctx.fillStyle = `rgba(90,58,30,${a})`;
-        ctx.fillRect(x, 0, 1, t);
-      }
-    });
-  }
-  return madeira;
+/** Material liso genérico, por cor. */
+export function material(cor: string, opcoes: { rugosidade?: number; metal?: number; emissivo?: boolean } = {}) {
+  if (opcoes.emissivo) return MAT.led(cor);
+  return unico(`liso-${cor}-${opcoes.rugosidade ?? 0.8}-${opcoes.metal ?? 0}`, () =>
+    pbr({ cor, rugosidade: opcoes.rugosidade ?? 0.8, metal: opcoes.metal }),
+  );
 }
 
-let gramado: THREE.CanvasTexture | null = null;
-/** Disco de gramado que se dissolve no preto do site. */
-export function texturaGramado() {
-  if (!gramado) {
-    gramado = canvasTextura(512, (ctx, t) => {
-      ctx.fillStyle = COR.gramado;
-      ctx.fillRect(0, 0, t, t);
-      for (let i = 0; i < 9000; i++) {
-        const v = Math.random();
-        ctx.fillStyle = v > 0.5 ? "rgba(98,128,62,0.35)" : "rgba(40,58,28,0.35)";
-        ctx.fillRect(Math.random() * t, Math.random() * t, 1.5, 3);
-      }
-      const g = ctx.createRadialGradient(t / 2, t / 2, t * 0.18, t / 2, t / 2, t / 2);
-      g.addColorStop(0, "rgba(13,13,13,0)");
-      g.addColorStop(1, "rgba(13,13,13,1)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, t, t);
-    });
-    gramado.wrapS = gramado.wrapT = THREE.ClampToEdgeWrapping;
-    gramado.colorSpace = THREE.SRGBColorSpace;
+/* ------------------------------------------- UV em metros ------------------------------------------- */
+
+/**
+ * Reescreve as UVs por projeção em caixa (pela normal dominante), em metros reais.
+ * Assim a mesma textura tem a mesma escala em qualquer móvel, parede ou piso.
+ */
+export function uvEmMetros(geo: THREE.BufferGeometry) {
+  const pos = geo.getAttribute("position");
+  const nor = geo.getAttribute("normal");
+  const uv = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) {
+    const nx = Math.abs(nor.getX(i));
+    const ny = Math.abs(nor.getY(i));
+    const nz = Math.abs(nor.getZ(i));
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    if (ny >= nx && ny >= nz) {
+      uv[i * 2] = x;
+      uv[i * 2 + 1] = z;
+    } else if (nx >= nz) {
+      uv[i * 2] = z;
+      uv[i * 2 + 1] = y;
+    } else {
+      uv[i * 2] = x;
+      uv[i * 2 + 1] = y;
+    }
   }
-  return gramado;
+  geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+  return geo;
 }
 
-let madeiraMat: THREE.MeshStandardMaterial | null = null;
-/** Painel amadeirado (cabeceira, divisória e portas de correr). */
-export function materialMadeira() {
-  if (!madeiraMat) {
-    const map = texturaMadeira();
-    map.colorSpace = THREE.SRGBColorSpace;
-    madeiraMat = new THREE.MeshStandardMaterial({ map, roughness: 0.65 });
+/** Disco que esconde a borda do gramado no preto do site. */
+let degrade: THREE.CanvasTexture | null = null;
+export function texturaDegradeChao() {
+  if (!degrade) {
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const ctx = c.getContext("2d")!;
+    const g = ctx.createRadialGradient(128, 128, 40, 128, 128, 128);
+    g.addColorStop(0, "rgba(13,13,13,0)");
+    g.addColorStop(0.55, "rgba(13,13,13,0.15)");
+    g.addColorStop(1, "rgba(13,13,13,1)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 256, 256);
+    degrade = new THREE.CanvasTexture(c);
   }
-  return madeiraMat;
+  return degrade;
 }
