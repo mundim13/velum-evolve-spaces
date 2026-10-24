@@ -25,6 +25,8 @@ interface Proposal {
   notes: string | null;
   valid_until: string | null;
   created_at: string;
+  /** "simulador" quando a proposta veio do simulador /modulos. */
+  origem?: string;
 }
 
 const PropostaPublica = () => {
@@ -36,31 +38,22 @@ const PropostaPublica = () => {
   useEffect(() => {
     const fetchProposal = async () => {
       try {
-        const { data, error } = await supabase
-          .from("proposals")
-          .select("*")
-          .eq("access_token", token)
-          .single();
-
-        if (error) throw error;
-
-        if (data) {
-          const items = Array.isArray(data.items) 
-            ? (data.items as unknown as ProposalItem[]) 
-            : [];
-          setProposal({
-            ...data,
-            items,
-          });
-
-          // Update status to viewed if it was sent
-          if (data.status === "sent") {
-            await supabase
-              .from("proposals")
-              .update({ status: "viewed" })
-              .eq("id", data.id);
-          }
+        // Leitura só pelo token, via função (que também marca a proposta como vista).
+        const viaToken = await supabase.rpc("proposta_por_token", { p_token: token! });
+        let data = viaToken.data?.[0] ?? null;
+        if (viaToken.error) {
+          // Enquanto a migração da função não estiver aplicada no banco, usa a consulta antiga.
+          const antiga = await supabase.from("proposals").select("*").eq("access_token", token!).single();
+          if (antiga.error) throw antiga.error;
+          data = antiga.data;
         }
+        if (!data) throw new Error("não encontrada");
+
+        const items = Array.isArray(data.items) ? (data.items as unknown as ProposalItem[]) : [];
+        setProposal({
+          ...data,
+          items,
+        });
       } catch (error: any) {
         setError("Proposta não encontrada ou link inválido.");
       } finally {
@@ -162,6 +155,7 @@ const PropostaPublica = () => {
   }
 
   const isExpired = proposal.valid_until && new Date(proposal.valid_until) < new Date();
+  const doSimulador = proposal.origem === "simulador";
   const benefits = extractBenefits(proposal.description);
   const { observations, payments, deadlines } = parseNotes(proposal.notes);
   
@@ -197,7 +191,7 @@ const PropostaPublica = () => {
             {proposal.title}
           </p>
           <p className="text-muted-foreground mb-12">
-            Engenharia Integrada + Gestão de Projetos
+            {doSimulador ? "Módulos Velum" : "Engenharia Integrada + Gestão de Projetos"}
           </p>
           
           {/* Client Box */}
@@ -211,6 +205,9 @@ const PropostaPublica = () => {
           <p className="text-sm text-muted-foreground mt-8">
             {isExpired ? (
               <span className="text-destructive">Proposta Expirada</span>
+            ) : doSimulador && proposal.valid_until ? (
+              // Data sem hora: meio-dia evita cair no dia anterior no fuso de Brasília.
+              `Estimativa válida até ${formatDate(`${proposal.valid_until}T12:00:00`)}`
             ) : (
               `Válido por 30 dias a partir da data de emissão`
             )}
@@ -258,10 +255,10 @@ const PropostaPublica = () => {
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl">
             <h2 className="text-2xl sm:text-3xl font-syncopate text-foreground mb-4 text-center">
-              ESCOPO E ENTREGÁVEIS
+              {doSimulador ? "O QUE VEM NO SEU MÓDULO" : "ESCOPO E ENTREGÁVEIS"}
             </h2>
             <p className="text-center text-muted-foreground mb-12">
-              Disciplinas incluídas nesta proposta
+              {doSimulador ? "Configuração montada no simulador" : "Disciplinas incluídas nesta proposta"}
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

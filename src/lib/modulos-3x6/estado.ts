@@ -6,6 +6,8 @@ import {
   type Config,
   type CorTextura,
   type Cozinha,
+  type Entrega,
+  type Extras,
   type FaceEsquadria,
   type TamanhoEsquadria,
   type TipoFachada,
@@ -22,7 +24,10 @@ export type Acao =
   | { tipo: "esquadria"; face: FaceEsquadria; tamanho?: TamanhoEsquadria }
   | { tipo: "fachada"; valor: TipoFachada }
   | { tipo: "cor"; valor: CorTextura }
-  | { tipo: "wpc"; valor: TomWpc };
+  | { tipo: "wpc"; valor: TomWpc }
+  | { tipo: "kitMobilia"; valor: boolean }
+  | { tipo: "opcional"; chave: Exclude<keyof Extras, "kitMobilia">; valor: boolean }
+  | { tipo: "entrega"; valor: Entrega };
 
 export const buscarAtalho = (id: string): Atalho | undefined => tabela.atalhos.find((a) => a.id === id);
 
@@ -47,6 +52,8 @@ const BASE: Config = {
   esquadria: { face: "testada", tamanho: "padrao" },
   fachada: { tipo: "textura", cor: "offwhite", wpc: "cumaru" },
   atalho: null,
+  extras: { kitMobilia: false, deck: false, pergolado: false, fundacao: false, kitAirbnb: false },
+  entrega: { modo: "regiao", cidade: "", cep: "", km: null },
 };
 
 /** Configuração inicial: o atalho Cazita. */
@@ -77,5 +84,15 @@ export function reduzir(c: Config, a: Acao): Config {
       return { ...c, fachada: { ...c.fachada, cor: a.valor } };
     case "wpc":
       return { ...c, fachada: { ...c.fachada, wpc: a.valor } };
+    case "kitMobilia":
+      return { ...c, extras: { ...c.extras, kitMobilia: a.valor } };
+    case "opcional": {
+      const extras = { ...c.extras, [a.chave]: a.valor };
+      // O pergolado só existe sobre o deck: tirar o deck tira o pergolado, e sem deck ele não entra.
+      if (!extras.deck) extras.pergolado = false;
+      return { ...c, extras };
+    }
+    case "entrega":
+      return { ...c, entrega: a.valor };
   }
 }

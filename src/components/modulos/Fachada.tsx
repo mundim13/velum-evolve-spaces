@@ -9,6 +9,8 @@ import { useSombraCasca } from "./sombra";
 
 /** Moldura saliente da testada (requadro em textura, ~15 cm), como na foto da fachada. O ripado frontal fica dentro dela. */
 export const MOLDURA = { lado: 0.15, topo: 0.28, profundidade: 0.15 };
+/** Platibanda: a borda da casca sobe ~10 cm acima da laje em todo o perímetro, como no Cazita real. */
+export const PLATIBANDA = 0.1;
 
 /** Ripa de ~5,6 cm com vão de ~4,4 cm sobre fundo escuro, para o relevo e a sombra aparecerem. */
 const RIPA = { passo: 0.1, largura: 0.056, profundidade: 0.036, folga: 0.025 };

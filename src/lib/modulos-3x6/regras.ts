@@ -1,4 +1,5 @@
 import type {
+  Uso,
   Config,
   Face,
   FaceEsquadria,
@@ -32,6 +33,27 @@ export interface Abertura {
   y1: number;
   /** false para peças sobrepostas à parede (veneziana), que não abrem vão mas tiram ripas. */
   recorta: boolean;
+}
+
+/**
+ * Uso do módulo a partir das escolhas (define o kit mobília e o kit Airbnb disponíveis).
+ * Estar com banheiro e cozinha é estúdio; estar só com cozinha é gourmet; estar sem nada não tem kit.
+ */
+export function usoDaConfig(c: Pick<Config, "banheiro" | "cozinha" | "vivencia">): Uso | null {
+  switch (c.vivencia) {
+    case "casal":
+    case "solteiro":
+      return "suite";
+    case "escritorio":
+    case "academia":
+    case "brinquedoteca":
+    case "loja":
+      return c.vivencia;
+    case "estar":
+      if (c.cozinha !== "nenhuma" && c.banheiro !== "nenhum") return "estudio";
+      if (c.cozinha !== "nenhuma") return "gourmet";
+      return null;
+  }
 }
 
 export const temFaixa = (c: Pick<Config, "banheiro" | "cozinha">) =>

@@ -12,13 +12,14 @@ import { tabela, type Config, type Face, type FaceEsquadria } from "@/lib/modulo
 import { Caixa } from "./Caixa";
 import { Arandela, Esquadria } from "./Esquadria";
 import { FACES, paraLocal, quadroFace } from "./faces";
-import { MOLDURA, Ripado, useMaterialFachada } from "./Fachada";
+import { MOLDURA, PLATIBANDA, Ripado, useMaterialFachada } from "./Fachada";
 import { COR, MAT } from "./materiais";
 import { Parede } from "./Parede";
 import { SombraContato, useSombraCasca } from "./sombra";
 import { Banheiro } from "./zonas/Banheiro";
 import { Cozinha } from "./zonas/Cozinha";
 import { Divisorias, TETO } from "./zonas/Divisorias";
+import { Externos } from "./zonas/Externos";
 import { Vivencia } from "./zonas/Vivencia";
 
 /** Vão principal animado: o vidro abre a parede até o tamanho certo. */
@@ -140,6 +141,8 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
   // Com o ripado completo, a moldura é a única parte de textura que sobraria: vira arremate preto,
   // como as quinas e o rufo, para não deixar uma faixa na cor da textura em volta do ripado.
   const matMoldura = tipoFachada === "ripadoCompleto" ? MAT.perfil() : matFachada;
+  // Nas faces com ripado, a platibanda fica sob as ripas e o rufo; no ripado completo, preta como os arremates.
+  const matPlatibanda = tipoFachada === "ripadoCompleto" ? MAT.perfil() : matFachada;
 
   return (
     <group>
@@ -150,7 +153,17 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
       {/* Piso em porcelanato, forro e cobertura. */}
       <Caixa p={[0, CHASSI - 0.02, 0]} s={[L - 2 * T, 0.04, LARGURA - 2 * T]} mat={MAT.piso()} contato={false} />
       <mesh position={[0, TETO, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[L - 2 * T, LARGURA - 2 * T, 1]} geometry={geometriaPlano} material={MAT.pintura(COR.forro)} receiveShadow />
-      <Caixa p={[0, (TETO + H) / 2 + 0.005, 0]} s={[L - 2 * T, H - TETO - 0.01, LARGURA - 2 * T]} mat={MAT.pintura("#7A7975")} sombra={sombra} contato={false} />
+      {/* Laje com manta escura, rebaixada dentro da platibanda. */}
+      <Caixa p={[0, (TETO + H) / 2 + 0.005, 0]} s={[L - 2 * T, H - TETO - 0.01, LARGURA - 2 * T]} mat={MAT.manta()} sombra={sombra} contato={false} />
+      {/* Platibanda: laterais e fundo sobem acima da laje (a testada sobe com a moldura), com a manta virando por dentro. */}
+      {[-1, 1].map((lado) => (
+        <group key={`plat-${lado}`}>
+          <Caixa p={[0, H + PLATIBANDA / 2, lado * (LARGURA / 2 - T / 2)]} s={[L - 2 * T, PLATIBANDA, T]} mat={matPlatibanda} sombra={sombra} contato={false} />
+          <Caixa p={[0, H + PLATIBANDA / 2 - 0.01, lado * (LARGURA / 2 - T - 0.004)]} s={[L - 2 * T, PLATIBANDA, 0.008]} mat={MAT.manta()} sombra={false} contato={false} />
+        </group>
+      ))}
+      <Caixa p={[-meio + T / 2, H + PLATIBANDA / 2, 0]} s={[T, PLATIBANDA, LARGURA]} mat={matPlatibanda} sombra={sombra} contato={false} />
+      <Caixa p={[-meio + T + 0.004, H + PLATIBANDA / 2 - 0.01, 0]} s={[0.008, PLATIBANDA, LARGURA - 2 * T]} mat={MAT.manta()} sombra={false} contato={false} />
 
       {/* Sombra pré-calculada na junta das paredes com o piso, para nada parecer flutuar. */}
       <SombraContato x={0} z={-LARGURA / 2 + T} w={L - 2 * T} d={0.3} />
@@ -177,8 +190,8 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
         {[-1, 1].map((lado) => (
           <Caixa
             key={lado}
-            p={[lado * (LARGURA / 2 - MOLDURA.lado / 2), (CHASSI + H) / 2, MOLDURA.profundidade / 2]}
-            s={[MOLDURA.lado, H - CHASSI, MOLDURA.profundidade]}
+            p={[lado * (LARGURA / 2 - MOLDURA.lado / 2), (CHASSI + H + PLATIBANDA) / 2, MOLDURA.profundidade / 2]}
+            s={[MOLDURA.lado, H + PLATIBANDA - CHASSI, MOLDURA.profundidade]}
             mat={matMoldura}
             raio={0.01}
             sombra={sombra}
@@ -187,7 +200,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
         ))}
         {/* A peça de cima também cobre o topo da parede (5 mm acima, para não disputar o plano com ela). */}
         <Caixa
-          p={[0, H - MOLDURA.topo / 2 + 0.005, (MOLDURA.profundidade - T) / 2]}
+          p={[0, H + PLATIBANDA - MOLDURA.topo / 2, (MOLDURA.profundidade - T) / 2]}
           s={[LARGURA, MOLDURA.topo, MOLDURA.profundidade + T]}
           mat={matMoldura}
           raio={0.01}
@@ -209,7 +222,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
         faces={facesRipado}
         aberturas={alvo}
         comprimento={L}
-        altura={H}
+        altura={H + PLATIBANDA}
         cor={corWpc}
       />
 
@@ -217,6 +230,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
       <Banheiro config={config} />
       <Cozinha config={config} />
       <Vivencia config={config} />
+      <Externos config={config} />
 
       {escolhendoFace && <SeletorFaces config={config} onEscolher={onEscolherFace} />}
     </group>

@@ -1,10 +1,12 @@
-import { lazy, Suspense, useCallback, useMemo, useReducer, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import SeoHead from "@/components/SeoHead";
 import { Configurador, NOME_FACE, type Etapa } from "@/components/modulos/Configurador";
+import { Envio } from "@/components/modulos/Envio";
 import { PainelPreco } from "@/components/modulos/PainelPreco";
 import type { ModoVista } from "@/components/modulos/Showroom";
-import { CONFIG_INICIAL, reduzir } from "@/lib/modulos-3x6/estado";
+import { reduzir } from "@/lib/modulos-3x6/estado";
+import { carregarConfig, salvarConfig } from "@/lib/modulos-3x6/persistencia";
 import { calcularPreco } from "@/lib/modulos-3x6/preco";
 import type { FaceEsquadria } from "@/lib/modulos-3x6/tipos";
 
@@ -18,6 +20,9 @@ const VISTA_DA_ETAPA: Record<Etapa, ModoVista> = {
   vivencia: "dentro",
   esquadria: "fora",
   fachada: "fora",
+  mobilia: "dentro",
+  opcionais: "fora",
+  entrega: "fora",
 };
 
 function CarregandoShowroom() {
@@ -31,15 +36,27 @@ function CarregandoShowroom() {
 }
 
 export default function Modulos() {
-  const [config, despachar] = useReducer(reduzir, CONFIG_INICIAL);
+  // A configuração fica guardada no navegador: quem volta depois continua de onde parou.
+  const [config, despachar] = useReducer(reduzir, undefined, () => carregarConfig());
+  useEffect(() => salvarConfig(config), [config]);
+  const [enviando, setEnviando] = useState(false);
   const [etapa, setEtapa] = useState<Etapa>("atalho");
   // Abre por fora, girando devagar; as etapas de interior trocam para a vista em corte.
   const [modo, setModo] = useState<ModoVista>("fora");
   const resultado = useMemo(() => calcularPreco(config), [config]);
 
+  const passos = useRef<HTMLDivElement>(null);
   const irPara = useCallback((e: Etapa) => {
     setEtapa(e);
     setModo(VISTA_DA_ETAPA[e]);
+    // No celular o 3D e a barra de preço ficam fixos: leva o passo novo para logo abaixo do 3D.
+    requestAnimationFrame(() => {
+      const el = passos.current;
+      if (!el || window.matchMedia("(min-width: 1024px)").matches) return;
+      const topo3d = document.querySelector<HTMLElement>("[data-showroom]")?.getBoundingClientRect().bottom ?? 0;
+      const delta = el.getBoundingClientRect().top - topo3d - 8;
+      if (delta > 0) window.scrollBy({ top: delta, behavior: "smooth" });
+    });
   }, []);
 
   const escolherFace = useCallback((face: FaceEsquadria) => despachar({ tipo: "esquadria", face }), []);
@@ -56,6 +73,7 @@ export default function Modulos() {
       <main id="main" className="pt-[60px] lg:grid lg:grid-cols-[minmax(0,1fr)_440px] lg:h-screen">
         <section
           aria-label="Módulo 3x6 em 3D"
+          data-showroom
           // No celular o 3D fica fixo no topo, com 55% da altura da tela (o CSS global usa overflow-x: hidden, que anula o sticky).
           className="fixed top-[60px] inset-x-0 z-30 h-[55svh] lg:static lg:h-[calc(100vh-60px)]"
         >
@@ -64,7 +82,7 @@ export default function Modulos() {
               <Showroom
                 config={config}
                 modo={modo}
-                foco={etapa === "esquadria" || etapa === "fachada" ? config.esquadria.face : "testada"}
+                foco={etapa === "esquadria" || etapa === "fachada" || etapa === "opcionais" ? config.esquadria.face : "testada"}
                 escolhendoFace={etapa === "esquadria"}
                 onEscolherFace={escolherFace}
               />
@@ -125,14 +143,16 @@ export default function Modulos() {
             A partir de R$ 62 mil.
           </p>
 
-          <Configurador config={config} etapa={etapa} onEtapa={irPara} despachar={despachar} />
+          <div ref={passos} />
+          <Configurador config={config} etapa={etapa} onEtapa={irPara} despachar={despachar} onConcluir={() => setEnviando(true)} />
 
           <div className="hidden lg:block h-6 shrink-0" />
           <div className="lg:sticky lg:bottom-0 lg:-mx-6">
-            <PainelPreco resultado={resultado} />
+            <PainelPreco resultado={resultado} onEnviar={() => setEnviando(true)} />
           </div>
         </section>
       </main>
+      <Envio aberto={enviando} onFechar={() => setEnviando(false)} config={config} resultado={resultado} />
     </div>
   );
 }

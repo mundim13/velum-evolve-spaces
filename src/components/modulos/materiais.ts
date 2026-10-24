@@ -112,7 +112,12 @@ function unico<T extends THREE.Material>(chave: string, criar: () => T): T {
 /** Biblioteca de materiais do showroom. Cada um é criado uma vez e compartilhado. */
 export const MAT = {
   piso: () =>
-    unico("piso", () => pbr({ cor: "#FFFFFF", corPrevia: COR.pisoPorcelanato, rugosidade: 1, conjunto: "piso", metros: 1.8, mapas: ["cor", "normal", "rug"], normal: 0.8 })),
+    unico("piso", () => {
+      // Acetinado: rugosidade maior e reflexo do ambiente reduzido, para não riscar o piso com os painéis de luz.
+      const m = pbr({ cor: "#FFFFFF", corPrevia: COR.pisoPorcelanato, rugosidade: 1.8, conjunto: "piso", metros: 1.8, mapas: ["cor", "normal", "rug"], normal: 0.6 });
+      m.envMapIntensity = 0.45;
+      return m;
+    }),
   paredeBanheiro: () =>
     unico("paredeBanheiro", () =>
       pbr({ cor: "#FFFFFF", corPrevia: COR.porcelanatoBanheiro, rugosidade: 1, conjunto: "parede_banheiro", metros: 1.2, mapas: ["cor", "normal", "rug"], normal: 0.8 }),
@@ -125,6 +130,8 @@ export const MAT = {
   tecido: (cor: string) => unico(`tecido-${cor}`, () => pbr({ cor, rugosidade: 0.95, conjunto: "tecido", metros: 0.25, normal: 0.6 })),
   pintura: (cor: string) => unico(`pintura-${cor}`, () => pbr({ cor, rugosidade: 0.88 })),
   laca: (cor: string) => unico(`laca-${cor}`, () => pbr({ cor, rugosidade: 0.42 })),
+  /** Manta asfáltica escura da cobertura. */
+  manta: () => unico("manta", () => pbr({ cor: "#2F2E2C", rugosidade: 0.95 })),
   perfil: () => unico("perfil", () => pbr({ cor: COR.perfil, rugosidade: 0.38, metal: 0.55 })),
   inox: () => unico("inox", () => pbr({ cor: COR.inox, rugosidade: 0.22, metal: 1 })),
   espelho: () => unico("espelho", () => pbr({ cor: "#E8ECEE", rugosidade: 0.02, metal: 1 })),
@@ -167,6 +174,11 @@ export function criarMaterialReboco(cor: string) {
 /** WPC do ripado: veio neutro tingido pelo tom; a repetição vertical compensa a ripa esticada. */
 export function criarMaterialWpc(cor: string) {
   return pbr({ cor, rugosidade: 0.62, conjunto: "wpc", metros: 0.5, normal: 0.8, repeticao: [0.12, 2.6] });
+}
+
+/** Tábuas do deck: o mesmo veio do WPC, em UV de metros (veio ao longo da tábua). */
+export function criarMaterialDeck(cor: string) {
+  return pbr({ cor, rugosidade: 0.7, conjunto: "wpc", metros: 0.5, normal: 0.8 });
 }
 
 /** Material liso genérico, por cor. */

@@ -26,6 +26,8 @@ export type Database = {
           id: string
           items: Json | null
           notes: string | null
+          origem: string
+          configuracao: Json | null
           status: string
           title: string
           total_value: number | null
@@ -43,6 +45,8 @@ export type Database = {
           id?: string
           items?: Json | null
           notes?: string | null
+          origem?: string
+          configuracao?: Json | null
           status?: string
           title: string
           total_value?: number | null
@@ -60,6 +64,8 @@ export type Database = {
           id?: string
           items?: Json | null
           notes?: string | null
+          origem?: string
+          configuracao?: Json | null
           status?: string
           title?: string
           total_value?: number | null
@@ -73,7 +79,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      criar_proposta_simulador: {
+        Args: {
+          p_nome: string
+          p_telefone: string
+          p_titulo: string
+          p_descricao: string
+          p_itens: Json
+          p_total: number
+          p_notas: string
+          p_configuracao: Json
+        }
+        Returns: string
+      }
+      proposta_por_token: {
+        Args: { p_token: string }
+        Returns: Database["public"]["Tables"]["proposals"]["Row"][]
+      }
     }
     Enums: {
       [_ in never]: never

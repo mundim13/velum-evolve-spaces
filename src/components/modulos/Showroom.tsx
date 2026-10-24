@@ -228,7 +228,7 @@ function Sol() {
     <directionalLight
       position={[9, 7, 6]}
       intensity={2.3}
-      color="#FFE6CC"
+      color="#FFEEDD"
       castShadow
       shadow-mapSize={[tamanho, tamanho]}
       shadow-bias={-0.0004}

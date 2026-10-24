@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { CHASSI, ESPESSURA_PAREDE as T, trechoVivencia } from "@/lib/modulos-3x6/regras";
 import type { Config, Vivencia as TipoVivencia } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
@@ -224,6 +225,76 @@ function Academia({ a, b, c }: Area) {
   );
 }
 
+let tecidoListrado: THREE.MeshStandardMaterial | null = null;
+/** Lona listrada colorida da cabaninha (listras de ~15 cm descendo do cume). */
+function materialListrado() {
+  if (!tecidoListrado) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 8;
+    const ctx = canvas.getContext("2d")!;
+    ["#F2C14E", "#FBF8F2", "#7CC6D6", "#FBF8F2", "#EE8C77", "#FBF8F2", "#9CCB8E", "#FBF8F2"].forEach((cor, i) => {
+      ctx.fillStyle = cor;
+      ctx.fillRect(i * 16, 0, 16, 8);
+    });
+    const map = new THREE.CanvasTexture(canvas);
+    map.colorSpace = THREE.SRGBColorSpace;
+    map.wrapS = map.wrapT = THREE.RepeatWrapping;
+    tecidoListrado = new THREE.MeshStandardMaterial({ map, roughness: 0.9, side: THREE.DoubleSide });
+  }
+  return tecidoListrado;
+}
+
+/** Cabaninha em A: lona listrada, varetas cruzadas no cume e abertura frontal voltada para o ambiente. */
+function Cabaninha({ x, z }: { x: number; z: number }) {
+  const a = 0.55; // meia largura
+  const h = 1.25; // altura do cume (abaixo do corte da vista por dentro)
+  const comprimento = 1.2;
+  const inclinada = Math.hypot(a, h);
+  const theta = Math.atan2(a, h);
+  const lona = materialListrado();
+  const madeira = MAT.madeiraMovel();
+  const fundo = new THREE.Shape([new THREE.Vector2(-a, 0), new THREE.Vector2(a, 0), new THREE.Vector2(0, h)]);
+  // Abas da frente presas nas laterais, deixando a porta triangular aberta no meio.
+  const aba = (lado: 1 | -1) =>
+    new THREE.Shape([
+      new THREE.Vector2(lado * a, 0),
+      new THREE.Vector2(lado * 0.28, 0),
+      new THREE.Vector2(0, 0.85),
+      new THREE.Vector2(0, h),
+    ]);
+  return (
+    <group position={[x, P, z]}>
+      {[1, -1].map((lado) => (
+        <mesh key={lado} position={[0, h / 2, (lado * a) / 2]} rotation={[-lado * theta, 0, 0]} material={lona} castShadow receiveShadow>
+          <boxGeometry args={[comprimento, inclinada, 0.012]} />
+        </mesh>
+      ))}
+      <mesh position={[-comprimento / 2, 0, 0]} rotation={[0, Math.PI / 2, 0]} material={lona} castShadow>
+        <shapeGeometry args={[fundo]} />
+      </mesh>
+      {([1, -1] as const).map((lado) => (
+        <mesh key={`aba${lado}`} position={[comprimento / 2 + 0.01, 0, 0]} rotation={[0, Math.PI / 2, 0]} material={lona} castShadow>
+          <shapeGeometry args={[aba(lado)]} />
+        </mesh>
+      ))}
+      {/* Varetas de madeira cruzando acima do cume, nas duas pontas. */}
+      {[-comprimento / 2 - 0.03, comprimento / 2 + 0.03].map((px) =>
+        [1, -1].map((lado) => (
+          <mesh key={`${px}${lado}`} position={[px, h * 0.56, lado * a * 0.44]} rotation={[-lado * theta, 0, 0]} material={madeira} castShadow>
+            <cylinderGeometry args={[0.014, 0.014, inclinada * 1.14, 8]} />
+          </mesh>
+        )),
+      )}
+      {/* Colchonete e almofadas dentro. */}
+      <Caixa p={[0.05, 0.05, 0]} s={[1.0, 0.08, 0.9]} mat={MAT.tecido("#7CC6D6")} raio={0.03} contato={false} />
+      <Caixa p={[-0.3, 0.17, 0.15]} s={[0.32, 0.16, 0.3]} mat={MAT.tecido("#F2C14E")} raio={0.06} contato={false} />
+      <Caixa p={[-0.32, 0.17, -0.18]} s={[0.3, 0.15, 0.28]} mat={MAT.tecido("#EE8C77")} raio={0.06} contato={false} />
+      <SombraContato x={0} z={0} w={comprimento + 0.1} d={2 * a + 0.1} y={0} />
+    </group>
+  );
+}
+
 function Brinquedoteca({ c }: Area) {
   const cores = ["#F2C14E", "#7CC6D6", "#EE8C77", "#9CCB8E"];
   return (
@@ -247,11 +318,7 @@ function Brinquedoteca({ c }: Area) {
       {cores.map((cor, i) => (
         <Caixa key={cor} p={[c - 0.95 + i * 0.5, P + 1.03, Z_B - 0.2]} s={[0.26, 0.26, 0.26]} mat={MAT.laca(cor)} raio={0.04} />
       ))}
-      {/* Tenda fechada e mais baixa que o corte da vista por dentro (aberta, virava um triângulo solto). */}
-      <mesh position={[c - 1.35, P + 0.65, Z_A + 0.75]} castShadow receiveShadow material={MAT.tecido("#EFE6D6")}>
-        <coneGeometry args={[0.6, 1.3, 6]} />
-      </mesh>
-      <SombraContato x={c - 1.35} z={Z_A + 0.75} w={1.1} d={1.1} />
+      <Cabaninha x={c - 1.35} z={Z_A + 0.72} />
     </>
   );
 }

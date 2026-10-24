@@ -1,4 +1,4 @@
-import { areaRipadoFrontal, varianteEsquadria } from "./regras";
+import { areaRipadoFrontal, usoDaConfig, varianteEsquadria } from "./regras";
 import { tabela as tabelaPadrao, type Config, type ItemPreco, type TabelaPrecos } from "./tipos";
 
 export interface ResultadoPreco {
@@ -7,6 +7,20 @@ export interface ResultadoPreco {
   /** Itens que aparecem no resumo mas ficam fora do total. */
   sobConsulta: string[];
   etiquetas: string[];
+}
+
+/** Kit mobília que se aplica ao uso atual (ou null quando o uso não tem kit, como o estar sem banheiro e cozinha). */
+export function kitMobiliaDe(c: Config, t: TabelaPrecos = tabelaPadrao) {
+  const uso = usoDaConfig(c);
+  if (!uso) return null;
+  const kit = t.kitMobilia[uso];
+  return kit && (kit.disponivelEm as string[]).includes(uso) ? { uso, ...kit } : null;
+}
+
+/** O kit Airbnb só aparece em suíte e estúdio. */
+export function kitAirbnbDisponivel(c: Config, t: TabelaPrecos = tabelaPadrao) {
+  const uso = usoDaConfig(c);
+  return !!uso && (t.opcionais.kitAirbnb.disponivelEm as string[]).includes(uso);
 }
 
 /** Soma a casca com os cômodos e acabamentos escolhidos. O preço sempre sai desta soma, inclusive nos atalhos. */
@@ -57,10 +71,42 @@ export function calcularPreco(c: Config, t: TabelaPrecos = tabelaPadrao): Result
     itens.push({ id: "fachada-ripadoCompleto", grupo: "Fachada", nome: t.fachada.ripadoCompleto.nome, venda: t.fachada.ripadoCompleto.venda });
   }
 
+  // Passo 7: kit mobília (o 3D aparece sempre mobiliado; o kit é a mobília solta).
+  const kit = kitMobiliaDe(c, t);
+  if (c.extras.kitMobilia && kit) {
+    itens.push({ id: `kit-${kit.uso}`, grupo: "Kit mobília", nome: kit.nome, venda: kit.venda, nota: "descricao" in kit ? kit.descricao : undefined });
+  }
+
+  // Passo 8: opcionais externos. Pergolado só com deck; kit Airbnb só em suíte e estúdio.
+  const o = t.opcionais;
+  if (c.extras.deck) itens.push({ id: "deck", grupo: "Opcionais", nome: o.deck.nome, venda: o.deck.venda });
+  if (c.extras.deck && c.extras.pergolado) itens.push({ id: "pergolado", grupo: "Opcionais", nome: o.pergolado.nome, venda: o.pergolado.venda });
+  if (c.extras.fundacao) itens.push({ id: "fundacao", grupo: "Opcionais", nome: o.fundacao.nome, venda: o.fundacao.venda });
+  if (c.extras.kitAirbnb && kitAirbnbDisponivel(c, t)) {
+    itens.push({ id: "kit-airbnb", grupo: "Opcionais", nome: o.kitAirbnb.nome, venda: o.kitAirbnb.venda, nota: o.kitAirbnb.descricao });
+  }
+
+  // Passo 9: entrega. Na região o frete já está no preço; fora dela, R$ por km; cidade sem distância, sob consulta.
+  const sobConsulta: string[] = [t.opcionais.ligacoes.nome];
+  const entrega = c.entrega;
+  if (entrega.modo === "regiao") {
+    itens.push({ id: "frete", grupo: "Entrega", nome: "Frete para Goiânia e região", venda: 0, nota: entrega.cidade || undefined });
+  } else if (entrega.km !== null) {
+    itens.push({
+      id: "frete",
+      grupo: "Entrega",
+      nome: `Frete até ${entrega.cidade}`,
+      venda: Math.round(entrega.km * o.freteKm.vendaPorKm),
+      nota: `${entrega.km} km × R$ ${o.freteKm.vendaPorKm}/km`,
+    });
+  } else {
+    sobConsulta.push(entrega.cidade ? `Frete até ${entrega.cidade}` : "Frete fora de Goiânia e região");
+  }
+
   return {
     itens,
     total: itens.reduce((s, i) => s + i.venda, 0),
-    sobConsulta: [t.opcionais.ligacoes.nome],
+    sobConsulta,
     etiquetas,
   };
 }

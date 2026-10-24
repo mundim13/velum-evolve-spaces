@@ -25,7 +25,7 @@ function useNumeroAnimado(valor: number, duracao = 450) {
 }
 
 /** Total sempre visível; o detalhamento abre com um toque. No celular fica fixo na base da tela. */
-export function PainelPreco({ resultado }: { resultado: ResultadoPreco }) {
+export function PainelPreco({ resultado, onEnviar }: { resultado: ResultadoPreco; onEnviar: () => void }) {
   const [aberto, setAberto] = useState(false);
   const total = useNumeroAnimado(resultado.total);
 
@@ -66,7 +66,7 @@ export function PainelPreco({ resultado }: { resultado: ResultadoPreco }) {
               </p>
             ))}
             <p className="font-dm" style={{ fontSize: 11, color: "rgba(249,250,251,0.35)" }}>
-              Fundação, kit mobília, opcionais externos e frete fora de Goiânia e região ficam fora deste total.
+              Estimativa do simulador: a Velum confirma os valores antes da contratação.
             </p>
           </div>
         </div>
@@ -77,7 +77,7 @@ export function PainelPreco({ resultado }: { resultado: ResultadoPreco }) {
           <p className="font-dm uppercase" style={{ fontSize: 10, letterSpacing: 1.5, color: "rgba(249,250,251,0.45)" }}>
             Total do módulo
           </p>
-          <p className="font-syncopate font-bold tabular-nums" style={{ fontSize: 22, color: "#F9FAFB", lineHeight: 1.2 }} aria-hidden>
+          <p className="font-syncopate font-bold tabular-nums" style={{ fontSize: 20, color: "#F9FAFB", lineHeight: 1.2 }} aria-hidden>
             {formatarReais(total)}
           </p>
           <span className="sr-only" aria-live="polite">
@@ -89,17 +89,28 @@ export function PainelPreco({ resultado }: { resultado: ResultadoPreco }) {
             </p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => setAberto((v) => !v)}
-          aria-expanded={aberto}
-          aria-controls="detalhe-preco"
-          className="flex items-center gap-1.5 font-dm font-medium shrink-0"
-          style={{ minHeight: 44, padding: "0 14px", borderRadius: 6, fontSize: 13, color: "#22D3EE", border: "1px solid rgba(34,211,238,0.35)" }}
-        >
-          Detalhes
-          <ChevronUp size={16} style={{ transform: aberto ? "none" : "rotate(180deg)", transition: "transform .2s" }} />
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setAberto((v) => !v)}
+            aria-expanded={aberto}
+            aria-controls="detalhe-preco"
+            aria-label="Detalhes do preço"
+            className="flex items-center gap-1 font-dm font-medium"
+            style={{ minHeight: 44, padding: "0 10px", borderRadius: 6, fontSize: 13, color: "#22D3EE", border: "1px solid rgba(34,211,238,0.35)" }}
+          >
+            Itens
+            <ChevronUp size={16} style={{ transform: aberto ? "none" : "rotate(180deg)", transition: "transform .2s" }} />
+          </button>
+          <button
+            type="button"
+            onClick={onEnviar}
+            className="font-dm font-medium hover:brightness-110 transition-all"
+            style={{ minHeight: 44, padding: "0 14px", borderRadius: 6, fontSize: 13, background: "#22D3EE", color: "#050505" }}
+          >
+            Enviar
+          </button>
+        </div>
       </div>
     </div>
   );

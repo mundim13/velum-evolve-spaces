@@ -1,4 +1,5 @@
 import tabelaJson from "@/data/modulos-3x6/precos.json";
+import cidadesJson from "@/data/modulos-3x6/cidades.json";
 
 export type Banheiro = "nenhum" | "lavabo" | "completo";
 export type Cozinha = "nenhuma" | "copa" | "completa";
@@ -25,6 +26,30 @@ export type TipoFachada = "textura" | "ripadoFrontal" | "ripadoCompleto";
 export type CorTextura = "offwhite" | "grafite" | "areia" | "musgo";
 export type TomWpc = "ipe" | "cumaru" | "teca" | "cinza";
 
+/** Uso do módulo, derivado das escolhas: define qual kit mobília e quais opcionais se aplicam. */
+export type Uso = "suite" | "estudio" | "gourmet" | "escritorio" | "academia" | "brinquedoteca" | "loja";
+
+/** Passos 7 e 8 do simulador. */
+export interface Extras {
+  kitMobilia: boolean;
+  deck: boolean;
+  /** Só vale com o deck marcado. */
+  pergolado: boolean;
+  fundacao: boolean;
+  /** Só vale em suíte e estúdio. */
+  kitAirbnb: boolean;
+}
+
+/** Passo 9: entrega. Em Goiânia e região o frete está incluso; fora dela, R$ por km. */
+export interface Entrega {
+  modo: "regiao" | "fora";
+  /** Cidade informada (ou encontrada pelo CEP). */
+  cidade: string;
+  cep: string;
+  /** Distância de Goiânia em km; null quando a cidade não está na tabela (frete sob consulta). */
+  km: number | null;
+}
+
 export interface Config {
   /** Comprimento da casca em metros. A largura é sempre 3 m. */
   comprimento: number;
@@ -37,11 +62,13 @@ export interface Config {
   fachada: { tipo: TipoFachada; cor: CorTextura; wpc: TomWpc };
   /** Atalho que originou a configuração; vira null quando a pessoa ajusta algo. */
   atalho: string | null;
+  extras: Extras;
+  entrega: Entrega;
 }
 
 export interface ItemPreco {
   id: string;
-  grupo: "Casca" | "Banheiro" | "Cozinha" | "Vivência" | "Esquadria" | "Fachada";
+  grupo: "Casca" | "Banheiro" | "Cozinha" | "Vivência" | "Esquadria" | "Fachada" | "Kit mobília" | "Opcionais" | "Entrega";
   nome: string;
   venda: number;
   nota?: string;
@@ -50,3 +77,5 @@ export interface ItemPreco {
 export type TabelaPrecos = typeof tabelaJson;
 export const tabela: TabelaPrecos = tabelaJson;
 export type Atalho = TabelaPrecos["atalhos"][number];
+export type Cidade = (typeof cidadesJson)["cidades"][number];
+export const cidades: Cidade[] = cidadesJson.cidades;
