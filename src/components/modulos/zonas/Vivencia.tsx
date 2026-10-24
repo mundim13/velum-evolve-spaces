@@ -379,7 +379,7 @@ const MOVEIS: Record<TipoVivencia, (area: Area) => JSX.Element> = {
  * Vivência: parede-cabeceira em painel amadeirado, sanca com LED junto à fachada, plafon quadrado e split.
  * O módulo aparece sempre mobiliado; o mobiliário muda com a aplicação e entra animado.
  */
-export function Vivencia({ config }: { config: Config }) {
+export function Vivencia({ config, mobiliado = true }: { config: Config; mobiliado?: boolean }) {
   const sombra = useSombraCasca();
   const [x0, x1] = trechoVivencia(config);
   const a = x0 + 0.06;
@@ -416,9 +416,11 @@ export function Vivencia({ config }: { config: Config }) {
         <Caixa p={[b - 0.8, P + 2.2, ladoSplit + (ladoSplit > 0 ? -0.1 : 0.1)]} s={[0.78, 0.015, 0.02]} mat={MAT.laca("#2A2A2A")} sombra={false} />
       </group>
 
-      <Entrada key={`${config.vivencia}-${x0}`}>
-        <Moveis {...area} />
-      </Entrada>
+      {mobiliado && (
+        <Entrada key={`${config.vivencia}-${x0}`}>
+          <Moveis {...area} />
+        </Entrada>
+      )}
     </>
   );
 }

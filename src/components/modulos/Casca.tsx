@@ -106,10 +106,12 @@ interface Props {
   config: Config;
   escolhendoFace: boolean;
   onEscolherFace: (face: FaceEsquadria) => void;
+  /** false deixa a vivência sem móveis (a jornada de produção mostra o módulo antes do mobiliário). */
+  mobiliado?: boolean;
 }
 
 /** Casca 3x6 paramétrica: o comprimento é variável e tudo (paredes, vãos, ripado, zonas) se recalcula a partir dele. */
-export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
+export function Casca({ config, escolhendoFace, onEscolherFace, mobiliado = true }: Props) {
   const { comprimento: L, altura: H } = config;
   const meio = L / 2;
 
@@ -229,7 +231,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
       <Divisorias config={config} />
       <Banheiro config={config} />
       <Cozinha config={config} />
-      <Vivencia config={config} />
+      <Vivencia config={config} mobiliado={mobiliado} />
       <Externos config={config} />
 
       {escolhendoFace && <SeletorFaces config={config} onEscolher={onEscolherFace} />}
