@@ -5,7 +5,7 @@ import { Caixa } from "../Caixa";
 import { Entrada } from "../Entrada";
 import { MOLDURA } from "../Fachada";
 import { quadroFace } from "../faces";
-import { MAT, criarMaterialDeck } from "../materiais";
+import { MAT, criarMaterialDeck, criarMaterialTabuado } from "../materiais";
 
 const TABUA = { largura: 0.14, junta: 0.008 };
 const TOPO_DECK = CHASSI - 0.03;
@@ -27,8 +27,10 @@ export function Externos({ config }: { config: Config }) {
 
   const dim = deckDe(config, tabela.opcionais.deck.profundidade);
   const DECK = { comprimento: dim.largura, profundidade: dim.profundidade };
-  const tabuas = Math.floor(DECK.comprimento / (TABUA.largura + TABUA.junta));
-  const passoTabua = DECK.comprimento / tabuas;
+  const tabuas = Math.round(DECK.comprimento / (TABUA.largura + TABUA.junta));
+  // O tampo fica entre as testeiras (20 mm de cada lado e na frente), que cobrem o corte das tábuas.
+  const larguraTampo = DECK.comprimento - 0.04;
+  const matTampo = useMemo(() => criarMaterialTabuado(wpc, larguraTampo, tabuas), [wpc, larguraTampo, tabuas]);
   const sarrafos = Math.max(6, Math.round(DECK.comprimento / 0.3));
   const zc = inicio + DECK.profundidade / 2;
   const meio = config.comprimento / 2;
@@ -50,22 +52,14 @@ export function Externos({ config }: { config: Config }) {
       {deck && (
         <group position={q.pos} rotation={[0, q.rotY, 0]}>
           <Entrada key={`deck-${face}-${DECK.comprimento}`}>
-            {/* Estrutura escura recuada e testeira em WPC nas bordas livres. */}
+            {/* Estrutura escura recuada e testeira em WPC nas bordas livres, na altura do tampo. */}
             <Caixa p={[0, TOPO_DECK / 2 - 0.02, zc]} s={[DECK.comprimento - 0.1, TOPO_DECK - 0.06, DECK.profundidade - 0.1]} mat={MAT.laca("#1E1E1E")} contato={false} />
-            <Caixa p={[0, (TOPO_DECK - 0.03) / 2, inicio + DECK.profundidade - 0.01]} s={[DECK.comprimento, TOPO_DECK - 0.03, 0.02]} mat={matDeck} contato={false} />
+            <Caixa p={[0, TOPO_DECK / 2, inicio + DECK.profundidade - 0.01]} s={[DECK.comprimento, TOPO_DECK, 0.02]} mat={matDeck} contato={false} />
             {[-1, 1].map((lado) => (
-              <Caixa key={lado} p={[lado * (DECK.comprimento / 2 - 0.01), (TOPO_DECK - 0.03) / 2, zc]} s={[0.02, TOPO_DECK - 0.03, DECK.profundidade]} mat={matDeck} contato={false} />
+              <Caixa key={lado} p={[lado * (DECK.comprimento / 2 - 0.01), TOPO_DECK / 2, zc]} s={[0.02, TOPO_DECK, DECK.profundidade]} mat={matDeck} contato={false} />
             ))}
-            {Array.from({ length: tabuas }, (_, i) => (
-              <Caixa
-                key={i}
-                p={[-DECK.comprimento / 2 + passoTabua * (i + 0.5), TOPO_DECK - 0.0125, zc]}
-                s={[passoTabua - TABUA.junta, 0.025, DECK.profundidade]}
-                mat={matDeck}
-                raio={0.003}
-                contato={false}
-              />
-            ))}
+            {/* Tampo único: tábuas e juntas desenhadas na textura (com mipmaps), sem pontilhado a distância. */}
+            <Caixa p={[0, TOPO_DECK - 0.0125, zc - 0.01]} s={[larguraTampo, 0.025, DECK.profundidade - 0.02]} mat={matTampo} contato={false} />
           </Entrada>
 
           {pergolado && (

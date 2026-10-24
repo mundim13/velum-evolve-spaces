@@ -29,13 +29,24 @@ const PASTA = "/modulos/texturas/";
 const carregador = new THREE.TextureLoader();
 const imagens = new Map<string, Promise<THREE.Texture>>();
 let pedirQuadro: () => void = () => {};
+let anisotropia = 8;
+const texturasProntas = new Set<THREE.Texture>();
 
 /** O Canvas registra aqui o invalidate(), para redesenhar quando uma textura chega (frameloop "demand"). */
 export function registrarRedesenho(fn: () => void) {
   pedirQuadro = fn;
 }
 
-function textura(nome: string, cor: boolean, metros: number, repeticaoExtra: [number, number] = [1, 1]) {
+/** O Canvas informa a anisotropia máxima da GPU; vale para as texturas já carregadas e para as próximas. */
+export function registrarAnisotropia(maximo: number) {
+  anisotropia = Math.max(1, Math.min(16, maximo));
+  for (const t of texturasProntas) {
+    t.anisotropy = anisotropia;
+    t.needsUpdate = true;
+  }
+}
+
+function textura(nome: string, cor: boolean, metros: number, repeticaoExtra: [number, number] = [1, 1], deslocamento: [number, number] = [0, 0]) {
   let base = imagens.get(nome);
   if (!base) {
     base = carregador.loadAsync(`${PASTA}${nome}.webp`);
@@ -45,8 +56,14 @@ function textura(nome: string, cor: boolean, metros: number, repeticaoExtra: [nu
     const c = t.clone();
     c.wrapS = c.wrapT = THREE.RepeatWrapping;
     c.repeat.set(repeticaoExtra[0] / metros, repeticaoExtra[1] / metros);
+    c.offset.set(deslocamento[0], deslocamento[1]);
     c.colorSpace = cor ? THREE.SRGBColorSpace : THREE.NoColorSpace;
-    c.anisotropy = 8;
+    // Mipmaps com filtragem trilinear e anisotropia máxima: sem serrilhado nem pontilhado a distância.
+    c.generateMipmaps = true;
+    c.minFilter = THREE.LinearMipmapLinearFilter;
+    c.magFilter = THREE.LinearFilter;
+    c.anisotropy = anisotropia;
+    texturasProntas.add(c);
     c.needsUpdate = true;
     return c;
   });
@@ -65,6 +82,8 @@ interface DefinicaoPBR {
   normal?: number;
   /** Repetição adicional (por exemplo, para comprimir o veio nas ripas instanciadas). */
   repeticao?: [number, number];
+  /** Deslocamento da textura (em repetições), para alinhar o desenho com a peça. */
+  deslocamento?: [number, number];
 }
 
 function pbr(d: DefinicaoPBR) {
@@ -76,7 +95,7 @@ function pbr(d: DefinicaoPBR) {
   if (d.conjunto && typeof document !== "undefined") {
     const metros = d.metros ?? 1;
     for (const tipo of d.mapas ?? ["cor", "normal"]) {
-      textura(`${d.conjunto}_${tipo}`, tipo === "cor", metros, d.repeticao)
+      textura(`${d.conjunto}_${tipo}`, tipo === "cor", metros, d.repeticao, d.deslocamento)
         .then((t) => {
           if (tipo === "cor") {
             m.map = t;
@@ -179,6 +198,25 @@ export function criarMaterialWpc(cor: string) {
 /** Tábuas do deck: o mesmo veio do WPC, em UV de metros (veio ao longo da tábua). */
 export function criarMaterialDeck(cor: string) {
   return pbr({ cor, rugosidade: 0.7, conjunto: "wpc", metros: 0.5, normal: 0.8 });
+}
+
+/**
+ * Tampo do deck: o tabuado vem da textura deck_* (4 tábuas por repetição, 1 m de comprimento), esticada para
+ * caber um número inteiro de tábuas na largura e alinhada para começar numa junta na borda (x = -largura / 2).
+ */
+export function criarMaterialTabuado(cor: string, largura: number, tabuas: number) {
+  const passo = largura / tabuas;
+  const repeticaoX = 1 / (4 * passo);
+  const deslocamentoX = ((largura / 2) * repeticaoX) % 1;
+  return pbr({
+    cor,
+    rugosidade: 0.72,
+    conjunto: "deck",
+    metros: 1,
+    normal: 0.9,
+    repeticao: [repeticaoX, 1],
+    deslocamento: [deslocamentoX, 0],
+  });
 }
 
 /** Material liso genérico, por cor. */

@@ -283,19 +283,37 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
 }
 
 /** Barra de passos com rolagem horizontal; o degradê na borda direita indica que há mais passos. */
+/** Largura do degradê da borda direita da barra de passos e folga mínima nas bordas (px). */
+const DEGRADE_BARRA = 56;
+const MARGEM_BARRA = 16;
+
 function BarraEtapas({ etapa, onEtapa }: { etapa: Etapa; onEtapa: (e: Etapa) => void }) {
   const barra = useRef<HTMLElement>(null);
   const [temMais, setTemMais] = useState(true);
+  // O degradê só aparece enquanto o último passo não estiver inteiro na tela.
   const medir = () => {
     const b = barra.current;
-    if (b) setTemMais(b.scrollLeft + b.clientWidth < b.scrollWidth - 4);
+    const ultimo = b?.lastElementChild;
+    if (!b || !ultimo) return;
+    const noFim = b.scrollLeft + b.clientWidth >= b.scrollWidth - 1;
+    setTemMais(!noFim && ultimo.getBoundingClientRect().right > b.getBoundingClientRect().right - MARGEM_BARRA + 1);
   };
   useEffect(() => {
-    // O passo ativo sempre fica visível na barra.
-    barra.current?.querySelector<HTMLElement>('[aria-current="step"]')?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+    // O passo ativo fica inteiro na tela e fora do degradê: a barra rola até ele com uma folga de cada lado.
+    const b = barra.current;
+    const ativo = b?.querySelector<HTMLElement>('[aria-current="step"]');
+    if (!b || !ativo) return;
+    const caixa = b.getBoundingClientRect();
+    const botao = ativo.getBoundingClientRect();
+    let alvo = b.scrollLeft;
+    if (botao.right > caixa.right - DEGRADE_BARRA - 4) alvo += botao.right - (caixa.right - DEGRADE_BARRA - 4);
+    if (botao.left < caixa.left + MARGEM_BARRA) alvo -= caixa.left + MARGEM_BARRA - botao.left;
+    // Rolagem imediata: a suave seria cancelada pela rolagem suave da página até o passo novo (celular).
+    if (alvo !== b.scrollLeft) b.scrollLeft = alvo;
     medir();
   }, [etapa]);
   useEffect(() => {
+    medir();
     window.addEventListener("resize", medir);
     return () => window.removeEventListener("resize", medir);
   }, []);
@@ -331,7 +349,7 @@ function BarraEtapas({ etapa, onEtapa }: { etapa: Etapa; onEtapa: (e: Etapa) => 
       <div
         aria-hidden
         className="pointer-events-none absolute top-0 right-0 bottom-1 transition-opacity duration-200"
-        style={{ width: 56, opacity: temMais ? 1 : 0, background: "linear-gradient(to right, rgba(10,10,10,0), #0A0A0A 85%)" }}
+        style={{ width: DEGRADE_BARRA, opacity: temMais ? 1 : 0, background: "linear-gradient(to right, rgba(10,10,10,0), #0A0A0A 85%)" }}
       />
     </div>
   );

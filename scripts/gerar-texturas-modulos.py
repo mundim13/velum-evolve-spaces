@@ -161,6 +161,34 @@ def wpc():
     salvar(normal(0.7 * estria + 0.3 * fino, 3.0), "wpc_normal", 78)
 
 
+def deck():
+    """
+    Tabuado do deck WPC: 4 tábuas lado a lado (u) por 1 m de comprimento (v), em tons neutros para tingir.
+    As juntas ficam na textura (e não na geometria) para os mipmaps as filtrarem: na geometria, a junta
+    de 8 mm fica menor que um pixel a distância e vira um pontilhado.
+    """
+    n = 1024
+    tabuas = 4
+    yy, xx = np.mgrid[0:n, 0:n] / n
+    pos = (xx * tabuas) % 1.0  # posição dentro da tábua (0 a 1)
+    indice = np.floor(xx * tabuas).astype(int)
+    junta = 0.055  # 8 mm em 148 mm
+    meia = junta / 2
+    # Distância à junta mais próxima (a junta é centrada na emenda entre tábuas, em pos = 0 e 1).
+    d = np.minimum(pos, 1 - pos)
+    vao = d < meia
+    chanfro = np.clip((d - meia) / 0.03, 0, 1)  # borda levemente arredondada
+    escovado = ruido(n, 1.1, 81, ax=1.0, ay=30.0)
+    ranhuras = 0.5 + 0.5 * np.sin(pos * 2 * np.pi * 9)  # frisos do WPC ao longo da tábua
+    tom = np.array([0.0, 0.035, -0.025, 0.02])[indice]
+    t = 0.8 + tom + 0.1 * (escovado - 0.5) + 0.025 * ranhuras
+    t = t * (0.82 + 0.18 * chanfro)
+    t = np.where(vao, 0.16, t)
+    salvar(t, "deck_cor", 88)
+    altura = np.where(vao, 0.0, 0.25 + 0.75 * np.sqrt(chanfro)) + 0.04 * ranhuras + 0.03 * escovado
+    salvar(normal(altura, 6.0), "deck_normal", 85)
+
+
 def pedras(nome, n, celulas, cores, semente, junta, cor_junta):
     """Pedras arredondadas (seixo do box): domo por célula de Worley, com junta entre elas."""
     f1, f2, idv = worley(n, celulas, semente, 0.95)
@@ -209,6 +237,7 @@ if __name__ == "__main__":
     porcelanato("parede_banheiro", 1024, 1.2, (0.6, 1.2), "#C9C2B7", "#B3AA9D", 71)
     madeira()
     wpc()
+    deck()
     pedras("seixo", 1024, 26, ["#6F7F6E", "#8FA08C", "#A7B3A1", "#C2C6B8"], 91, 0.16, "#B8B4AA")
     granito()
     tecido()

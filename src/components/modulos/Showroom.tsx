@@ -6,7 +6,8 @@ import * as THREE from "three";
 import { CHASSI } from "@/lib/modulos-3x6/regras";
 import type { Config, FaceEsquadria } from "@/lib/modulos-3x6/tipos";
 import { Casca } from "./Casca";
-import { registrarRedesenho } from "./materiais";
+import { Desempenho } from "./Desempenho";
+import { registrarAnisotropia, registrarRedesenho } from "./materiais";
 import { SEM_CORTE, SombraCasca } from "./sombra";
 import fotoCazita from "@/assets/modulos/cazita-fachada.webp";
 
@@ -352,6 +353,7 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
           // Tone mapping neutro, para as cores saírem fiéis às amostras. Quando o pós-processamento
           // carrega, ele assume essa etapa (ver Efeitos.tsx).
           gl.toneMapping = THREE.NeutralToneMapping;
+          registrarAnisotropia(gl.capabilities.getMaxAnisotropy());
         }}
         style={{ touchAction: "none" }}
       >
@@ -359,6 +361,7 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
         <fog attach="fog" args={[CEU.horizonte, 20, 48]} />
         <Fundo />
         <Redesenho />
+        <Desempenho />
         <Ambiente />
         <Sol />
         <SombraSobDemanda chave={`${JSON.stringify(config)}|${modo}`} />
