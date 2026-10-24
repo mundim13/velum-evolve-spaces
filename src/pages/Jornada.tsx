@@ -382,7 +382,7 @@ function Indicador({ titulo, valor, unidade, nota, barra }: { titulo: string; va
   );
 }
 
-function Indicadores({ t }: { t: number }) {
+function Indicadores({ t, compacto = false }: { t: number; compacto?: boolean }) {
   const dia = diaEm(t);
   const { indice, entregue } = etapaEm(t);
   const total = useMemo(() => calcularPreco(CONFIG_VENDIDA).total, []);
@@ -391,8 +391,8 @@ function Indicadores({ t }: { t: number }) {
     <>
       <Indicador titulo="Progresso geral" valor={`${Math.round(progresso * 100)}`} unidade="%" nota="" barra={progresso} />
       <Indicador titulo="Prazo" valor={`${dia}`} unidade={`de ${DIAS_TOTAIS} dias`} nota={entregue ? "Entregue no prazo" : `Entrega em ${DIAS_TOTAIS - dia} dias`} />
-      <Indicador titulo="Etapa" valor={`${entregue ? ETAPAS.length : indice + 1}`} unidade={`de ${ETAPAS.length}`} nota={entregue ? "Concluída" : ETAPAS[indice].nome} />
-      <Indicador titulo="Área" valor="18" unidade="m²" nota="3,00 × 6,00 × 2,90 m" />
+      {!compacto && <Indicador titulo="Etapa" valor={`${entregue ? ETAPAS.length : indice + 1}`} unidade={`de ${ETAPAS.length}`} nota={entregue ? "Concluída" : ETAPAS[indice].nome} />}
+      {!compacto && <Indicador titulo="Área" valor="18" unidade="m²" nota="3,00 × 6,00 × 2,90 m" />}
       <Indicador titulo="Investimento" valor={formatarReais(total)} nota="Frete incluso em Goiânia" />
     </>
   );
@@ -407,6 +407,8 @@ export default function Jornada() {
   const gravando = p.get("gravar") === "1";
   const [vertical, setVertical] = useState(() => p.get("formato") === "vertical" || (typeof window !== "undefined" && window.innerWidth < 1024));
   const efeitos = p.get("efeitos") !== "0";
+  // Formato de reels (1080 × 1920): o painel cresce para continuar legível na tela do celular.
+  const escala = p.get("formato") === "vertical" ? 1.55 : 1;
 
   const inicio = Number(p.get("t") ?? 0) || 0;
   const tempo = useRef(inicio);
@@ -474,7 +476,7 @@ export default function Jornada() {
       <Suspense fallback={null}>
         <Cena tempo={tempo} marco={marco} gravando={gravando} afastar={vertical ? 1.35 : 1} efeitos={efeitos} />
       </Suspense>
-      <div className="absolute top-3 left-3 pointer-events-none" style={{ background: "rgba(255,255,255,0.82)", padding: "8px 12px 9px", borderRadius: 8, backdropFilter: "blur(6px)" }}>
+      <div className="absolute top-3 left-3 pointer-events-none" style={{ background: "rgba(255,255,255,0.82)", padding: "8px 12px 9px", borderRadius: 8, backdropFilter: "blur(6px)", zoom: escala }}>
         <div className="font-dm" style={{ fontSize: 11, color: COR.suave }}>
           {entregue ? "Entregue" : `Etapa ${indice + 1} de ${ETAPAS.length}`}
         </div>
@@ -496,6 +498,7 @@ export default function Jornada() {
             padding: "14px 22px",
             borderRadius: 12,
             whiteSpace: "nowrap",
+            zoom: escala,
           }}
         >
           <div className="font-syncopate font-bold uppercase" style={{ fontSize: vertical ? 18 : 16, letterSpacing: 4 }}>
@@ -557,22 +560,22 @@ export default function Jornada() {
       <SeoHead title="Jornada do módulo" description="Da fábrica ao seu quintal: acompanhe a produção, o transporte e a instalação de um módulo Velum." path="/jornada" />
 
       {vertical ? (
-        <div className="flex flex-col gap-3 p-4" style={{ minHeight: "100vh" }}>
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 p-4" style={{ height: "100vh" }}>
+          <div className="flex items-center justify-between" style={{ zoom: escala }}>
             <Logo />
             <Chip destaque>
               Dia <strong style={{ fontWeight: 600 }}>{dia}</strong> de {DIAS_TOTAIS}
             </Chip>
           </div>
-          <div style={{ height: "52vh" }}>{cena}</div>
-          {resumo}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-3">
-              <Indicadores t={t} />
-            </div>
-            <div className="flex flex-col gap-3">
+          <div className="flex-1 min-h-0">{cena}</div>
+          {/* No formato de reels, o painel de baixo é ampliado para ler no celular. */}
+          <div className="flex flex-col gap-3" style={{ zoom: escala }}>
+            {resumo}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-3">
+                <Indicadores t={t} compacto />
+              </div>
               <CartaoEtapa t={t} />
-              <Cronograma t={t} />
             </div>
           </div>
         </div>
