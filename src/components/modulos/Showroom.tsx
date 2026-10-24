@@ -28,7 +28,8 @@ const DIRECAO_FORA: Record<FaceEsquadria, THREE.Vector3> = {
   ladoA: new THREE.Vector3(0.75, 0.42, -1.1).normalize(),
   ladoB: new THREE.Vector3(0.3, 0.42, 1.2).normalize(),
 };
-const DIRECAO_DENTRO = new THREE.Vector3(0.3, 1.55, 0.85).normalize();
+// Bem do alto (cerca de 74°): a parede mais próxima, cortada a 1,55 m, esconde só uns 45 cm junto dela.
+const DIRECAO_DENTRO = new THREE.Vector3(0.3, 2.3, 0.6).normalize();
 
 function distancia(aspecto: number) {
   if (aspecto < 0.8) return 15;
