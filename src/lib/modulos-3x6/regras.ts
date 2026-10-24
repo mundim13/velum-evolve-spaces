@@ -20,6 +20,11 @@ export const FAIXA = 1.5;
 export const CHASSI = 0.2;
 export const ESPESSURA_PAREDE = 0.12;
 export const ALTURA_VAO = 2.1;
+/** Divisória amadeirada entre a faixa hidráulica e a vivência (em x = fim da faixa). */
+export const ESPESSURA_DIVISORIA = 0.06;
+/** Vãos das portas de correr na divisória, ao longo de z. */
+export const VAO_BANHEIRO: [number, number] = [-1.05, -0.35];
+export const VAO_COZINHA: [number, number] = [0.4, 1.2];
 
 export type TipoAbertura = "porta" | "janela" | "basculante" | "veneziana";
 

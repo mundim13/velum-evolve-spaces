@@ -1,5 +1,5 @@
 import type * as THREE from "three";
-import { CHASSI, ESPESSURA_PAREDE as T, FAIXA } from "@/lib/modulos-3x6/regras";
+import { CHASSI, ESPESSURA_DIVISORIA, ESPESSURA_PAREDE as T, FAIXA, VAO_BANHEIRO, VAO_COZINHA } from "@/lib/modulos-3x6/regras";
 import type { Config } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
 import { Entrada } from "../Entrada";
@@ -8,8 +8,6 @@ import { useSombraCasca } from "../sombra";
 
 export const TETO = 2.78;
 export const ALTURA_PORTA_INTERNA = 2.15;
-export const VAO_BANHEIRO: [number, number] = [-1.05, -0.35];
-export const VAO_COZINHA: [number, number] = [0.4, 1.2];
 
 /** Retângulo vertical com um furo, montado com até quatro caixas finas (para revestir paredes com janela). */
 export function PainelComFuro({
@@ -59,8 +57,9 @@ export function PainelComFuro({
 }
 
 /**
- * Painel amadeirado que separa a faixa hidráulica da vivência, com as duas portas de correr embutidas,
- * e a parede entre banheiro e cozinha. Tudo depende de existir banheiro e/ou cozinha.
+ * Painel amadeirado que separa a faixa hidráulica da vivência, com as portas de correr embutidas,
+ * e a parede entre banheiro e cozinha. Só existe com banheiro: sem ele, a cozinha fica aberta para a
+ * vivência (gourmet), sem sobrar pedaço de painel solto no meio do ambiente.
  */
 export function Divisorias({ config }: { config: Config }) {
   const meio = config.comprimento / 2;
@@ -70,12 +69,12 @@ export function Divisorias({ config }: { config: Config }) {
   const temBanheiro = config.banheiro !== "nenhum";
   const temCozinha = config.cozinha !== "nenhuma";
   const sombra = useSombraCasca();
-  if (!temBanheiro && !temCozinha) return null;
+  if (!temBanheiro) return null;
 
   const madeira = MAT.madeira();
   const perfil = MAT.perfil();
   const piso = CHASSI;
-  const espessura = 0.06;
+  const espessura = ESPESSURA_DIVISORIA;
 
   // Trechos cheios da divisória, de ponta a ponta, menos os vãos das portas.
   const trechos: [number, number][] = [];
@@ -101,8 +100,16 @@ export function Divisorias({ config }: { config: Config }) {
       {/* Rodapé preto fino, como nas fotos. */}
       <Caixa p={[xF + 0.032, piso + 0.025, (zIni + zFim) / 2]} s={[0.004, 0.05, zFim - zIni]} mat={perfil} sombra={false} />
 
+      {/* Sem cozinha, a folha do banheiro fica fechada na frente do vão: banheiro com privacidade. */}
+      {!temCozinha && (
+        <>
+          <Caixa p={[xF + 0.05, piso + 1.11, (VAO_BANHEIRO[0] + VAO_BANHEIRO[1]) / 2]} s={[0.035, 2.2, VAO_BANHEIRO[1] - VAO_BANHEIRO[0] + 0.12]} mat={madeira} raio={0.004} />
+          <Caixa p={[xF + 0.075, piso + 1.05, VAO_BANHEIRO[1] - 0.04]} s={[0.012, 0.2, 0.03]} mat={perfil} raio={0.004} />
+        </>
+      )}
+
       {/* As duas folhas ficam estacionadas no meio, deixando banheiro e cozinha abertos. */}
-      {temBanheiro && temCozinha && (
+      {temCozinha && (
         <>
           {[0.05, 0.1].map((dx, i) => (
             <group key={dx}>

@@ -55,7 +55,29 @@ function useVaoAnimado(alvo: Abertura): Abertura {
 
 const geometriaPlano = new THREE.PlaneGeometry(1, 1);
 
-/** Camada clicável sobre as faces que aceitam a esquadria principal: tocar na face escolhe onde fica o vidro. */
+/** Contorno retangular de uma face (quatro réguas finas), em ciano. */
+function Contorno({ largura, altura, espessura, opacidade }: { largura: number; altura: number; espessura: number; opacidade: number }) {
+  const reguas: [number, number, number, number][] = [
+    [0, altura - espessura / 2, largura, espessura],
+    [0, espessura / 2, largura, espessura],
+    [-largura / 2 + espessura / 2, altura / 2, espessura, altura],
+    [largura / 2 - espessura / 2, altura / 2, espessura, altura],
+  ];
+  return (
+    <>
+      {reguas.map(([x, y, w, h], i) => (
+        <mesh key={i} position={[x, y, 0]} scale={[w, h, 1]} geometry={geometriaPlano} renderOrder={10}>
+          <meshBasicMaterial color="#22D3EE" transparent opacity={opacidade} depthWrite={false} toneMapped={false} />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
+/**
+ * Camada clicável sobre as faces que aceitam a esquadria principal: tocar na face escolhe onde fica o vidro.
+ * A face fica marcada só pelo contorno ciano (sem véu por cima), para o vidro continuar transparente.
+ */
 function SeletorFaces({
   config,
   onEscolher,
@@ -71,12 +93,14 @@ function SeletorFaces({
         const q = quadroFace(face, config.comprimento);
         const comp = face === "testada" ? LARGURA : config.comprimento;
         const escolhida = config.esquadria.face === face;
-        const opacidade = escolhida ? 0.12 : sobre === face ? 0.16 : 0.05;
+        const destaque = escolhida || sobre === face;
+        const afastamento = face === "testada" ? MOLDURA.profundidade + 0.03 : 0.08;
         return (
           <group key={face} position={q.pos} rotation={[0, q.rotY, 0]}>
+            {/* Plano de toque invisível (não pinta nada, só recebe o clique). */}
             <mesh
               geometry={geometriaPlano}
-              position={[0, config.altura / 2, face === "testada" ? MOLDURA.profundidade + 0.03 : 0.08]}
+              position={[0, config.altura / 2, afastamento]}
               scale={[comp, config.altura, 1]}
               onClick={(e: ThreeEvent<MouseEvent>) => {
                 if (e.delta > 8) return;
@@ -93,8 +117,11 @@ function SeletorFaces({
                 document.body.style.cursor = "";
               }}
             >
-              <meshBasicMaterial color="#22D3EE" transparent opacity={opacidade} depthWrite={false} />
+              <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
             </mesh>
+            <group position={[0, 0, afastamento + 0.005]}>
+              <Contorno largura={comp + 0.06} altura={config.altura + 0.04} espessura={destaque ? 0.05 : 0.025} opacidade={escolhida ? 1 : sobre === face ? 0.85 : 0.45} />
+            </group>
           </group>
         );
       })}
