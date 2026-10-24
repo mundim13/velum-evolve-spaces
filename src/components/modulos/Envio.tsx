@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { propostasClient } from "@/lib/propostas-client";
+import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import { formatarReais, type ResultadoPreco } from "@/lib/modulos-3x6/preco";
 import { usoDaConfig } from "@/lib/modulos-3x6/regras";
@@ -23,7 +23,7 @@ const urlWhatsApp = (mensagem: string) => `https://wa.me/${VELUM_WHATSAPP}?text=
 async function criarProposta(config: Config, resultado: ResultadoPreco, contato: Contato): Promise<{ link: string } | { falha: Falha }> {
   try {
     const p = montarProposta(config, resultado, contato);
-    const { data, error } = await propostasClient.rpc("criar_proposta_simulador", {
+    const { data, error } = await supabase.rpc("criar_proposta_simulador", {
       ...p,
       p_itens: p.p_itens as unknown as Json,
       p_configuracao: p.p_configuracao as unknown as Json,

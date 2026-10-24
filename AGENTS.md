@@ -1,3 +1,3 @@
 # Architecture rules
 
-- Proposal RPC type extensions live in `src/lib/propostas-client.ts` and reuse the managed client; this keeps pending migration contracts typed without modifying generated integration files or creating another auth session.
+- Proposal RPCs (`criar_proposta_simulador`, `proposta_por_token`) are already typed in the generated `src/integrations/supabase/types.ts` (migrations applied). Call them through the managed `supabase` client from `src/integrations/supabase/client.ts`; do not add wrapper clients or type casts for them.
