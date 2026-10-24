@@ -48,10 +48,16 @@ export interface Sala {
   zB: number;
 }
 
+/**
+ * A vivência ocupa o módulo inteiro quando não há faixa hidráulica, e também no gourmet: lá a bancada
+ * gourmet é a cozinha, e a faixa do fundo não é desenhada (sem cozinha dobrada).
+ */
+export const salaInteira = (c: Pick<Config, "banheiro" | "cozinha" | "vivencia">) => !temFaixa(c) || ambienteDaConfig(c) === "gourmet";
+
 export function sala(c: Config): Sala {
   const meio = c.comprimento / 2;
   return {
-    a: temFaixa(c) ? -meio + FAIXA + ESPESSURA_DIVISORIA / 2 : -meio + T,
+    a: salaInteira(c) ? -meio + T : -meio + FAIXA + ESPESSURA_DIVISORIA / 2,
     b: meio - T,
     zA: -1.5 + T,
     zB: 1.5 - T,
@@ -90,7 +96,7 @@ export function vaosDaSala(c: Config): Vao[] {
   const vaos: Vao[] = [];
   for (const ab of aberturas(c)) {
     if (!ab.recorta) continue;
-    if (ab.face === "fundo" && temFaixa(c)) continue; // o fundo, aí, é do banheiro e da cozinha
+    if (ab.face === "fundo" && !salaInteira(c)) continue; // o fundo, aí, é do banheiro e da cozinha
     const parede = ab.face === "fundo" ? "fundo" : PAREDE_DA_FACE[ab.face];
     const [lo, hi] = limitesParede(s, parede);
     const u0 = Math.max(lo, ab.u0);
@@ -106,7 +112,7 @@ export function vaosDaSala(c: Config): Vao[] {
     });
   }
   // Divisória: portas do banheiro e da cozinha, ou passagem aberta onde não há parede.
-  if (temFaixa(c)) {
+  if (!salaInteira(c)) {
     const temBanheiro = c.banheiro !== "nenhum";
     const temCozinha = c.cozinha !== "nenhuma";
     const passagens: [string, number, number][] = [];
@@ -217,6 +223,8 @@ interface PecaBase {
   alto: boolean;
   /** Sem ela, o ambiente não se sustenta (conta mais na escolha do arranjo). */
   essencial?: boolean;
+  /** Não vai na parede do painel amadeirado (espelhos: sobre o painel pareciam um vão cinza). */
+  foraDoPainel?: boolean;
 }
 
 export interface PecaParede extends PecaBase {
@@ -293,6 +301,7 @@ const espelho = (largura: number): PecaParede => ({
   profundidade: 0.05,
   alto: true,
   essencial: true,
+  foraDoPainel: true,
   paredes: ["fundo", "lateral", "cabeceira", "testada"],
   ancora: 0.5,
 });
@@ -398,7 +407,7 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
       { id: "expositora", tipo: "mesa-expositora", largura: 1.0, profundidade: 0.7, alto: false, frente: "balcao", distancia: 1.3 },
       // Espera do cliente (ou do paciente, no consultório) e espelho de corpo inteiro.
       { id: "espera", tipo: "espera", largura: 1.5, profundidade: 0.75, alto: false, paredes: ["cabeceira", "lateral", "testada", "fundo"], ancora: 0.9 },
-      { id: "espelho", tipo: "espelho-corpo", largura: 0.6, profundidade: 0.05, alto: true, paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.15 },
+      { id: "espelho", tipo: "espelho-corpo", largura: 0.6, profundidade: 0.05, alto: true, foraDoPainel: true, paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.15 },
     ],
   ],
 };
@@ -410,6 +419,8 @@ interface Contexto {
   vaos: Vao[];
   zonas: Ret[];
   paredePorta: Parede;
+  /** A cabeceira tem o painel amadeirado (sempre, menos com a porta de vidro nela). */
+  painel: boolean;
 }
 
 function valida(ctx: Contexto, r: Ret, alto: boolean, parede: Parede | null, u0: number, u1: number, colocadas: Colocada[]) {
@@ -430,7 +441,9 @@ function colocarNaParede(ctx: Contexto, peca: PecaParede, colocadas: Colocada[])
     const junto = tentarParedes(ctx, peca, colocadas, [ref.parede], ref, 0);
     if (junto) return junto;
   }
-  const paredes = [...new Set(peca.paredes.map((p) => (p === "oposta-porta" ? OPOSTA[ctx.paredePorta] : p)))];
+  const paredes = [...new Set(peca.paredes.map((p) => (p === "oposta-porta" ? OPOSTA[ctx.paredePorta] : p)))].filter(
+    (p) => !(peca.foraDoPainel && ctx.painel && p === "cabeceira"),
+  );
   if (peca.reserva) {
     const comReserva = tentarParedes(ctx, peca, colocadas, paredes, undefined, peca.reserva);
     if (comReserva) return comReserva;
@@ -534,7 +547,7 @@ export function layoutVivencia(c: Config): Layout {
   const s = sala(c);
   const vaos = vaosDaSala(c);
   const principal = vaos.find((v) => v.id === "principal");
-  const ctx: Contexto = { s, vaos, zonas: zonasLivres(c), paredePorta: principal?.parede ?? "testada" };
+  const ctx: Contexto = { s, vaos, zonas: zonasLivres(c), paredePorta: principal?.parede ?? "testada", painel: c.esquadria.face !== "ladoA" };
   let melhor: { colocadas: Colocada[]; pontos: number; pecas: Peca[] } | null = null;
   for (const pecas of ARRANJOS[ambiente]) {
     const r = montar(ctx, pecas);

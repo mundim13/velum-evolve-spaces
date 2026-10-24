@@ -58,6 +58,13 @@ describe("layout da vivência: regra geral de aberturas", () => {
     expect(faltam, `faltam ${faltam.join(", ")}`).toEqual([]);
   });
 
+  it.each(configs.map((c) => [nome(c), c] as const))("%s: espelho nunca sobre o painel amadeirado", (_, c) => {
+    const l = layoutVivencia(c);
+    const painel = c.esquadria.face !== "ladoA";
+    const espelhos = l.pecas.filter((p) => p.tipo === "espelho" || p.tipo === "espelho-corpo");
+    expect(espelhos.filter((p) => painel && p.parede === "cabeceira")).toEqual([]);
+  });
+
   it("a faixa livre na frente da porta tem 80 cm", () => {
     const l = layoutVivencia(CONFIG_INICIAL);
     const porta = l.zonas.find((z) => z.x1 === l.sala.b)!;
@@ -87,6 +94,13 @@ describe("atalhos", () => {
     expect(l.pecas.find((p) => p.id === "bancada")?.parede).toBe("cabeceira");
     expect(l.pecas.map((p) => p.tipo)).toEqual(expect.arrayContaining(["bancada-gourmet", "frigobar", "mesa-alta"]));
     expect(l.pecas.some((p) => p.tipo === "sofa" || p.tipo === "rack-tv")).toBe(false);
+  });
+
+  it("gourmet: a bancada é a cozinha, e a vivência ocupa o módulo inteiro (sem a copa do fundo)", () => {
+    const c = atalho("gourmet");
+    const l = layoutVivencia(c);
+    expect(l.sala.a).toBeCloseTo(-c.comprimento / 2 + 0.12);
+    expect(l.vaos.some((v) => v.parede === "fundo" && v.tipo === "porta")).toBe(false);
   });
 
   it("academia: espelho, rack de anilhas e cardio", () => {

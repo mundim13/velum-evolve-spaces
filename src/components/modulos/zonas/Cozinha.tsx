@@ -1,3 +1,4 @@
+import { ambienteDaConfig } from "@/lib/modulos-3x6/layout";
 import { CHASSI, ESPESSURA_PAREDE as T, FAIXA } from "@/lib/modulos-3x6/regras";
 import type { Config } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
@@ -37,7 +38,8 @@ function Armario({ xFundo, prof, y0, alt, z0, z1, portas }: { xFundo: number; pr
  * Copa: armário verde, bancada preta, cuba e frigobar embutido. Completa: cooktop, armários altos e coluna.
  */
 export function Cozinha({ config }: { config: Config }) {
-  if (config.cozinha === "nenhuma") return null;
+  // No gourmet, a cozinha é a bancada gourmet da vivência (sem a copa do fundo junto).
+  if (config.cozinha === "nenhuma" || ambienteDaConfig(config) === "gourmet") return null;
   const completa = config.cozinha === "completa";
   const meio = config.comprimento / 2;
   const xFundo = -meio + T;
