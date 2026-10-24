@@ -36,8 +36,8 @@ function distancia(aspecto: number) {
   return 11.5;
 }
 
-function preset(modo: ModoVista, aspecto: number, foco: FaceEsquadria = "testada") {
-  const d = distancia(aspecto);
+function preset(modo: ModoVista, aspecto: number, foco: FaceEsquadria = "testada", afastar = 1) {
+  const d = distancia(aspecto) * afastar;
   return modo === "fora"
     ? { alvo: ALVO_FORA.clone(), pos: ALVO_FORA.clone().addScaledVector(DIRECAO_FORA[foco], d) }
     : { alvo: ALVO_DENTRO.clone(), pos: ALVO_DENTRO.clone().addScaledVector(DIRECAO_DENTRO, d * 0.95) };
@@ -50,11 +50,14 @@ function preset(modo: ModoVista, aspecto: number, foco: FaceEsquadria = "testada
 function Camera({
   modo,
   foco,
+  afastar,
   girar,
   onInteragir,
 }: {
   modo: ModoVista;
   foco: FaceEsquadria;
+  /** Multiplica a distância da câmera (com o deck, o enquadramento precisa abrir). */
+  afastar: number;
   girar: boolean;
   onInteragir: () => void;
 }) {
@@ -77,12 +80,12 @@ function Camera({
     anim.current = {
       t: 0,
       de: { pos: camera.position.clone(), alvo: c.target.clone() },
-      para: preset(modo, aspecto, foco),
+      para: preset(modo, aspecto, foco, afastar),
     };
     invalidate();
     // A transição só reinicia quando muda a vista, a face em foco ou a faixa de proporção da tela.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modo, foco, faixaAspecto]);
+  }, [modo, foco, faixaAspecto, afastar]);
 
   useFrame((state, dt) => {
     const a = anim.current;
@@ -364,7 +367,7 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
         <SombraCasca.Provider value={modo === "fora"}>
           <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} />
         </SombraCasca.Provider>
-        <Camera modo={modo} foco={foco} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
+        <Camera modo={modo} foco={foco} afastar={config.extras.deck && modo === "fora" ? 1.3 : 1} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
         <Suspense fallback={null}>
           <Efeitos />
         </Suspense>
