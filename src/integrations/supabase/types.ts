@@ -120,6 +120,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      telefone_normalizado: { Args: { p_telefone: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never

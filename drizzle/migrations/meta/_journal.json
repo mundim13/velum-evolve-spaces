@@ -8,6 +8,13 @@
       "when": 1792848455616,
       "tag": "0000_propostas_simulador_modulos",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792848472007,
+      "tag": "0001_limite_propostas_simulador",
+      "breakpoints": true
     }
   ]
 }
