@@ -76,10 +76,10 @@
   },
   "opcionais": {
     "deck": { "nome": "Deck WPC", "descricao": "Na frente da esquadria principal: 3 x 2 m na testada, 6 x 2 m na lateral", "profundidade": 2, "vendaM2": 600 },
-    "pergolado": { "nome": "Pergolado sobre o deck", "venda": 6000, "exige": "deck" },
+    "pergolado": { "nome": "Pergolado sobre o deck", "descricao": "Mesmo tamanho do deck", "vendaM2": 500, "exige": "deck" },
     "fundacao": { "nome": "Fundação", "venda": 4500 },
     "kitAirbnb": { "nome": "Kit Airbnb", "descricao": "Enxoval, utensílios, fechadura digital", "venda": 3500, "disponivelEm": ["suite", "estudio"] },
-    "freteKm": { "nome": "Frete", "descricao": "Incluso até kmIncluso da fábrica; acima disso, vendaPorKm por km que passar do incluso", "kmIncluso": 50, "vendaPorKm": 12 },
+    "freteKm": { "nome": "Frete", "descricao": "Incluso nas cidadesInclusas; nas demais, vendaPorKm por km de distância da fábrica", "cidadesInclusas": ["Goiânia", "Aparecida de Goiânia", "Senador Canedo"], "vendaPorKm": 12 },
     "ligacoes": { "nome": "Ligações de água, esgoto e luz", "sobConsulta": true }
   },
   "atalhos": [

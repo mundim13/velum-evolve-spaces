@@ -1,4 +1,4 @@
-import { deckComPreco, formatarReais, kitMobiliaDe, type ResultadoPreco } from "./preco";
+import { cidadesComFreteIncluso, deckComPreco, formatarReais, kitMobiliaDe, pergoladoComPreco, type ResultadoPreco } from "./preco";
 import { usoDaConfig, varianteEsquadria } from "./regras";
 import { tabela, type Config, type FaceEsquadria, type Uso } from "./tipos";
 
@@ -38,16 +38,15 @@ export function resumoConfig(c: Config): [string, string][] {
   const kit = kitMobiliaDe(c);
   const opcionais = [
     c.extras.deck && deckComPreco(c).nome,
-    c.extras.deck && c.extras.pergolado && t.opcionais.pergolado.nome,
+    c.extras.deck && c.extras.pergolado && pergoladoComPreco(c).nome,
     c.extras.fundacao && t.opcionais.fundacao.nome,
     c.extras.kitAirbnb && (usoDaConfig(c) === "suite" || usoDaConfig(c) === "estudio") && t.opcionais.kitAirbnb.nome,
   ].filter(Boolean) as string[];
-  const incluso = t.opcionais.freteKm.kmIncluso;
   const entrega =
-    c.entrega.km !== null
-      ? `${c.entrega.cidade} (${c.entrega.km} km${c.entrega.km <= incluso ? ", frete incluso" : ""})`
-      : c.entrega.modo === "regiao"
-        ? `Até ${incluso} km da fábrica (frete incluso)`
+    c.entrega.modo === "regiao"
+      ? `${c.entrega.cidade || cidadesComFreteIncluso().join(", ")} (frete incluso)`
+      : c.entrega.km !== null
+        ? `${c.entrega.cidade} (${c.entrega.km} km)`
         : `${c.entrega.cidade || "Cidade a confirmar"} (frete sob consulta)`;
 
   return [

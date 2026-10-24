@@ -40,13 +40,13 @@ export interface Extras {
   kitAirbnb: boolean;
 }
 
-/** Passo 9: entrega. Até 50 km da fábrica o frete está incluso ("regiao"); acima, R$ por km excedente ("fora"). */
+/** Passo 9: entrega. "regiao": cidade com frete incluso (Goiânia, Aparecida, Senador Canedo); "fora": R$ por km. */
 export interface Entrega {
   modo: "regiao" | "fora";
   /** Cidade informada (ou encontrada pelo CEP). */
   cidade: string;
   cep: string;
-  /** Distância da fábrica em km; null quando não se sabe (região sem cidade informada, ou cidade fora da tabela). */
+  /** Distância da fábrica em km; null quando não se sabe (cidade inclusa não informada, ou cidade fora da lista). */
   km: number | null;
 }
 

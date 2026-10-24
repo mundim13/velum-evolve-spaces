@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ENTREGA_REGIAO, cidadeDoCep, entregaPara, limparCep } from "@/lib/modulos-3x6/entrega";
 import { reduzir, type Acao } from "@/lib/modulos-3x6/estado";
-import { calcularPreco, deckComPreco, formatarReais, kitAirbnbDisponivel, kitMobiliaDe } from "@/lib/modulos-3x6/preco";
+import {
+  calcularPreco,
+  cidadesComFreteIncluso,
+  deckComPreco,
+  formatarReais,
+  kitAirbnbDisponivel,
+  kitMobiliaDe,
+  pergoladoComPreco,
+} from "@/lib/modulos-3x6/preco";
 import { NOME_FACE } from "@/lib/modulos-3x6/saida";
 import { opcoesEsquadria } from "@/lib/modulos-3x6/regras";
 import {
@@ -146,7 +154,7 @@ function Rotulo({ children }: { children: ReactNode }) {
   );
 }
 
-/** Passo 9: cidade (com sugestões da tabela) ou CEP, para o frete acima dos km inclusos. */
+/** Passo 9: cidade (com sugestões da tabela) ou CEP, para o frete fora das cidades com frete incluso. */
 function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Acao) => void }) {
   const e = config.entrega;
   const [fora, setFora] = useState(e.modo === "fora" || !!e.cidade);
@@ -182,14 +190,13 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
 
   const r = calcularPreco(config);
   const frete = r.itens.find((i) => i.id === "frete");
-  const incluso = tabela.opcionais.freteKm.kmIncluso;
+  const inclusas = cidadesComFreteIncluso();
+  const listaInclusas = `${inclusas.slice(0, -1).join(", ")} ou ${inclusas[inclusas.length - 1]}`;
   const situacao =
-    e.km !== null
-      ? frete && frete.venda > 0
-        ? `${e.cidade}: ${e.km} km da fábrica, frete de ${formatarReais(frete.venda)} (${e.km - incluso} km além dos ${incluso} inclusos).`
-        : `${e.cidade}: ${e.km} km da fábrica, frete incluso.`
-      : e.modo === "regiao"
-        ? `Até ${incluso} km da fábrica: frete incluso.`
+    e.modo === "regiao"
+      ? `${e.cidade || listaInclusas}: frete incluso.`
+      : e.km !== null
+        ? `${e.cidade}: ${e.km} km da fábrica, frete de ${formatarReais(frete?.venda ?? 0)}.`
         : e.cidade
           ? `${e.cidade}: frete sob consulta, fora do total.`
           : "";
@@ -211,8 +218,8 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
       <div className="grid gap-2">
         <Opcao
           ativo={!fora}
-          titulo={`Até ${incluso} km da fábrica`}
-          detalhe="Goiânia e cidades próximas: frete incluso no preço"
+          titulo={listaInclusas}
+          detalhe="Frete incluso no preço"
           onClick={() => {
             setFora(false);
             setCidade("");
@@ -222,8 +229,8 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
         />
         <Opcao
           ativo={fora}
-          titulo="Informar a cidade"
-          detalhe={`Acima de ${incluso} km, R$ ${tabela.opcionais.freteKm.vendaPorKm} por km excedente`}
+          titulo="Outra cidade"
+          detalhe={`Frete de R$ ${tabela.opcionais.freteKm.vendaPorKm} por km a partir da fábrica`}
           onClick={() => setFora(true)}
         />
       </div>
@@ -600,8 +607,8 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
             {config.extras.deck && (
               <Opcao
                 ativo={config.extras.pergolado}
-                titulo={tabela.opcionais.pergolado.nome}
-                direita={<Preco valor={tabela.opcionais.pergolado.venda} />}
+                titulo={pergoladoComPreco(config).nome}
+                direita={<Preco valor={pergoladoComPreco(config).venda} />}
                 onClick={alternar("pergolado")}
               />
             )}

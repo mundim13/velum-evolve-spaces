@@ -18,14 +18,14 @@ export function buscarCidade(nome: string): Cidade | undefined {
 
 /**
  * Entrega para uma cidade informada pela pessoa (ou encontrada pelo CEP).
- * Até o limite da tabela (50 km da fábrica) o frete está incluso; acima, cobra o km excedente;
+ * Nas cidades inclusas da tabela de preços o frete está no preço; nas demais, vale a distância da lista;
  * cidade fora da lista fica com frete sob consulta.
  */
 export function entregaPara(nome: string, cep = ""): Entrega {
   const cidade = buscarCidade(nome);
   if (!cidade) return { modo: "fora", cidade: nome.trim(), cep, km: null };
   const rotulo = `${cidade.nome} - ${cidade.uf}`;
-  const modo = cidade.km <= tabela.opcionais.freteKm.kmIncluso ? "regiao" : "fora";
+  const modo = tabela.opcionais.freteKm.cidadesInclusas.includes(cidade.nome) ? "regiao" : "fora";
   return { modo, cidade: rotulo, cep, km: cidade.km };
 }
 

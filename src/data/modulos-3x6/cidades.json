@@ -1,5 +1,5 @@
 {
-  "observacao": "Distâncias rodoviárias ESTIMADAS a partir da fábrica (Goiânia), em km. O frete é incluso até opcionais.freteKm.kmIncluso (precos.json) e, acima disso, cobrado por km excedente. Conferir e ajustar antes de publicar. Cidade fora da lista = frete sob consulta.",
+  "observacao": "Distâncias rodoviárias ESTIMADAS a partir da fábrica (Goiânia), em km. O frete é incluso nas opcionais.freteKm.cidadesInclusas (precos.json) e, nas demais, cobrado por km de distância. Conferir e ajustar antes de publicar. Cidade fora da lista = frete sob consulta.",
   "origem": "Goiânia",
   "cidades": [
     { "nome": "Goiânia", "uf": "GO", "km": 0 },

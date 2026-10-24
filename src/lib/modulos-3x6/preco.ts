@@ -30,12 +30,22 @@ export function deckComPreco(c: Config, t: TabelaPrecos = tabelaPadrao) {
   };
 }
 
-/** Frete pela distância da fábrica: incluso até o limite da tabela, e cada km acima dele é cobrado. */
-export function fretePorKm(km: number, t: TabelaPrecos = tabelaPadrao) {
-  const f = t.opcionais.freteKm;
-  const excedente = Math.max(0, km - f.kmIncluso);
-  return { excedente, venda: Math.round(excedente * f.vendaPorKm) };
+/** Pergolado do mesmo tamanho do deck, por m² (R$ 3.000 no deck da testada, R$ 6.000 no da lateral). */
+export function pergoladoComPreco(c: Config, t: TabelaPrecos = tabelaPadrao) {
+  const d = deckDe(c, t.opcionais.deck.profundidade);
+  return {
+    nome: `${t.opcionais.pergolado.nome} (${m(d.largura)} x ${m(d.profundidade)} m)`,
+    venda: Math.round(d.area * t.opcionais.pergolado.vendaM2),
+    nota: `${m(d.area)} m² × R$ ${t.opcionais.pergolado.vendaM2}/m²`,
+  };
 }
+
+/** Frete pela distância da fábrica (R$ por km); nas cidades inclusas da tabela, não entra no total. */
+export function fretePorKm(km: number, t: TabelaPrecos = tabelaPadrao) {
+  return Math.round(km * t.opcionais.freteKm.vendaPorKm);
+}
+
+export const cidadesComFreteIncluso = (t: TabelaPrecos = tabelaPadrao) => t.opcionais.freteKm.cidadesInclusas;
 
 /** O kit Airbnb só aparece em suíte e estúdio. */
 export function kitAirbnbDisponivel(c: Config, t: TabelaPrecos = tabelaPadrao) {
@@ -103,31 +113,34 @@ export function calcularPreco(c: Config, t: TabelaPrecos = tabelaPadrao): Result
     const deck = deckComPreco(c, t);
     itens.push({ id: "deck", grupo: "Opcionais", nome: deck.nome, venda: deck.venda, nota: deck.nota });
   }
-  if (c.extras.deck && c.extras.pergolado) itens.push({ id: "pergolado", grupo: "Opcionais", nome: o.pergolado.nome, venda: o.pergolado.venda });
+  if (c.extras.deck && c.extras.pergolado) {
+    const pergolado = pergoladoComPreco(c, t);
+    itens.push({ id: "pergolado", grupo: "Opcionais", nome: pergolado.nome, venda: pergolado.venda, nota: pergolado.nota });
+  }
   if (c.extras.fundacao) itens.push({ id: "fundacao", grupo: "Opcionais", nome: o.fundacao.nome, venda: o.fundacao.venda });
   if (c.extras.kitAirbnb && kitAirbnbDisponivel(c, t)) {
     itens.push({ id: "kit-airbnb", grupo: "Opcionais", nome: o.kitAirbnb.nome, venda: o.kitAirbnb.venda, nota: o.kitAirbnb.descricao });
   }
 
-  // Passo 9: entrega. Até o limite da tabela (50 km da fábrica) o frete é incluso; acima, R$ por km excedente;
-  // cidade sem distância conhecida, sob consulta.
+  // Passo 9: entrega. Nas cidades inclusas da tabela (Goiânia, Aparecida, Senador Canedo) o frete está no preço;
+  // nas demais, R$ por km de distância da fábrica; cidade sem distância conhecida, sob consulta.
   const sobConsulta: string[] = [t.opcionais.ligacoes.nome];
   const entrega = c.entrega;
-  const incluso = o.freteKm.kmIncluso;
-  if (entrega.km !== null) {
-    const frete = fretePorKm(entrega.km, t);
+  if (entrega.modo === "regiao") {
+    itens.push({
+      id: "frete",
+      grupo: "Entrega",
+      nome: entrega.cidade ? `Frete até ${entrega.cidade}` : `Frete para ${cidadesComFreteIncluso(t).join(", ")}`,
+      venda: 0,
+    });
+  } else if (entrega.km !== null) {
     itens.push({
       id: "frete",
       grupo: "Entrega",
       nome: `Frete até ${entrega.cidade}`,
-      venda: frete.venda,
-      nota:
-        frete.excedente > 0
-          ? `${entrega.km} km, ${incluso} km inclusos: ${frete.excedente} km × R$ ${o.freteKm.vendaPorKm}/km`
-          : `${entrega.km} km, dentro dos ${incluso} km inclusos`,
+      venda: fretePorKm(entrega.km, t),
+      nota: `${entrega.km} km × R$ ${o.freteKm.vendaPorKm}/km`,
     });
-  } else if (entrega.modo === "regiao") {
-    itens.push({ id: "frete", grupo: "Entrega", nome: `Frete até ${incluso} km da fábrica`, venda: 0 });
   } else {
     sobConsulta.push(entrega.cidade ? `Frete até ${entrega.cidade}` : "Frete");
   }
