@@ -20,12 +20,14 @@ export type Database = {
           client_email: string | null
           client_name: string
           client_phone: string | null
+          configuracao: Json | null
           created_at: string
           created_by: string | null
           description: string | null
           id: string
           items: Json | null
           notes: string | null
+          origem: string
           status: string
           title: string
           total_value: number | null
@@ -37,12 +39,14 @@ export type Database = {
           client_email?: string | null
           client_name: string
           client_phone?: string | null
+          configuracao?: Json | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: string
           items?: Json | null
           notes?: string | null
+          origem?: string
           status?: string
           title: string
           total_value?: number | null
@@ -54,12 +58,14 @@ export type Database = {
           client_email?: string | null
           client_name?: string
           client_phone?: string | null
+          configuracao?: Json | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: string
           items?: Json | null
           notes?: string | null
+          origem?: string
           status?: string
           title?: string
           total_value?: number | null
@@ -73,7 +79,47 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      criar_proposta_simulador: {
+        Args: {
+          p_configuracao: Json
+          p_descricao: string
+          p_itens: Json
+          p_nome: string
+          p_notas: string
+          p_telefone: string
+          p_titulo: string
+          p_total: number
+        }
+        Returns: string
+      }
+      proposta_por_token: {
+        Args: { p_token: string }
+        Returns: {
+          access_token: string
+          client_email: string | null
+          client_name: string
+          client_phone: string | null
+          configuracao: Json | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          items: Json | null
+          notes: string | null
+          origem: string
+          status: string
+          title: string
+          total_value: number | null
+          updated_at: string
+          valid_until: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "proposals"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       [_ in never]: never
