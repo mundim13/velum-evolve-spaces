@@ -40,7 +40,7 @@ export interface Extras {
   kitAirbnb: boolean;
 }
 
-/** Passo 9: entrega. "regiao": cidade com frete incluso (Goiânia, Aparecida, Senador Canedo); "fora": R$ por km. */
+/** Passo 9: entrega. "regiao": cidade com frete incluso (Goiânia, Aparecida, Senador Canedo); "fora": R$ por km, ida e volta. */
 export interface Entrega {
   modo: "regiao" | "fora";
   /** Cidade informada (ou encontrada pelo CEP). */

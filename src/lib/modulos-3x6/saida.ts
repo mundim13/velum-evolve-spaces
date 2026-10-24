@@ -1,4 +1,4 @@
-import { cidadesComFreteIncluso, deckComPreco, formatarReais, kitMobiliaDe, pergoladoComPreco, type ResultadoPreco } from "./preco";
+import { cidadesComFreteIncluso, deckComPreco, formatarReais, kitMobiliaDe, pergoladoComPreco, textoFrete, type ResultadoPreco } from "./preco";
 import { usoDaConfig, varianteEsquadria } from "./regras";
 import { tabela, type Config, type FaceEsquadria, type Uso } from "./tipos";
 
@@ -46,7 +46,7 @@ export function resumoConfig(c: Config): [string, string][] {
     c.entrega.modo === "regiao"
       ? `${c.entrega.cidade || cidadesComFreteIncluso().join(", ")} (frete incluso)`
       : c.entrega.km !== null
-        ? `${c.entrega.cidade} (${c.entrega.km} km)`
+        ? `${c.entrega.cidade}: ${textoFrete(c.entrega.km)}`
         : `${c.entrega.cidade || "Cidade a confirmar"} (frete sob consulta)`;
 
   return [

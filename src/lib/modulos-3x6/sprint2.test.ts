@@ -2,11 +2,13 @@ import { describe, expect, it } from "vitest";
 import { buscarCidade, entregaPara } from "./entrega";
 import { CONFIG_INICIAL, aplicarAtalho, buscarAtalho, reduzir } from "./estado";
 import { CHAVE, carregarConfig, salvarConfig, validarConfig } from "./persistencia";
-import { calcularPreco, deckComPreco, fretePorKm, kitAirbnbDisponivel, kitMobiliaDe, pergoladoComPreco } from "./preco";
+import { calcularPreco, deckComPreco, fretePorKm, kitAirbnbDisponivel, kitMobiliaDe, pergoladoComPreco, textoFrete } from "./preco";
 import { usoDaConfig } from "./regras";
 import { mensagemWhatsApp, montarProposta, nomeValido, resumoConfig, telefoneValido } from "./saida";
 import type { Config } from "./tipos";
 
+/** formatarReais usa espaço não separável depois do "R$". */
+const semNbsp = (s: string) => s.replace(/\u00a0/g, " ");
 const comAtalho = (id: string) => aplicarAtalho(CONFIG_INICIAL, buscarAtalho(id)!);
 const total = (c: Config) => calcularPreco(c).total;
 const com = (c: Config, ...acoes: Parameters<typeof reduzir>[1][]) => acoes.reduce(reduzir, c);
@@ -95,7 +97,7 @@ describe("opcionais externos (passo 8)", () => {
 describe("entrega (passo 9)", () => {
   it("encontra a cidade sem acento, maiúscula ou UF", () => {
     expect(buscarCidade("goiania")?.nome).toBe("Goiânia");
-    expect(buscarCidade("Rio Verde - GO")?.km).toBe(230);
+    expect(buscarCidade("Rio Verde - GO")?.km).toBe(225);
     expect(buscarCidade("anapolis/go")?.nome).toBe("Anápolis");
   });
 
@@ -105,15 +107,16 @@ describe("entrega (passo 9)", () => {
     expect(total(c)).toBe(80000);
   });
 
-  it("nas demais cidades cobra R$ 12 por km de distância", () => {
-    expect(fretePorKm(25)).toBe(300);
+  it("nas demais cidades cobra ida e volta: km da fábrica × 2 × R$ 12", () => {
+    expect(fretePorKm(35)).toBe(840);
+    expect(semNbsp(textoFrete(35))).toBe("35 km da fábrica (ida e volta), frete de R$ 840");
     const trindade = com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Trindade") });
-    expect(trindade.entrega.modo).toBe("fora");
-    expect(total(trindade)).toBe(80000 + 25 * 12);
+    expect(trindade.entrega).toMatchObject({ modo: "fora", km: 35 });
+    expect(total(trindade)).toBe(80000 + 840);
     const rioVerde = com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Rio Verde") });
-    expect(total(rioVerde)).toBe(80000 + 230 * 12);
-    expect(calcularPreco(rioVerde).itens.find((i) => i.id === "frete")?.nota).toBe("230 km × R$ 12/km");
-    expect(total(com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Anápolis") }))).toBe(80000 + 55 * 12);
+    expect(total(rioVerde)).toBe(80000 + 225 * 2 * 12);
+    expect(calcularPreco(rioVerde).itens.find((i) => i.id === "frete")?.nota).toBe("225 km × 2 (ida e volta) × R$ 12/km");
+    expect(total(com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Anápolis") }))).toBe(80000 + 70 * 2 * 12);
   });
 
   it("cidade fora da tabela fica sob consulta, fora do total", () => {
@@ -207,6 +210,6 @@ describe("saída para WhatsApp e /propostas", () => {
     expect(p.p_itens.every((i) => i.quantity === 1 && typeof i.description === "string")).toBe(true);
     expect(p.p_notas.split("\n").every((l) => l.startsWith("•"))).toBe(true);
     expect(p.p_titulo).toBe("Módulo 3x6 · Cazita (Airbnb)");
-    expect(resumoConfig(c).find(([r]) => r === "Entrega")?.[1]).toBe("Rio Verde - GO (230 km)");
+    expect(semNbsp(resumoConfig(c).find(([r]) => r === "Entrega")?.[1] ?? "")).toBe("Rio Verde - GO: 225 km da fábrica (ida e volta), frete de R$ 5.400");
   });
 });

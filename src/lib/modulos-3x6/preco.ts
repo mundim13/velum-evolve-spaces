@@ -40,9 +40,15 @@ export function pergoladoComPreco(c: Config, t: TabelaPrecos = tabelaPadrao) {
   };
 }
 
-/** Frete pela distância da fábrica (R$ por km); nas cidades inclusas da tabela, não entra no total. */
+/** Frete pela distância da fábrica, ida e volta (km × 2 × R$ por km); nas cidades inclusas, não entra no total. */
 export function fretePorKm(km: number, t: TabelaPrecos = tabelaPadrao) {
-  return Math.round(km * t.opcionais.freteKm.vendaPorKm);
+  const f = t.opcionais.freteKm;
+  return Math.round(km * (f.idaEVolta ? 2 : 1) * f.vendaPorKm);
+}
+
+/** "35 km da fábrica (ida e volta), frete de R$ 840": a mesma frase no passo 9, na mensagem e na proposta. */
+export function textoFrete(km: number, t: TabelaPrecos = tabelaPadrao) {
+  return `${km} km da fábrica${t.opcionais.freteKm.idaEVolta ? " (ida e volta)" : ""}, frete de ${formatarReais(fretePorKm(km, t))}`;
 }
 
 export const cidadesComFreteIncluso = (t: TabelaPrecos = tabelaPadrao) => t.opcionais.freteKm.cidadesInclusas;
@@ -123,7 +129,7 @@ export function calcularPreco(c: Config, t: TabelaPrecos = tabelaPadrao): Result
   }
 
   // Passo 9: entrega. Nas cidades inclusas da tabela (Goiânia, Aparecida, Senador Canedo) o frete está no preço;
-  // nas demais, R$ por km de distância da fábrica; cidade sem distância conhecida, sob consulta.
+  // nas demais, ida e volta (km × 2 × R$ por km); cidade sem distância conhecida, sob consulta.
   const sobConsulta: string[] = [t.opcionais.ligacoes.nome];
   const entrega = c.entrega;
   if (entrega.modo === "regiao") {
@@ -139,7 +145,9 @@ export function calcularPreco(c: Config, t: TabelaPrecos = tabelaPadrao): Result
       grupo: "Entrega",
       nome: `Frete até ${entrega.cidade}`,
       venda: fretePorKm(entrega.km, t),
-      nota: `${entrega.km} km × R$ ${o.freteKm.vendaPorKm}/km`,
+      nota: o.freteKm.idaEVolta
+        ? `${entrega.km} km × 2 (ida e volta) × R$ ${o.freteKm.vendaPorKm}/km`
+        : `${entrega.km} km × R$ ${o.freteKm.vendaPorKm}/km`,
     });
   } else {
     sobConsulta.push(entrega.cidade ? `Frete até ${entrega.cidade}` : "Frete");

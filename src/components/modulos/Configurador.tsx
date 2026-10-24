@@ -9,6 +9,7 @@ import {
   kitAirbnbDisponivel,
   kitMobiliaDe,
   pergoladoComPreco,
+  textoFrete,
 } from "@/lib/modulos-3x6/preco";
 import { NOME_FACE } from "@/lib/modulos-3x6/saida";
 import { opcoesEsquadria } from "@/lib/modulos-3x6/regras";
@@ -196,7 +197,7 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
     e.modo === "regiao"
       ? `${e.cidade || listaInclusas}: frete incluso.`
       : e.km !== null
-        ? `${e.cidade}: ${e.km} km da fábrica, frete de ${formatarReais(frete?.venda ?? 0)}.`
+        ? `${e.cidade}: ${textoFrete(e.km)}.`
         : e.cidade
           ? `${e.cidade}: frete sob consulta, fora do total.`
           : "";
@@ -230,7 +231,7 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
         <Opcao
           ativo={fora}
           titulo="Outra cidade"
-          detalhe={`Frete de R$ ${tabela.opcionais.freteKm.vendaPorKm} por km a partir da fábrica`}
+          detalhe={`Frete de R$ ${tabela.opcionais.freteKm.vendaPorKm} por km, ida e volta, a partir da fábrica`}
           onClick={() => setFora(true)}
         />
       </div>
