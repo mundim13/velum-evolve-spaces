@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { propostasClient } from "@/lib/propostas-client";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CheckCircle, Users, Target, Layers, ClipboardList, DollarSign, FileText } from "lucide-react";
 import logoWhite from "@/assets/logo-velum-white.svg";
@@ -45,7 +44,7 @@ const PropostaPublica = () => {
       }
       try {
         // Leitura só pelo token, via função (que também marca a proposta como vista).
-        const viaToken = await propostasClient.rpc("proposta_por_token", { p_token: token });
+        const viaToken = await supabase.rpc("proposta_por_token", { p_token: token });
         let data = viaToken.data?.[0] ?? null;
         if (viaToken.error) {
           // Enquanto a migração da função não estiver aplicada no banco, usa a consulta antiga.
