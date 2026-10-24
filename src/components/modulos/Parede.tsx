@@ -20,9 +20,15 @@ function forma(quadro: QuadroFace, altura: number, aberturas: Abertura[]) {
   s.lineTo(x1, altura);
   s.lineTo(x0, altura);
   s.closePath();
+  // O furo não pode passar da borda da parede (o vão fora a fora vai até a face externa da testada, 12 cm
+  // além do fim da lateral): sem esse limite, a triangulação se perde e um triângulo da parede cobre o vão.
+  const margem = 0.005;
   for (const a of aberturas) {
     if (!a.recorta || a.u1 - a.u0 < 0.01) continue;
-    const [h0, h1] = paraLocal(quadro, a.u0, a.u1);
+    const [l0, l1] = paraLocal(quadro, a.u0, a.u1);
+    const h0 = Math.max(l0, x0 + margem);
+    const h1 = Math.min(l1, x1 - margem);
+    if (h1 - h0 < 0.01) continue;
     const furo = new THREE.Path();
     furo.moveTo(h0, a.y0);
     furo.lineTo(h0, a.y1);
