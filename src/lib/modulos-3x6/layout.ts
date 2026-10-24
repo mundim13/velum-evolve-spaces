@@ -8,6 +8,7 @@ import {
   aberturas,
   temFaixa,
 } from "./regras";
+import { circulacao, falhasDeCirculacao } from "./circulacao";
 import type { Config, Face } from "./tipos";
 
 /*
@@ -31,12 +32,18 @@ export type Parede = "cabeceira" | "lateral" | "testada" | "fundo";
 
 /** Faixa livre na frente de portas, vidros e passagens. */
 export const LIVRE_PORTA = 0.8;
+/** Nos vidros laterais largos (3 m e fora a fora): 80 cm só na folha de entrada, junto à testada... */
+export const LARGURA_ENTRADA = 1.0;
+/** ...e passagem mínima de 60 cm no resto do vidro (a cama de casal fica de frente para ele). */
+export const LIVRE_VIDRO = 0.6;
 /** Folga lateral entre móvel alto e janela. */
 const FOLGA_JANELA = 0.05;
 /** Folga mínima entre móveis. */
 const FOLGA_MOVEIS = 0.03;
 const PASSO = 0.05;
 const EPS = 1e-6;
+/** Posições que travariam a circulação que cada peça ainda pode tentar antes de sair. */
+const TENTATIVAS_CIRCULACAO = 25;
 
 export interface Sala {
   /** Início útil ao longo de x (face da divisória ou da parede do fundo). */
@@ -129,9 +136,20 @@ export function vaosDaSala(c: Config): Vao[] {
 /** Faixa livre na frente de cada porta, vidro ou passagem, em planta. */
 export function zonasLivres(c: Config): Ret[] {
   const s = sala(c);
-  return vaosDaSala(c)
-    .filter((v) => v.tipo === "porta")
-    .map((v) => retNaParede(s, v.parede, (v.u0 + v.u1) / 2, v.u1 - v.u0, LIVRE_PORTA));
+  const zonas: Ret[] = [];
+  for (const v of vaosDaSala(c)) {
+    if (v.tipo !== "porta") continue;
+    const lateral = v.parede === "cabeceira" || v.parede === "lateral";
+    if (v.id === "principal" && lateral && v.u1 - v.u0 > LARGURA_ENTRADA + 1) {
+      // Folha de entrada no fim do vidro, do lado da testada (x maior): 80 cm; o resto do vidro: 60 cm.
+      const corte = v.u1 - LARGURA_ENTRADA;
+      zonas.push(retNaParede(s, v.parede, (corte + v.u1) / 2, LARGURA_ENTRADA, LIVRE_PORTA));
+      zonas.push(retNaParede(s, v.parede, (v.u0 + corte) / 2, corte - v.u0, LIVRE_VIDRO));
+    } else {
+      zonas.push(retNaParede(s, v.parede, (v.u0 + v.u1) / 2, v.u1 - v.u0, LIVRE_PORTA));
+    }
+  }
+  return zonas;
 }
 
 /** Retângulo em planta de uma peça encostada na parede, centrada em u, com a largura ao longo dela. */
@@ -181,7 +199,7 @@ export type TipoPeca =
   | "escrivaninha"
   | "sofa"
   | "rack-tv"
-  | "mesa-centro"
+  | "mesa-lateral"
   | "bancada-gourmet"
   | "frigobar"
   | "mesa-alta"
@@ -223,6 +241,8 @@ interface PecaBase {
   alto: boolean;
   /** Sem ela, o ambiente não se sustenta (conta mais na escolha do arranjo). */
   essencial?: boolean;
+  /** Peça de piso (colchonetes): pisa-se nela, não fecha a passagem. */
+  pisavel?: boolean;
   /** Não vai na parede do painel amadeirado (espelhos: sobre o painel pareciam um vão cinza). */
   foraDoPainel?: boolean;
 }
@@ -261,6 +281,8 @@ export interface Colocada {
   largura: number;
   profundidade: number;
   alto: boolean;
+  /** Peça de piso: não fecha a passagem. */
+  pisavel?: boolean;
   rect: Ret;
 }
 
@@ -293,8 +315,8 @@ export function ambienteDaConfig(c: Pick<Config, "banheiro" | "cozinha" | "viven
 /** Criado-mudo com abajur, ao lado da cama (some se não couber). */
 const criado = (id: string): PecaParede => ({ id, tipo: "criado-mudo", largura: 0.45, profundidade: 0.4, alto: false, paredes: [], ancora: 0, junto: "cama" });
 
-/** Espelho de parede (2 m no fundo, de frente para a entrada, ou 1 m onde não couber). */
-const espelho = (largura: number): PecaParede => ({
+/** Espelho de parede no fundo, de frente para a entrada, num canto (o espaldar fica ao lado); 1 m onde não couber. */
+const espelho = (largura: number, ancora = 0.5): PecaParede => ({
   id: "espelho",
   tipo: "espelho",
   largura,
@@ -303,7 +325,7 @@ const espelho = (largura: number): PecaParede => ({
   essencial: true,
   foraDoPainel: true,
   paredes: ["fundo", "lateral", "cabeceira", "testada"],
-  ancora: 0.5,
+  ancora,
 });
 
 const planta = (ancora: number, paredes: Parede[] = ["lateral", "testada", "cabeceira", "fundo"]): PecaParede => ({
@@ -320,10 +342,12 @@ const ESTEIRA: PecaParede = { id: "esteira", tipo: "esteira", largura: 1.8, prof
 const ANILHAS: PecaParede = { id: "anilhas", tipo: "rack-anilhas", largura: 0.9, profundidade: 0.5, alto: true, essencial: true, paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.55 };
 const BIKE: PecaParede = { id: "bike", tipo: "bike", largura: 1.05, profundidade: 0.6, alto: true, paredes: ["lateral", "cabeceira", "fundo", "testada"], ancora: 0.8 };
 const HALTERES: PecaParede = { id: "halteres", tipo: "halteres", largura: 0.6, profundidade: 0.36, alto: true, paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.85 };
-const BANCO: PecaSolta = { id: "banco", tipo: "banco-supino", largura: 1.25, profundidade: 0.45, alto: false, frente: "anilhas", distancia: 0.45 };
+const BANCO: PecaSolta = { id: "banco", tipo: "banco-supino", largura: 1.25, profundidade: 0.45, alto: false, frente: "anilhas", distancia: 0.6 };
 /** Zona de alongamento: espaldar na parede e colchonetes na frente dele. */
-const ESPALDAR: PecaParede = { id: "espaldar", tipo: "espaldar", largura: 0.9, profundidade: 0.14, alto: true, paredes: ["testada", "cabeceira", "lateral", "fundo"], ancora: 0.15 };
-const COLCHONETES: PecaSolta = { id: "colchonetes", tipo: "colchonetes", largura: 1.8, profundidade: 0.75, alto: false, frente: "espaldar", distancia: 0.1 };
+const ESPALDAR: PecaParede = { id: "espaldar", tipo: "espaldar", largura: 0.9, profundidade: 0.14, alto: true, paredes: ["fundo", "testada", "cabeceira", "lateral"], ancora: 0 };
+const COLCHONETES: PecaSolta = { id: "colchonetes", tipo: "colchonetes", largura: 1.8, profundidade: 0.75, alto: false, pisavel: true, frente: "espaldar", distancia: 0.1 };
+/** Banco encostado na parede, ao lado do rack de anilhas (no meio da sala ele fechava a passagem). */
+const BANCO_PAREDE: PecaParede = { id: "banco", tipo: "banco-supino", largura: 1.25, profundidade: 0.45, alto: false, paredes: ["cabeceira", "lateral", "testada"], ancora: 0.5, junto: "anilhas" };
 const KETTLEBELLS: PecaParede = { id: "kettlebells", tipo: "kettlebells", largura: 0.6, profundidade: 0.3, alto: false, junto: "halteres", paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.7 };
 
 /** Arranjos de cada ambiente, em ordem de preferência. */
@@ -353,11 +377,11 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
     ["cabeceira", "testada"],
     ["lateral", "testada"],
   ].map(([parSofa, parTv]) => [
-    { id: "sofa", tipo: "sofa", largura: 2.3, profundidade: 0.95, alto: false, essencial: true, paredes: [parSofa as Parede], ancora: 0.43 },
-    { id: "tv", tipo: "rack-tv", largura: 1.6, profundidade: 0.45, alto: true, essencial: true, paredes: [parTv as Parede], ancora: 0.3 },
-    { id: "mesa-centro", tipo: "mesa-centro", largura: 0.8, profundidade: 0.8, alto: false, frente: "sofa", distancia: 0.4 },
-    // Kitnet: mesa para dois junto da parede, perto da cozinha.
+    { id: "sofa", tipo: "sofa", largura: 1.9, profundidade: 0.9, alto: false, essencial: true, paredes: [parSofa as Parede], ancora: 0.43 },
+    { id: "tv", tipo: "rack-tv", largura: 1.6, profundidade: 0.42, alto: true, essencial: true, paredes: [parTv as Parede], ancora: 0.3 },
+    // Kitnet: mesa para dois junto da parede (no lugar da mesa de centro, que fechava a passagem).
     { id: "jantar", tipo: "mesa-jantar", largura: 1.0, profundidade: 0.75, alto: false, paredes: ["lateral", "cabeceira", "testada", "fundo"], ancora: 0.05 },
+    { id: "mesa-lateral", tipo: "mesa-lateral", largura: 0.45, profundidade: 0.45, alto: false, paredes: [parSofa as Parede], ancora: 0.5, junto: "sofa" },
     planta(1),
   ]),
   gourmet: [
@@ -384,6 +408,7 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
   ],
   // Espelho largo na parede do fundo, de frente para a entrada; com a divisória no fundo, um espelho estreito.
   academia: [
+    [espelho(1.6, 1), ESPALDAR, COLCHONETES, ESTEIRA, ANILHAS, BANCO_PAREDE, HALTERES, KETTLEBELLS, BIKE],
     [espelho(2.0), ESTEIRA, ANILHAS, HALTERES, KETTLEBELLS, BANCO, ESPALDAR, COLCHONETES, BIKE],
     [espelho(1.0), ESTEIRA, ANILHAS, HALTERES, KETTLEBELLS, BANCO, ESPALDAR, COLCHONETES, BIKE],
     [ESTEIRA, ANILHAS, espelho(1.0), HALTERES, KETTLEBELLS, BANCO, ESPALDAR, COLCHONETES, BIKE],
@@ -418,6 +443,8 @@ interface Contexto {
   s: Sala;
   vaos: Vao[];
   zonas: Ret[];
+  /** Aceita a posição só se a circulação não piorar (portas internas e móveis de uso seguem alcançáveis). */
+  circula: (colocadas: Colocada[], nova: Colocada) => boolean;
   paredePorta: Parede;
   /** A cabeceira tem o painel amadeirado (sempre, menos com a porta de vidro nela). */
   painel: boolean;
@@ -476,7 +503,8 @@ function tentarParedes(ctx: Contexto, peca: PecaParede, colocadas: Colocada[], p
       const teste = reserva ? retNaParede(ctx.s, parede, u, peca.largura + 2 * reserva, peca.profundidade) : r;
       if (valida(ctx, teste, peca.alto, parede, u - peca.largura / 2, u + peca.largura / 2, colocadas)) {
         const [x, z] = pontoNaParede(ctx.s, parede, u);
-        return { id: peca.id, tipo: peca.tipo, parede, x, z, rotY: ROTACAO[parede], largura: peca.largura, profundidade: peca.profundidade, alto: peca.alto, rect: r };
+        const nova: Colocada = { id: peca.id, tipo: peca.tipo, parede, x, z, rotY: ROTACAO[parede], largura: peca.largura, profundidade: peca.profundidade, alto: peca.alto, pisavel: peca.pisavel, rect: r };
+        if (ctx.circula(colocadas, nova)) return nova;
       }
     }
   }
@@ -503,7 +531,7 @@ function colocarSolta(ctx: Contexto, peca: PecaSolta, colocadas: Colocada[]): Co
   for (const [d, desvio] of opcoes) {
     const { cx, cz, r } = ao(d, desvio);
     if (valida(ctx, r, peca.alto, null, 0, 0, colocadas)) {
-      return {
+      const nova: Colocada = {
         id: peca.id,
         tipo: peca.tipo,
         parede: null,
@@ -513,8 +541,10 @@ function colocarSolta(ctx: Contexto, peca: PecaSolta, colocadas: Colocada[]): Co
         largura: peca.largura,
         profundidade: peca.profundidade,
         alto: peca.alto,
+        pisavel: peca.pisavel,
         rect: r,
       };
+      if (ctx.circula(colocadas, nova)) return nova;
     }
   }
   return null;
@@ -547,7 +577,24 @@ export function layoutVivencia(c: Config): Layout {
   const s = sala(c);
   const vaos = vaosDaSala(c);
   const principal = vaos.find((v) => v.id === "principal");
-  const ctx: Contexto = { s, vaos, zonas: zonasLivres(c), paredePorta: principal?.parede ?? "testada", painel: c.esquadria.face !== "ladoA" };
+  const zonas = zonasLivres(c);
+  const base = { de: null as Colocada[] | null, n: -1, falhas: 0, tentativas: 0 };
+  // Grade de 10 cm no motor (rápido no celular); os testes conferem com 5 cm.
+  const falhas = (pecas: Colocada[]) => falhasDeCirculacao(circulacao({ sala: s, vaos, zonas, pecas }, 0.1));
+  const ctx: Contexto = {
+    s,
+    vaos,
+    zonas,
+    paredePorta: principal?.parede ?? "testada",
+    painel: c.esquadria.face !== "ladoA",
+    circula: (colocadas, nova) => {
+      // A referência (sem a peça nova) é a mesma para todas as posições tentadas de uma peça: calcula uma vez.
+      if (base.de !== colocadas || base.n !== colocadas.length) Object.assign(base, { de: colocadas, n: colocadas.length, falhas: falhas(colocadas), tentativas: 0 });
+      // Peça que só travaria a passagem (planta, por exemplo) desiste depois de algumas posições e sai.
+      if (base.tentativas++ > TENTATIVAS_CIRCULACAO) return false;
+      return falhas([...colocadas, nova]) <= base.falhas;
+    },
+  };
   let melhor: { colocadas: Colocada[]; pontos: number; pecas: Peca[] } | null = null;
   for (const pecas of ARRANJOS[ambiente]) {
     const r = montar(ctx, pecas);

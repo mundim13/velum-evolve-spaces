@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { circulacao } from "./circulacao";
 import { CONFIG_INICIAL, aplicarAtalho, buscarAtalho, reduzir } from "./estado";
-import { ARRANJOS, LIVRE_PORTA, ambienteDaConfig, cruzam, layoutVivencia, type Layout } from "./layout";
+import { ARRANJOS, LIVRE_PORTA, LIVRE_VIDRO, ambienteDaConfig, cruzam, layoutVivencia, type Layout } from "./layout";
 import { opcoesEsquadria } from "./regras";
 import { tabela, type Banheiro, type Config, type Cozinha, type Vivencia } from "./tipos";
 
@@ -58,11 +59,26 @@ describe("layout da vivência: regra geral de aberturas", () => {
     expect(faltam, `faltam ${faltam.join(", ")}`).toEqual([]);
   });
 
+  it.each(configs.map((c) => [nome(c), c] as const))("%s: da porta de vidro se chega às portas internas e a cada móvel de uso", (_, c) => {
+    const r = circulacao(layoutVivencia(c));
+    expect({ portasIsoladas: r.portasIsoladas, semAcesso: r.semAcesso }).toEqual({ portasIsoladas: 0, semAcesso: [] });
+  });
+
   it.each(configs.map((c) => [nome(c), c] as const))("%s: espelho nunca sobre o painel amadeirado", (_, c) => {
     const l = layoutVivencia(c);
     const painel = c.esquadria.face !== "ladoA";
     const espelhos = l.pecas.filter((p) => p.tipo === "espelho" || p.tipo === "espelho-corpo");
     expect(espelhos.filter((p) => painel && p.parede === "cabeceira")).toEqual([]);
+  });
+
+  it("vidro lateral largo: 80 cm na folha de entrada e 60 cm no resto, e a cama de casal fica de frente para o vidro", () => {
+    for (const tamanho of ["parcial", "fora"] as const) {
+      const c = reduzir(aplicarAtalho(CONFIG_INICIAL, buscarAtalho("cazita")!), { tipo: "esquadria", face: "ladoB", tamanho });
+      const l = layoutVivencia(c);
+      const profundidades = l.zonas.filter((z) => z.z1 === l.sala.zB).map((z) => +(z.z1 - z.z0).toFixed(2)).sort();
+      expect(profundidades).toEqual([LIVRE_VIDRO, LIVRE_PORTA]);
+      expect(l.pecas.find((p) => p.id === "cama")?.parede).toBe("cabeceira");
+    }
   });
 
   it("a faixa livre na frente da porta tem 80 cm", () => {

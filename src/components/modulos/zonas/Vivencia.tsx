@@ -180,21 +180,23 @@ function Escrivaninha() {
 
 /* ------------------------------------------- estar e gourmet ------------------------------------------- */
 
-function Sofa() {
+/** Sofá de dois lugares, desenhado na largura que o layout pediu. */
+function Sofa({ largura }: PropsPeca) {
+  const w = largura - 0.1;
+  const assento = (w - 0.32) / 2;
   return (
     <>
-      <Caixa p={[0, P + 0.12, 0.46]} s={[2.2, 0.2, 0.88]} mat={MAT.tecido(TOM.estofado)} raio={0.04} />
-      {[-0.52, 0.52].map((d) => (
-        <group key={d}>
-          <Caixa p={[d, P + 0.32, 0.5]} s={[1.02, 0.2, 0.74]} mat={MAT.tecido(TOM.estofado)} raio={0.07} />
-          <Caixa p={[d, P + 0.6, 0.16]} s={[1.02, 0.45, 0.22]} mat={MAT.tecido(TOM.estofado)} raio={0.08} />
+      <Caixa p={[0, P + 0.12, 0.46]} s={[w, 0.2, 0.88]} mat={MAT.tecido(TOM.estofado)} raio={0.04} />
+      {[-1, 1].map((lado) => (
+        <group key={lado}>
+          <Caixa p={[lado * (assento / 2 + 0.005), P + 0.32, 0.5]} s={[assento, 0.2, 0.74]} mat={MAT.tecido(TOM.estofado)} raio={0.07} />
+          <Caixa p={[lado * (assento / 2 + 0.005), P + 0.6, 0.16]} s={[assento, 0.45, 0.22]} mat={MAT.tecido(TOM.estofado)} raio={0.08} />
+          <Caixa p={[lado * (w / 2 - 0.08), P + 0.36, 0.46]} s={[0.16, 0.5, 0.88]} mat={MAT.tecido(TOM.estofado)} raio={0.06} />
         </group>
       ))}
-      {[-1.06, 1.06].map((d) => (
-        <Caixa key={d} p={[d, P + 0.36, 0.46]} s={[0.16, 0.5, 0.88]} mat={MAT.tecido(TOM.estofado)} raio={0.06} />
-      ))}
-      <Caixa p={[-0.6, P + 0.62, 0.33]} s={[0.42, 0.36, 0.13]} mat={MAT.tecido(TOM.manta)} raio={0.05} />
-      <Caixa p={[0.62, P + 0.62, 0.33]} s={[0.42, 0.36, 0.13]} mat={MAT.tecido(TOM.almofada)} raio={0.05} />
+      <Tapete x={0} z={1.35} w={Math.min(2.2, largura)} d={1.0} />
+      <Caixa p={[-assento / 2, P + 0.62, 0.33]} s={[0.42, 0.36, 0.13]} mat={MAT.tecido(TOM.manta)} raio={0.05} />
+      <Caixa p={[assento / 2, P + 0.62, 0.33]} s={[0.42, 0.36, 0.13]} mat={MAT.tecido(TOM.almofada)} raio={0.05} />
     </>
   );
 }
@@ -211,13 +213,13 @@ function RackTv() {
   );
 }
 
-function MesaCentro() {
+/** Mesinha ao lado do sofá, com livro e vela (a mesa de centro fechava a passagem da quitinete). */
+function MesaLateralSofa() {
   return (
     <>
-      <Tapete x={0} z={-0.2} w={2.3} d={1.6} />
-      <Caixa p={[0, P + 0.36, 0]} s={[0.8, 0.04, 0.8]} mat={MAT.madeiraMovel()} cilindro />
-      <Caixa p={[0, P + 0.18, 0]} s={[0.08, 0.34, 0.08]} mat={MAT.perfil()} cilindro />
-      <Caixa p={[0.1, P + 0.42, 0.05]} s={[0.18, 0.06, 0.24]} mat={MAT.tecido("#2F3A44")} raio={0.008} />
+      <MesaLateral x={0} z={0.23} />
+      <Caixa p={[0.05, P + 0.55, 0.26]} s={[0.18, 0.04, 0.24]} mat={MAT.tecido("#2F3A44")} raio={0.008} />
+      <Caixa p={[-0.1, P + 0.58, 0.15]} s={[0.07, 0.1, 0.07]} mat={MAT.louca()} cilindro />
     </>
   );
 }
@@ -474,9 +476,11 @@ function Halteres() {
   );
 }
 
-function BancoSupino({ largura }: PropsPeca) {
+function BancoSupino({ largura, profundidade, parede }: PropsPeca) {
+  // Encostado na parede, a origem é a parede: o banco fica centrado na própria profundidade.
+  const z = parede ? profundidade / 2 : 0;
   return (
-    <>
+    <group position={[0, 0, z]}>
       <Caixa p={[0, P + 0.45, 0]} s={[largura - 0.05, 0.1, 0.3]} mat={MAT.tecido("#2B2B2B")} raio={0.04} />
       {[-0.42, 0.42].map((x) => (
         <group key={x}>
@@ -484,7 +488,7 @@ function BancoSupino({ largura }: PropsPeca) {
           <Caixa p={[x, P + 0.02, 0]} s={[0.08, 0.04, 0.4]} mat={MAT.perfil()} raio={0.01} />
         </group>
       ))}
-    </>
+    </group>
   );
 }
 
@@ -980,7 +984,7 @@ const PECAS: Record<TipoPeca, (p: PropsPeca) => JSX.Element> = {
   escrivaninha: Escrivaninha,
   sofa: Sofa,
   "rack-tv": RackTv,
-  "mesa-centro": MesaCentro,
+  "mesa-lateral": MesaLateralSofa,
   "bancada-gourmet": BancadaGourmet,
   frigobar: Frigobar,
   "mesa-alta": MesaAlta,
