@@ -11,7 +11,8 @@ import {
   pergoladoComPreco,
   textoFrete,
 } from "@/lib/modulos-3x6/preco";
-import { NOME_FACE } from "@/lib/modulos-3x6/saida";
+import { ambienteDaConfig, type Ambiente } from "@/lib/modulos-3x6/layout";
+import { NOME_FACE, resumoConfig } from "@/lib/modulos-3x6/saida";
 import { opcoesEsquadria } from "@/lib/modulos-3x6/regras";
 import {
   cidades,
@@ -36,17 +37,103 @@ export type Etapa =
   | "opcionais"
   | "entrega";
 
-export const ETAPAS: { id: Etapa; nome: string }[] = [
-  { id: "atalho", nome: "Atalhos" },
-  { id: "banheiro", nome: "Banheiro" },
-  { id: "cozinha", nome: "Cozinha" },
-  { id: "vivencia", nome: "Vivência" },
-  { id: "esquadria", nome: "Esquadria" },
-  { id: "fachada", nome: "Fachada" },
-  { id: "mobilia", nome: "Kit mobília" },
-  { id: "opcionais", nome: "Opcionais" },
-  { id: "entrega", nome: "Entrega" },
+/**
+ * Passos na ordem em que alguém pensa o módulo: primeiro para que ele serve, depois o que vai dentro,
+ * a porta, o lado de fora e a entrega. Cada passo tem um nome curto (barra), uma pergunta e uma linha de ajuda.
+ */
+export const ETAPAS: { id: Etapa; nome: string; pergunta: string; ajuda: string }[] = [
+  {
+    id: "atalho",
+    nome: "Modelo",
+    pergunta: "Por onde começar?",
+    ajuda: "Escolha um modelo pronto: ele preenche todos os passos e você ajusta o que quiser depois. Ou comece do zero.",
+  },
+  {
+    id: "vivencia",
+    nome: "Uso do espaço",
+    pergunta: "Para que vai ser o módulo?",
+    ajuda: "É o ambiente principal. Ele define os móveis que aparecem no 3D e o kit de mobília disponível.",
+  },
+  {
+    id: "banheiro",
+    nome: "Banheiro",
+    pergunta: "Precisa de banheiro?",
+    ajuda: "O banheiro fica no fundo, junto da parede hidráulica. Sem ele, o ambiente principal fica maior.",
+  },
+  {
+    id: "cozinha",
+    nome: "Cozinha",
+    pergunta: "E de cozinha?",
+    ajuda: "A cozinha fica ao lado do banheiro, na mesma parede hidráulica.",
+  },
+  {
+    id: "esquadria",
+    nome: "Porta de vidro",
+    pergunta: "Onde fica a porta de vidro?",
+    ajuda: "É a entrada e a maior abertura do módulo. Toque numa face no 3D ou escolha abaixo; os móveis se reorganizam para não bloquear o vidro.",
+  },
+  {
+    id: "fachada",
+    nome: "Fachada",
+    pergunta: "Como fica por fora?",
+    ajuda: "A textura lisa já está inclusa. O ripado de WPC (madeira plástica) pode ir só na frente ou em volta toda.",
+  },
+  {
+    id: "mobilia",
+    nome: "Mobília",
+    pergunta: "Quer o módulo mobiliado?",
+    ajuda: "O 3D mostra o módulo decorado para dar ideia do uso. O kit é a mobília solta (camas, mesas, aparelhos) e é opcional.",
+  },
+  {
+    id: "opcionais",
+    nome: "Área externa",
+    pergunta: "Algo do lado de fora?",
+    ajuda: "Deck, pergolado e fundação. As ligações de água, esgoto e luz são orçadas à parte, fora do total.",
+  },
+  {
+    id: "entrega",
+    nome: "Entrega",
+    pergunta: "Onde vamos entregar?",
+    ajuda: "O frete depende da cidade. No fim, revise o resumo e peça a proposta.",
+  },
 ];
+
+/** O que cada uso do espaço traz, para quem escolhe sem conhecer os nomes. */
+const DESCRICAO_USO: Record<Vivencia, string> = {
+  casal: "Cama de casal, criados e cabeceira amadeirada",
+  solteiro: "Cama de solteiro e mesa de trabalho",
+  estar: "Sofá e TV; com cozinha e sem banheiro vira espaço gourmet",
+  escritorio: "Duas estações de trabalho, estante e canto de descanso",
+  academia: "Cardio, peso livre e alongamento",
+  brinquedoteca: "Cabaninha, mesinha, estante e cantinho de leitura",
+  loja: "Vitrine, balcão com caixa e prateleiras; serve de consultório",
+};
+
+/** Como o ambiente aparece no 3D com as escolhas atuais (o estar muda com banheiro e cozinha). */
+const NOME_AMBIENTE: Record<Ambiente, string> = {
+  casal: "quarto de casal",
+  solteiro: "quarto de solteiro",
+  estar: "estar com sofá e TV (estúdio)",
+  gourmet: "espaço gourmet",
+  vazio: "módulo vazio, só com o acabamento",
+  escritorio: "escritório",
+  academia: "academia",
+  brinquedoteca: "brinquedoteca",
+  loja: "loja/consultório",
+};
+
+/** Passo do simulador onde se altera cada linha do resumo. */
+const ETAPA_DO_RESUMO: Record<string, Etapa> = {
+  Aplicação: "atalho",
+  "Uso do espaço": "vivencia",
+  Banheiro: "banheiro",
+  Cozinha: "cozinha",
+  "Porta de vidro": "esquadria",
+  Fachada: "fachada",
+  "Kit mobília": "mobilia",
+  Opcionais: "opcionais",
+  Entrega: "entrega",
+};
 
 export { NOME_FACE };
 
@@ -215,7 +302,6 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
 
   return (
     <>
-      <Rotulo>Onde o módulo vai ser entregue</Rotulo>
       <div className="grid gap-2">
         <Opcao
           ativo={!fora}
@@ -283,12 +369,12 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
   );
 }
 
-/** Barra de passos com rolagem horizontal; o degradê na borda direita indica que há mais passos. */
 /** Largura do degradê da borda direita da barra de passos e folga mínima nas bordas (px). */
 const DEGRADE_BARRA = 56;
 const MARGEM_BARRA = 16;
 
-function BarraEtapas({ etapa, onEtapa }: { etapa: Etapa; onEtapa: (e: Etapa) => void }) {
+/** Barra de passos com rolagem horizontal; passos já vistos ganham ✓ e o degradê na borda indica que há mais. */
+function BarraEtapas({ etapa, onEtapa, vistas }: { etapa: Etapa; onEtapa: (e: Etapa) => void; vistas: ReadonlySet<Etapa> }) {
   const barra = useRef<HTMLElement>(null);
   const [temMais, setTemMais] = useState(true);
   // O degradê só aparece enquanto o último passo não estiver inteiro na tela.
@@ -324,6 +410,7 @@ function BarraEtapas({ etapa, onEtapa }: { etapa: Etapa; onEtapa: (e: Etapa) => 
       <nav ref={barra} onScroll={medir} aria-label="Etapas" className="flex gap-2 overflow-x-auto px-4 pb-1" style={{ scrollbarWidth: "none" }}>
         {ETAPAS.map((e, i) => {
           const ativo = e.id === etapa;
+          const vista = !ativo && vistas.has(e.id);
           return (
             <button
               key={e.id}
@@ -341,7 +428,7 @@ function BarraEtapas({ etapa, onEtapa }: { etapa: Etapa; onEtapa: (e: Etapa) => 
                 border: `1px solid ${ativo ? ACENTO : "rgba(255,255,255,0.08)"}`,
               }}
             >
-              <span style={{ opacity: 0.6, marginRight: 6 }}>{i + 1}</span>
+              <span style={{ opacity: vista ? 1 : 0.6, marginRight: 6, color: vista ? ACENTO : undefined }}>{vista ? "✓" : i + 1}</span>
               {e.nome}
             </button>
           );
@@ -356,20 +443,81 @@ function BarraEtapas({ etapa, onEtapa }: { etapa: Etapa; onEtapa: (e: Etapa) => 
   );
 }
 
+/** Topo de cada passo: posição no percurso, barra de progresso, a pergunta do passo e uma linha de ajuda. */
+function CabecalhoPasso({ indice }: { indice: number }) {
+  const e = ETAPAS[indice];
+  return (
+    <div style={{ margin: "16px 0 14px" }}>
+      <div className="flex items-center justify-between font-dm" style={{ fontSize: 11, color: TEXTO_FRACO }}>
+        <span>
+          Passo {indice + 1} de {ETAPAS.length}
+        </span>
+        <span>{Math.round(((indice + 1) / ETAPAS.length) * 100)}%</span>
+      </div>
+      <div style={{ height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, marginTop: 6 }}>
+        <div style={{ width: `${((indice + 1) / ETAPAS.length) * 100}%`, height: "100%", background: ACENTO, borderRadius: 2, transition: "width 300ms" }} />
+      </div>
+      <h2 className="font-syncopate font-bold uppercase" style={{ fontSize: 15, letterSpacing: 1, lineHeight: 1.3, color: "#F9FAFB", marginTop: 14 }}>
+        {e.pergunta}
+      </h2>
+      <p className="font-dm" style={{ fontSize: 13, color: "rgba(249,250,251,0.6)", lineHeight: 1.55, marginTop: 6 }}>
+        {e.ajuda}
+      </p>
+    </div>
+  );
+}
+
+/** Como o ambiente vai aparecer com as escolhas atuais (o uso muda com banheiro e cozinha). */
+function ComoFica({ config }: { config: Config }) {
+  return (
+    <p className="font-dm" style={{ fontSize: 12, color: "rgba(249,250,251,0.7)", marginTop: 12, padding: "8px 10px", borderRadius: 6, background: "rgba(34,211,238,0.06)", border: "1px solid rgba(34,211,238,0.15)" }}>
+      Com as escolhas de agora, o ambiente fica como <strong style={{ color: "#F9FAFB", fontWeight: 500 }}>{NOME_AMBIENTE[ambienteDaConfig(config)]}</strong>.
+    </p>
+  );
+}
+
+/** Resumo final, com atalho para alterar cada escolha antes de pedir a proposta. */
+function Resumo({ config, onEtapa }: { config: Config; onEtapa: (e: Etapa) => void }) {
+  return (
+    <>
+      <Rotulo>Revise antes de enviar</Rotulo>
+      <dl className="grid font-dm" style={{ fontSize: 13, borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
+        {resumoConfig(config).map(([rotulo, valor], i) => (
+          <div key={rotulo} className="flex items-start gap-3" style={{ padding: "8px 12px", background: i % 2 ? "transparent" : "rgba(255,255,255,0.02)" }}>
+            <dt style={{ width: 104, flexShrink: 0, color: TEXTO_FRACO }}>{rotulo}</dt>
+            <dd className="flex-1" style={{ color: "#F9FAFB" }}>
+              {valor}
+            </dd>
+            {ETAPA_DO_RESUMO[rotulo] && ETAPA_DO_RESUMO[rotulo] !== "entrega" && (
+              <button type="button" onClick={() => onEtapa(ETAPA_DO_RESUMO[rotulo])} className="font-dm" style={{ fontSize: 12, color: ACENTO, minHeight: 24 }}>
+                alterar
+              </button>
+            )}
+          </div>
+        ))}
+      </dl>
+    </>
+  );
+}
+
 interface Props {
   config: Config;
   etapa: Etapa;
   onEtapa: (e: Etapa) => void;
+  /** Passos que a pessoa já abriu (marcados com ✓ na barra). */
+  vistas: ReadonlySet<Etapa>;
   despachar: (a: Acao) => void;
   /** Último passo concluído: abre o envio para a Velum. */
   onConcluir: () => void;
 }
 
 /** Escolhas na ordem do briefing (passos 1 a 9). Cada opção mostra quanto muda no total. */
-export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: Props) {
+export function Configurador({ config, etapa, onEtapa, vistas, despachar, onConcluir }: Props) {
   const op = (acao: Acao) => () => despachar(acao);
   const indice = ETAPAS.findIndex((e) => e.id === etapa);
   const proxima = ETAPAS[indice + 1];
+  const anterior = ETAPAS[indice - 1];
+  const atalhoAtual = config.atalho ? tabela.atalhos.find((a) => a.id === config.atalho) : undefined;
   const kit = kitMobiliaDe(config);
   const airbnb = kitAirbnbDisponivel(config);
   const alternar = (chave: "deck" | "pergolado" | "fundacao" | "kitAirbnb") => () =>
@@ -377,11 +525,11 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
 
   return (
     <div>
-      <BarraEtapas etapa={etapa} onEtapa={onEtapa} />
+      <BarraEtapas etapa={etapa} onEtapa={onEtapa} vistas={vistas} />
+      <CabecalhoPasso indice={indice} />
 
       {etapa === "atalho" && (
         <>
-          <Rotulo>Comece por um atalho</Rotulo>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {tabela.atalhos.map((a) => {
               const partes = [
@@ -416,33 +564,34 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
               }}
             />
           </div>
-          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
-            O atalho só pré-seleciona as escolhas. Depois é só ajustar.
+          <p className="font-dm" style={{ fontSize: 12, color: atalhoAtual ? "rgba(249,250,251,0.75)" : TEXTO_FRACO, marginTop: 10 }}>
+            {atalhoAtual
+              ? `Modelo ${atalhoAtual.nome} aplicado: os próximos passos já estão preenchidos. Avance para conferir ou ajustar cada um.`
+              : "O modelo só pré-seleciona as escolhas. Depois é só ajustar."}
           </p>
         </>
       )}
 
       {etapa === "banheiro" && (
         <>
-          <Rotulo>Banheiro no fundo, junto à parede hidráulica</Rotulo>
           <div className="grid gap-2">
             {(Object.keys(tabela.banheiro) as Banheiro[]).map((b) => (
               <Opcao
                 key={b}
                 ativo={config.banheiro === b}
                 titulo={tabela.banheiro[b].nome}
-                detalhe={b === "completo" ? "Box com seixo, bancada, louças e metais" : b === "lavabo" ? "Bacia e bancada, sem box" : undefined}
+                detalhe={b === "completo" ? "Box com seixo, bancada, louças e metais" : b === "lavabo" ? "Bacia e bancada, sem box" : "Mais espaço para o ambiente principal"}
                 direita={<Diferenca config={config} acao={{ tipo: "banheiro", valor: b }} />}
                 onClick={op({ tipo: "banheiro", valor: b })}
               />
             ))}
           </div>
+          <ComoFica config={config} />
         </>
       )}
 
       {etapa === "cozinha" && (
         <>
-          <Rotulo>Cozinha colada ao banheiro</Rotulo>
           <div className="grid gap-2">
             {(Object.keys(tabela.cozinha) as Cozinha[]).map((k) => {
               const item = tabela.cozinha[k];
@@ -451,42 +600,37 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
                   key={k}
                   ativo={config.cozinha === k}
                   titulo={item.nome}
-                  detalhe={"descricao" in item ? item.descricao : undefined}
+                  detalhe={"descricao" in item ? item.descricao : "Sem bancada nem pia"}
                   direita={<Diferenca config={config} acao={{ tipo: "cozinha", valor: k }} />}
                   onClick={op({ tipo: "cozinha", valor: k })}
                 />
               );
             })}
           </div>
+          <ComoFica config={config} />
         </>
       )}
 
       {etapa === "vivencia" && (
         <>
-          <Rotulo>O que é o espaço que sobra</Rotulo>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {(Object.keys(tabela.vivencia) as Vivencia[]).map((v) => (
               <Opcao
                 key={v}
                 ativo={config.vivencia === v}
                 titulo={tabela.vivencia[v].nome}
+                detalhe={DESCRICAO_USO[v]}
                 direita={<Diferenca config={config} acao={{ tipo: "vivencia", valor: v }} />}
                 onClick={op({ tipo: "vivencia", valor: v })}
               />
             ))}
           </div>
-          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
-            O módulo aparece mobiliado; a mobília solta vira um kit opcional na próxima etapa do simulador.
-          </p>
+          <ComoFica config={config} />
         </>
       )}
 
       {etapa === "esquadria" && (
         <>
-          <Rotulo>Porta de correr de vidro: face e tamanho</Rotulo>
-          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginBottom: 10 }}>
-            Toque numa face do módulo ou escolha abaixo. A parede do banheiro nunca recebe vidro.
-          </p>
           <div className="grid gap-2">
             {opcoesEsquadria(config).map((o) => {
               const ativo = config.esquadria.face === o.face && config.esquadria.tamanho === o.tamanho;
@@ -517,12 +661,14 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
               );
             })}
           </div>
+          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
+            A parede do fundo (banheiro e cozinha) não recebe vidro. Com a porta numa lateral, a frente vira parede cheia.
+          </p>
         </>
       )}
 
       {etapa === "fachada" && (
         <>
-          <Rotulo>Acabamento da fachada</Rotulo>
           <div className="grid gap-2">
             {(["textura", "ripadoFrontal", "ripadoCompleto"] as TipoFachada[]).map((t) => (
               <Opcao
@@ -584,7 +730,6 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
 
       {etapa === "mobilia" && (
         <>
-          <Rotulo>Mobília solta</Rotulo>
           {kit ? (
             <div className="grid gap-2">
               <Opcao
@@ -603,18 +748,14 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
             </div>
           ) : (
             <p className="font-dm" style={{ fontSize: 13, color: TEXTO_FRACO }}>
-              Esta configuração (estar sem banheiro e sem cozinha) não tem kit mobília. Escolha uma aplicação para ver o kit dela.
+              Esta configuração (estar sem banheiro e sem cozinha) não tem kit mobília. Escolha um uso do espaço para ver o kit dele.
             </p>
           )}
-          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
-            No 3D o módulo aparece sempre mobiliado; o kit é a mobília solta (cama, cadeiras, aparelhos).
-          </p>
         </>
       )}
 
       {etapa === "opcionais" && (
         <>
-          <Rotulo>Opcionais externos</Rotulo>
           <div className="grid gap-2">
             <Opcao
               ativo={config.extras.deck}
@@ -648,30 +789,43 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
               />
             )}
           </div>
-          <p className="font-dm" style={{ fontSize: 12, color: TEXTO_FRACO, marginTop: 10 }}>
-            {tabela.opcionais.ligacoes.nome}: sob consulta, fora do total.
-          </p>
         </>
       )}
 
-      {etapa === "entrega" && <PassoEntrega config={config} despachar={despachar} />}
+      {etapa === "entrega" && (
+        <>
+          <PassoEntrega config={config} despachar={despachar} />
+          <Resumo config={config} onEtapa={onEtapa} />
+        </>
+      )}
 
-      <button
-        type="button"
-        onClick={() => (proxima ? onEtapa(proxima.id) : onConcluir())}
-        className="w-full font-dm font-medium transition-all hover:brightness-110"
-        style={{
-          marginTop: 20,
-          minHeight: 48,
-          borderRadius: 8,
-          fontSize: 14,
-          background: proxima ? "transparent" : ACENTO,
-          color: proxima ? ACENTO : "#050505",
-          border: `1px solid ${proxima ? "rgba(34,211,238,0.45)" : ACENTO}`,
-        }}
-      >
-        {proxima ? `Próximo: ${proxima.nome}` : "Quero este módulo"}
-      </button>
+      <div className="flex gap-2" style={{ marginTop: 20 }}>
+        {anterior && (
+          <button
+            type="button"
+            onClick={() => onEtapa(anterior.id)}
+            className="font-dm font-medium transition-colors hover:text-white"
+            style={{ minHeight: 48, padding: "0 16px", borderRadius: 8, fontSize: 14, color: "rgba(249,250,251,0.7)", border: "1px solid rgba(255,255,255,0.12)" }}
+          >
+            Voltar
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => (proxima ? onEtapa(proxima.id) : onConcluir())}
+          className="flex-1 font-dm font-medium transition-all hover:brightness-110"
+          style={{
+            minHeight: 48,
+            borderRadius: 8,
+            fontSize: 14,
+            background: proxima ? "transparent" : ACENTO,
+            color: proxima ? ACENTO : "#050505",
+            border: `1px solid ${proxima ? "rgba(34,211,238,0.45)" : ACENTO}`,
+          }}
+        >
+          {proxima ? `Próximo: ${proxima.nome}` : "Quero este módulo"}
+        </button>
+      </div>
     </div>
   );
 }

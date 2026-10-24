@@ -51,10 +51,10 @@ export function resumoConfig(c: Config): [string, string][] {
 
   return [
     ["Aplicação", nomeAplicacao(c)],
+    ["Uso do espaço", t.vivencia[c.vivencia].nome],
     ["Banheiro", t.banheiro[c.banheiro].nome],
     ["Cozinha", t.cozinha[c.cozinha].nome],
-    ["Vivência", t.vivencia[c.vivencia].nome],
-    ["Esquadria", `${t.esquadria[variante].nome} · ${NOME_FACE[c.esquadria.face].toLowerCase()}`],
+    ["Porta de vidro", `${t.esquadria[variante].nome} · ${NOME_FACE[c.esquadria.face].toLowerCase()}`],
     ["Fachada", fachada],
     ["Kit mobília", c.extras.kitMobilia && kit ? kit.nome : "Sem kit"],
     ["Opcionais", opcionais.length ? opcionais.join(", ") : "Nenhum"],
