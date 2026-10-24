@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { lazy, Suspense } from "react";
 import "@/styles/velum.css";
 import Index from "./pages/Index";
 import Lum from "./pages/Lum";
@@ -17,6 +18,9 @@ import PropostaForm from "./pages/PropostaForm";
 import PropostaPublica from "./pages/PropostaPublica";
 import NotFound from "./pages/NotFound";
 
+// O showroom 3D carrega sob demanda para não pesar nas outras páginas.
+const Modulos = lazy(() => import("./pages/Modulos"));
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,6 +33,14 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/lum" element={<Lum />} />
+          <Route
+            path="/modulos"
+            element={
+              <Suspense fallback={<div className="min-h-screen" style={{ background: "#0D0D0D" }} />}>
+                <Modulos />
+              </Suspense>
+            }
+          />
           <Route path="/gerenciamento" element={<Gerenciamento />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/sobre" element={<Sobre />} />
