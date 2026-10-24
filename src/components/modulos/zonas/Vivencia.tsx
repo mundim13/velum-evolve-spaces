@@ -975,6 +975,83 @@ function EspelhoCorpo({ largura }: PropsPeca) {
   );
 }
 
+
+/* ------------------------------------------- versões compactas das zonas ------------------------------------------- */
+
+/** Descanso compacto: uma poltrona com luminária de piso. */
+function PoltronaLeitura() {
+  return (
+    <>
+      <Poltrona x={0.08} z={0.42} />
+      <LuminariaPiso x={-0.36} z={0.14} />
+    </>
+  );
+}
+
+/** Espera compacta: uma poltrona e uma mesinha com revistas. */
+function EsperaCompacta() {
+  return (
+    <>
+      <Poltrona x={-0.18} z={0.4} cor="#8E9A7F" />
+      <MesaLateral x={0.3} z={0.24} altura={0.45} />
+      <Caixa p={[0.3, P + 0.475, 0.24]} s={[0.22, 0.02, 0.28]} mat={MAT.laca("#E8B04B")} raio={0.004} />
+    </>
+  );
+}
+
+/** Leitura compacta: estante baixa de capa para a frente e um pufe. */
+function LeituraCompacta({ largura }: PropsPeca) {
+  return (
+    <>
+      <Caixa p={[0, P + 0.3, 0.08]} s={[largura, 0.6, 0.14]} mat={MAT.laca("#F7F5F0")} raio={0.008} />
+      {[0.2, 0.46].map((y, i) => (
+        <group key={y}>
+          <Caixa p={[0, P + y - 0.02, 0.18]} s={[largura - 0.04, 0.03, 0.08]} mat={MAT.madeiraMovel()} />
+          {[-0.22, 0, 0.22].map((x, k) => (
+            <mesh key={x} position={[x, P + y + 0.09, 0.17]} rotation={[-0.12, 0, 0]} material={MAT.laca(CORES_INFANTIS[(k + i) % 4])} castShadow>
+              <boxGeometry args={[0.18, 0.22, 0.015]} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+      <Caixa p={[0.12, P + 0.15, 0.52]} s={[0.36, 0.3, 0.36]} mat={MAT.tecido("#EE8C77")} cilindro />
+    </>
+  );
+}
+
+/** Alongamento compacto: cesto com colchonetes enrolados, rolo de liberação e bola suíça ao lado. */
+function KitAlongamento() {
+  return (
+    <>
+      <Caixa p={[-0.15, P + 0.2, 0.2]} s={[0.36, 0.4, 0.34]} mat={MAT.tecido("#C9B79C")} raio={0.03} />
+      {[[-0.22, "#5E8C7A"], [-0.08, "#C47A5A"]].map(([x, cor]) => (
+        <mesh key={x as number} position={[x as number, P + 0.5, 0.2]} material={MAT.laca(cor as string)} castShadow>
+          <cylinderGeometry args={[0.065, 0.065, 0.5, 16]} />
+        </mesh>
+      ))}
+      <mesh position={[0.2, P + 0.25, 0.22]} material={MAT.laca("#7CC6D6")} castShadow receiveShadow>
+        <sphereGeometry args={[0.25, 28, 18]} />
+      </mesh>
+    </>
+  );
+}
+
+/** Bancada de parede (jantar compacto): tampo preso na parede e duas banquetas. */
+function BarParede({ largura }: PropsPeca) {
+  return (
+    <>
+      <Caixa p={[0, P + 1.0, 0.18]} s={[largura, 0.04, 0.36]} mat={MAT.madeiraMovel()} raio={0.006} />
+      {[-largura / 2 + 0.12, largura / 2 - 0.12].map((x) => (
+        <Caixa key={x} p={[x, P + 0.85, 0.04]} s={[0.04, 0.26, 0.06]} mat={MAT.perfil()} />
+      ))}
+      {[-0.22, 0.22].map((x) => (
+        <Banqueta key={x} x={x} z={0.45} />
+      ))}
+      <Caixa p={[0.1, P + 1.06, 0.16]} s={[0.1, 0.08, 0.1]} mat={MAT.louca()} cilindro />
+    </>
+  );
+}
+
 /* ------------------------------------------- montagem ------------------------------------------- */
 
 const PECAS: Record<TipoPeca, (p: PropsPeca) => JSX.Element> = {
@@ -1013,6 +1090,11 @@ const PECAS: Record<TipoPeca, (p: PropsPeca) => JSX.Element> = {
   "cantinho-leitura": CantinhoLeitura,
   espera: Espera,
   "espelho-corpo": EspelhoCorpo,
+  "espera-compacta": EsperaCompacta,
+  "poltrona-leitura": PoltronaLeitura,
+  "leitura-compacta": LeituraCompacta,
+  "kit-alongamento": KitAlongamento,
+  "bar-parede": BarParede,
   planta: () => <Planta />,
 };
 

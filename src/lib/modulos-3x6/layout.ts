@@ -228,6 +228,11 @@ export type TipoPeca =
   | "kettlebells"
   | "cantinho-leitura"
   | "espera"
+  | "espera-compacta"
+  | "poltrona-leitura"
+  | "leitura-compacta"
+  | "kit-alongamento"
+  | "bar-parede"
   | "espelho-corpo"
   | "planta";
 
@@ -248,6 +253,8 @@ interface PecaBase {
 }
 
 export interface PecaParede extends PecaBase {
+  /** Versão menor da mesma zona, tentada quando a completa não cabe (a zona não some à toa). */
+  compacta?: { tipo: TipoPeca; largura: number; profundidade: number; alto?: boolean };
   /** Paredes aceitas, em ordem de preferência; "oposta-porta" é a parede em frente à esquadria principal. */
   paredes: (Parede | "oposta-porta")[];
   /** Posição preferida ao longo da parede: 0 no início (fundo ou lado A), 1 no fim (testada ou lado B). */
@@ -344,7 +351,16 @@ const BIKE: PecaParede = { id: "bike", tipo: "bike", largura: 1.05, profundidade
 const HALTERES: PecaParede = { id: "halteres", tipo: "halteres", largura: 0.6, profundidade: 0.36, alto: true, paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.85 };
 const BANCO: PecaSolta = { id: "banco", tipo: "banco-supino", largura: 1.25, profundidade: 0.45, alto: false, frente: "anilhas", distancia: 0.6 };
 /** Zona de alongamento: espaldar na parede e colchonetes na frente dele. */
-const ESPALDAR: PecaParede = { id: "espaldar", tipo: "espaldar", largura: 0.9, profundidade: 0.14, alto: true, paredes: ["fundo", "testada", "cabeceira", "lateral"], ancora: 0 };
+const ESPALDAR: PecaParede = {
+  id: "espaldar",
+  tipo: "espaldar",
+  largura: 0.9,
+  profundidade: 0.14,
+  alto: true,
+  paredes: ["fundo", "testada", "cabeceira", "lateral"],
+  ancora: 0,
+  compacta: { tipo: "kit-alongamento", largura: 0.7, profundidade: 0.45, alto: false },
+};
 const COLCHONETES: PecaSolta = { id: "colchonetes", tipo: "colchonetes", largura: 1.8, profundidade: 0.75, alto: false, pisavel: true, frente: "espaldar", distancia: 0.1 };
 /** Banco encostado na parede, ao lado do rack de anilhas (no meio da sala ele fechava a passagem). */
 const BANCO_PAREDE: PecaParede = { id: "banco", tipo: "banco-supino", largura: 1.25, profundidade: 0.45, alto: false, paredes: ["cabeceira", "lateral", "testada"], ancora: 0.5, junto: "anilhas" };
@@ -380,7 +396,7 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
     { id: "sofa", tipo: "sofa", largura: 1.9, profundidade: 0.9, alto: false, essencial: true, paredes: [parSofa as Parede], ancora: 0.43 },
     { id: "tv", tipo: "rack-tv", largura: 1.6, profundidade: 0.42, alto: true, essencial: true, paredes: [parTv as Parede], ancora: 0.3 },
     // Kitnet: mesa para dois junto da parede (no lugar da mesa de centro, que fechava a passagem).
-    { id: "jantar", tipo: "mesa-jantar", largura: 1.0, profundidade: 0.75, alto: false, paredes: ["lateral", "cabeceira", "testada", "fundo"], ancora: 0.05 },
+    { id: "jantar", tipo: "mesa-jantar", largura: 1.0, profundidade: 0.75, alto: false, paredes: ["lateral", "cabeceira", "testada", "fundo"], ancora: 0.05, compacta: { tipo: "bar-parede", largura: 0.9, profundidade: 0.6 } },
     { id: "mesa-lateral", tipo: "mesa-lateral", largura: 0.45, profundidade: 0.45, alto: false, paredes: [parSofa as Parede], ancora: 0.5, junto: "sofa" },
     planta(1),
   ]),
@@ -401,7 +417,7 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
       { id: "mesas", tipo: "mesas-escritorio", largura: 2.6, profundidade: 1.2, alto: false, essencial: true, paredes: ["cabeceira", "lateral", "fundo"], ancora: 0.5 },
       { id: "estante", tipo: "estante", largura: 1.6, profundidade: 0.36, alto: true, essencial: true, paredes: ["lateral", "fundo", "cabeceira", "testada"], ancora: 0.5 },
       // Canto de descanso (poltrona, mesinha e luminária de piso) longe das mesas, perto da luz da entrada.
-      { id: "descanso", tipo: "canto-descanso", largura: 1.3, profundidade: 0.85, alto: false, paredes: ["lateral", "cabeceira", "fundo", "testada"], ancora: 1 },
+      { id: "descanso", tipo: "canto-descanso", largura: 1.3, profundidade: 0.85, alto: false, paredes: ["lateral", "cabeceira", "fundo", "testada"], ancora: 1, compacta: { tipo: "poltrona-leitura", largura: 0.95, profundidade: 0.85 } },
       { id: "aparador", tipo: "aparador", largura: 1.0, profundidade: 0.45, alto: false, paredes: ["fundo", "lateral", "cabeceira"], ancora: 0.5 },
       planta(1),
     ],
@@ -419,20 +435,20 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
       { id: "estante", tipo: "estante-baixa", largura: 2.0, profundidade: 0.36, alto: true, essencial: true, paredes: ["lateral", "cabeceira", "fundo"], ancora: 0.4 },
       { id: "mesinha", tipo: "mesinha-infantil", largura: 1.25, profundidade: 1.25, alto: false, frente: "estante", distancia: 0.55 },
       // Cantinho de leitura: livros de capa para a frente, pufes e almofadões no chão.
-      { id: "leitura", tipo: "cantinho-leitura", largura: 1.2, profundidade: 0.9, alto: true, paredes: ["fundo", "lateral", "cabeceira", "testada"], ancora: 0.5 },
+      { id: "leitura", tipo: "cantinho-leitura", largura: 1.2, profundidade: 0.9, alto: true, paredes: ["fundo", "lateral", "cabeceira", "testada"], ancora: 0.5, compacta: { tipo: "leitura-compacta", largura: 0.8, profundidade: 0.75 } },
     ],
   ],
   loja: [
     [
       // Vitrine perto da entrada (testada), balcão com caixa no fundo, de frente para quem entra.
       { id: "vitrine", tipo: "vitrine", largura: 1.2, profundidade: 0.5, alto: false, essencial: true, paredes: ["lateral", "cabeceira"], ancora: 1 },
-      { id: "prateleira-a", tipo: "prateleira-loja", largura: 1.5, profundidade: 0.4, alto: true, essencial: true, paredes: ["cabeceira", "lateral", "testada"], ancora: 0.45 },
+      { id: "prateleira-a", tipo: "prateleira-loja", largura: 1.5, profundidade: 0.4, alto: true, essencial: true, paredes: ["cabeceira", "lateral", "testada"], ancora: 0 },
       { id: "balcao", tipo: "balcao-caixa", largura: 1.2, profundidade: 0.62, alto: false, essencial: true, paredes: ["fundo", "cabeceira", "lateral", "testada"], ancora: 0.5 },
       { id: "prateleira-b", tipo: "prateleira-loja", largura: 1.5, profundidade: 0.4, alto: true, paredes: ["lateral", "cabeceira", "testada"], ancora: 0.45 },
-      { id: "expositora", tipo: "mesa-expositora", largura: 1.0, profundidade: 0.7, alto: false, frente: "balcao", distancia: 1.3 },
       // Espera do cliente (ou do paciente, no consultório) e espelho de corpo inteiro.
-      { id: "espera", tipo: "espera", largura: 1.5, profundidade: 0.75, alto: false, paredes: ["cabeceira", "lateral", "testada", "fundo"], ancora: 0.9 },
+      { id: "espera", tipo: "espera", largura: 1.5, profundidade: 0.75, alto: false, paredes: ["cabeceira", "lateral", "testada", "fundo"], ancora: 0.9, compacta: { tipo: "espera-compacta", largura: 1.0, profundidade: 0.75 } },
       { id: "espelho", tipo: "espelho-corpo", largura: 0.6, profundidade: 0.05, alto: true, foraDoPainel: true, paredes: ["cabeceira", "lateral", "fundo", "testada"], ancora: 0.15 },
+      { id: "expositora", tipo: "mesa-expositora", largura: 1.0, profundidade: 0.7, alto: false, frente: "balcao", distancia: 1.3 },
     ],
   ],
 };
@@ -463,6 +479,12 @@ function valida(ctx: Contexto, r: Ret, alto: boolean, parede: Parede | null, u0:
 }
 
 function colocarNaParede(ctx: Contexto, peca: PecaParede, colocadas: Colocada[]): Colocada | null {
+  const inteira = colocarUma(ctx, peca, colocadas);
+  if (inteira || !peca.compacta) return inteira;
+  return colocarUma(ctx, { ...peca, ...peca.compacta, reserva: undefined }, colocadas);
+}
+
+function colocarUma(ctx: Contexto, peca: PecaParede, colocadas: Colocada[]): Colocada | null {
   const ref = peca.junto ? colocadas.find((q) => q.id === peca.junto) : undefined;
   if (ref?.parede) {
     const junto = tentarParedes(ctx, peca, colocadas, [ref.parede], ref, 0);
@@ -578,7 +600,7 @@ export function layoutVivencia(c: Config): Layout {
   const vaos = vaosDaSala(c);
   const principal = vaos.find((v) => v.id === "principal");
   const zonas = zonasLivres(c);
-  const base = { de: null as Colocada[] | null, n: -1, falhas: 0, tentativas: 0 };
+  const base = { de: null as Colocada[] | null, n: -1, tipo: "" as string, falhas: 0, tentativas: 0 };
   // Grade de 10 cm no motor (rápido no celular); os testes conferem com 5 cm.
   const falhas = (pecas: Colocada[]) => falhasDeCirculacao(circulacao({ sala: s, vaos, zonas, pecas }, 0.1));
   const ctx: Contexto = {
@@ -589,7 +611,8 @@ export function layoutVivencia(c: Config): Layout {
     painel: c.esquadria.face !== "ladoA",
     circula: (colocadas, nova) => {
       // A referência (sem a peça nova) é a mesma para todas as posições tentadas de uma peça: calcula uma vez.
-      if (base.de !== colocadas || base.n !== colocadas.length) Object.assign(base, { de: colocadas, n: colocadas.length, falhas: falhas(colocadas), tentativas: 0 });
+      if (base.de !== colocadas || base.n !== colocadas.length || base.tipo !== nova.tipo)
+        Object.assign(base, { de: colocadas, n: colocadas.length, tipo: nova.tipo, falhas: falhas(colocadas), tentativas: 0 });
       // Peça que só travaria a passagem (planta, por exemplo) desiste depois de algumas posições e sai.
       if (base.tentativas++ > TENTATIVAS_CIRCULACAO) return false;
       return falhas([...colocadas, nova]) <= base.falhas;
