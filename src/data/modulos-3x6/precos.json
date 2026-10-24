@@ -75,11 +75,11 @@
     "brinquedoteca": { "nome": "Kit brinquedoteca", "venda": 4000, "disponivelEm": ["brinquedoteca"] }
   },
   "opcionais": {
-    "deck": { "nome": "Deck WPC frontal 6 x 2 m", "venda": 7200 },
+    "deck": { "nome": "Deck WPC", "descricao": "Na frente da esquadria principal: 3 x 2 m na testada, 6 x 2 m na lateral", "profundidade": 2, "vendaM2": 600 },
     "pergolado": { "nome": "Pergolado sobre o deck", "venda": 6000, "exige": "deck" },
     "fundacao": { "nome": "Fundação", "venda": 4500 },
     "kitAirbnb": { "nome": "Kit Airbnb", "descricao": "Enxoval, utensílios, fechadura digital", "venda": 3500, "disponivelEm": ["suite", "estudio"] },
-    "freteKm": { "nome": "Frete fora de Goiânia e região", "vendaPorKm": 12 },
+    "freteKm": { "nome": "Frete", "descricao": "Incluso até kmIncluso da fábrica; acima disso, vendaPorKm por km que passar do incluso", "kmIncluso": 50, "vendaPorKm": 12 },
     "ligacoes": { "nome": "Ligações de água, esgoto e luz", "sobConsulta": true }
   },
   "atalhos": [

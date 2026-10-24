@@ -367,7 +367,7 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
         <SombraCasca.Provider value={modo === "fora"}>
           <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} />
         </SombraCasca.Provider>
-        <Camera modo={modo} foco={foco} afastar={config.extras.deck && modo === "fora" ? 1.3 : 1} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
+        <Camera modo={modo} foco={foco} afastar={config.extras.deck && modo === "fora" ? (config.esquadria.face === "testada" ? 1.15 : 1.3) : 1} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
         <Suspense fallback={null}>
           <Efeitos />
         </Suspense>

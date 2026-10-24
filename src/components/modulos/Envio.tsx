@@ -8,12 +8,19 @@ import { mensagemWhatsApp, montarProposta, nomeValido, telefoneValido, type Cont
 import type { Config } from "@/lib/modulos-3x6/tipos";
 import { VELUM_WHATSAPP, getUtm } from "@/lib/whatsapp";
 
-type Estado = { fase: "formulario" } | { fase: "enviando" } | { fase: "pronto"; link: string | null; url: string };
+type Falha = "limite" | "falha";
+type Estado =
+  | { fase: "formulario" }
+  | { fase: "enviando" }
+  | { fase: "pronto"; link: string | null; url: string; falha?: Falha };
 
 const urlWhatsApp = (mensagem: string) => `https://wa.me/${VELUM_WHATSAPP}?text=${encodeURIComponent(mensagem + getUtm())}`;
 
-/** Grava a proposta (Supabase) e devolve o link /proposta/:token, ou null se não der para gravar agora. */
-async function criarProposta(config: Config, resultado: ResultadoPreco, contato: Contato) {
+/**
+ * Grava a proposta (Supabase) e devolve o link /proposta/:token. Sem link, diz por quê: o limite de
+ * 3 propostas por telefone em 24 h (aplicado no banco) ou uma falha qualquer.
+ */
+async function criarProposta(config: Config, resultado: ResultadoPreco, contato: Contato): Promise<{ link: string } | { falha: Falha }> {
   try {
     const p = montarProposta(config, resultado, contato);
     const { data, error } = await supabase.rpc("criar_proposta_simulador", {
@@ -21,10 +28,11 @@ async function criarProposta(config: Config, resultado: ResultadoPreco, contato:
       p_itens: p.p_itens as unknown as Json,
       p_configuracao: p.p_configuracao as unknown as Json,
     });
-    if (error || !data) return null;
-    return `${window.location.origin}/proposta/${data}`;
+    if (error) return { falha: error.message.includes("limite de propostas") ? "limite" : "falha" };
+    if (!data) return { falha: "falha" };
+    return { link: `${window.location.origin}/proposta/${data}` };
   } catch {
-    return null;
+    return { falha: "falha" };
   }
 }
 
@@ -42,6 +50,8 @@ interface Props {
 export function Envio({ aberto, onFechar, config, resultado }: Props) {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
+  // Campo-armadilha: invisível para pessoas; robôs que preenchem tudo caem nele e nada é gravado.
+  const [armadilha, setArmadilha] = useState("");
   const [tentou, setTentou] = useState(false);
   const [estado, setEstado] = useState<Estado>({ fase: "formulario" });
 
@@ -52,12 +62,18 @@ export function Envio({ aberto, onFechar, config, resultado }: Props) {
     ev.preventDefault();
     setTentou(true);
     if (!nomeOk || !telefoneOk) return;
+    if (armadilha.trim()) {
+      setEstado({ fase: "pronto", link: null, url: urlWhatsApp("") });
+      return;
+    }
     // A janela abre já no clique (senão o navegador bloqueia o pop-up depois da espera pela gravação).
     const janela = window.open("", "_blank");
     if (janela) janela.opener = null;
     setEstado({ fase: "enviando" });
     const contato = { nome, telefone };
-    const link = await criarProposta(config, resultado, contato);
+    const gravada = await criarProposta(config, resultado, contato);
+    const link = "link" in gravada ? gravada.link : null;
+    const falha = "falha" in gravada ? gravada.falha : undefined;
     const url = urlWhatsApp(mensagemWhatsApp(config, resultado, contato, link));
     (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({
       event: "modulos_envio_whatsapp",
@@ -65,10 +81,11 @@ export function Envio({ aberto, onFechar, config, resultado }: Props) {
       atalho: config.atalho ?? "nenhum",
       total: resultado.total,
       proposta: !!link,
+      falha: falha ?? "nenhuma",
     });
     if (janela) janela.location.href = url;
     else window.location.href = url;
-    setEstado({ fase: "pronto", link, url });
+    setEstado({ fase: "pronto", link, url, falha });
   };
 
   const fechar = () => {
@@ -100,6 +117,12 @@ export function Envio({ aberto, onFechar, config, resultado }: Props) {
                 Total estimado de {formatarReais(resultado.total)}. A gente gera a sua proposta com link e abre o WhatsApp da Velum com tudo
                 preenchido.
               </DialogDescription>
+            </div>
+            <div aria-hidden="true" style={{ position: "absolute", left: -10000, top: "auto", width: 1, height: 1, overflow: "hidden" }}>
+              <label>
+                Empresa
+                <input name="empresa" tabIndex={-1} autoComplete="off" value={armadilha} onChange={(e) => setArmadilha(e.target.value)} />
+              </label>
             </div>
             <label className="grid gap-1.5">
               <span style={{ fontSize: 12, color: "rgba(249,250,251,0.6)" }}>Nome</span>
@@ -150,7 +173,9 @@ export function Envio({ aberto, onFechar, config, resultado }: Props) {
             <DialogDescription style={{ fontSize: 13, color: "rgba(249,250,251,0.7)" }}>
               {estado.link
                 ? "Sua proposta está pronta e o WhatsApp da Velum abriu com a mensagem. Se não abriu, use o botão abaixo."
-                : "Não conseguimos gerar o link da proposta agora, mas a sua configuração foi para o WhatsApp da Velum. Se não abriu, use o botão abaixo."}
+                : estado.falha === "limite"
+                  ? "Este telefone já gerou 3 propostas nas últimas 24 horas, então não criamos outro link. A sua configuração foi para o WhatsApp da Velum. Se não abriu, use o botão abaixo."
+                  : "Não conseguimos gerar o link da proposta agora, mas a sua configuração foi para o WhatsApp da Velum. Se não abriu, use o botão abaixo."}
             </DialogDescription>
             <a
               href={estado.url}

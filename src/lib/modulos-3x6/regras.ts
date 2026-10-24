@@ -56,6 +56,15 @@ export function usoDaConfig(c: Pick<Config, "banheiro" | "cozinha" | "vivencia">
   }
 }
 
+/**
+ * Deck WPC na frente da esquadria principal, acompanhando a face: 3 x 2 m na testada, 6 x 2 m na lateral.
+ * A largura é o comprimento da face; a profundidade vem da tabela.
+ */
+export function deckDe(c: Pick<Config, "comprimento" | "esquadria">, profundidade = 2) {
+  const largura = c.esquadria.face === "testada" ? LARGURA : c.comprimento;
+  return { largura, profundidade, area: largura * profundidade };
+}
+
 export const temFaixa = (c: Pick<Config, "banheiro" | "cozinha">) =>
   c.banheiro !== "nenhum" || c.cozinha !== "nenhuma";
 

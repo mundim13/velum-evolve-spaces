@@ -1,4 +1,4 @@
-import { formatarReais, kitMobiliaDe, type ResultadoPreco } from "./preco";
+import { deckComPreco, formatarReais, kitMobiliaDe, type ResultadoPreco } from "./preco";
 import { usoDaConfig, varianteEsquadria } from "./regras";
 import { tabela, type Config, type FaceEsquadria, type Uso } from "./tipos";
 
@@ -37,17 +37,18 @@ export function resumoConfig(c: Config): [string, string][] {
       : `${t.fachada[c.fachada.tipo].nome} em ${t.cores.wpc[c.fachada.wpc].nome.toLowerCase()} (textura ${t.cores.textura[c.fachada.cor].nome.toLowerCase()})`;
   const kit = kitMobiliaDe(c);
   const opcionais = [
-    c.extras.deck && t.opcionais.deck.nome,
+    c.extras.deck && deckComPreco(c).nome,
     c.extras.deck && c.extras.pergolado && t.opcionais.pergolado.nome,
     c.extras.fundacao && t.opcionais.fundacao.nome,
     c.extras.kitAirbnb && (usoDaConfig(c) === "suite" || usoDaConfig(c) === "estudio") && t.opcionais.kitAirbnb.nome,
   ].filter(Boolean) as string[];
+  const incluso = t.opcionais.freteKm.kmIncluso;
   const entrega =
-    c.entrega.modo === "regiao"
-      ? `Goiânia e região${c.entrega.cidade ? ` (${c.entrega.cidade})` : ""}`
-      : c.entrega.km !== null
-        ? `${c.entrega.cidade} (${c.entrega.km} km)`
-        : `${c.entrega.cidade || "Fora de Goiânia e região"} (frete sob consulta)`;
+    c.entrega.km !== null
+      ? `${c.entrega.cidade} (${c.entrega.km} km${c.entrega.km <= incluso ? ", frete incluso" : ""})`
+      : c.entrega.modo === "regiao"
+        ? `Até ${incluso} km da fábrica (frete incluso)`
+        : `${c.entrega.cidade || "Cidade a confirmar"} (frete sob consulta)`;
 
   return [
     ["Aplicação", nomeAplicacao(c)],

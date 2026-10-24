@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ENTREGA_REGIAO, cidadeDoCep, entregaPara, limparCep } from "@/lib/modulos-3x6/entrega";
 import { reduzir, type Acao } from "@/lib/modulos-3x6/estado";
-import { calcularPreco, formatarReais, kitAirbnbDisponivel, kitMobiliaDe } from "@/lib/modulos-3x6/preco";
+import { calcularPreco, deckComPreco, formatarReais, kitAirbnbDisponivel, kitMobiliaDe } from "@/lib/modulos-3x6/preco";
 import { NOME_FACE } from "@/lib/modulos-3x6/saida";
 import { opcoesEsquadria } from "@/lib/modulos-3x6/regras";
 import {
@@ -146,7 +146,7 @@ function Rotulo({ children }: { children: ReactNode }) {
   );
 }
 
-/** Passo 9: cidade (com sugestões da tabela) ou CEP, para o frete fora de Goiânia e região. */
+/** Passo 9: cidade (com sugestões da tabela) ou CEP, para o frete acima dos km inclusos. */
 function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Acao) => void }) {
   const e = config.entrega;
   const [fora, setFora] = useState(e.modo === "fora" || !!e.cidade);
@@ -182,11 +182,14 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
 
   const r = calcularPreco(config);
   const frete = r.itens.find((i) => i.id === "frete");
+  const incluso = tabela.opcionais.freteKm.kmIncluso;
   const situacao =
-    e.modo === "regiao"
-      ? `Goiânia e região${e.cidade ? ` (${e.cidade})` : ""}: frete incluso.`
-      : e.km !== null
-        ? `${e.cidade}: ${e.km} km de Goiânia, frete de ${formatarReais(frete?.venda ?? 0)}.`
+    e.km !== null
+      ? frete && frete.venda > 0
+        ? `${e.cidade}: ${e.km} km da fábrica, frete de ${formatarReais(frete.venda)} (${e.km - incluso} km além dos ${incluso} inclusos).`
+        : `${e.cidade}: ${e.km} km da fábrica, frete incluso.`
+      : e.modo === "regiao"
+        ? `Até ${incluso} km da fábrica: frete incluso.`
         : e.cidade
           ? `${e.cidade}: frete sob consulta, fora do total.`
           : "";
@@ -208,8 +211,8 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
       <div className="grid gap-2">
         <Opcao
           ativo={!fora}
-          titulo="Goiânia e região"
-          detalhe="Frete incluso no preço"
+          titulo={`Até ${incluso} km da fábrica`}
+          detalhe="Goiânia e cidades próximas: frete incluso no preço"
           onClick={() => {
             setFora(false);
             setCidade("");
@@ -217,7 +220,12 @@ function PassoEntrega({ config, despachar }: { config: Config; despachar: (a: Ac
             despachar({ tipo: "entrega", valor: ENTREGA_REGIAO });
           }}
         />
-        <Opcao ativo={fora} titulo="Outra cidade" detalhe={`Frete de R$ ${tabela.opcionais.freteKm.vendaPorKm} por km a partir de Goiânia`} onClick={() => setFora(true)} />
+        <Opcao
+          ativo={fora}
+          titulo="Informar a cidade"
+          detalhe={`Acima de ${incluso} km, R$ ${tabela.opcionais.freteKm.vendaPorKm} por km excedente`}
+          onClick={() => setFora(true)}
+        />
       </div>
       {fora && (
         <div className="grid gap-3" style={{ marginTop: 12 }}>
@@ -584,8 +592,9 @@ export function Configurador({ config, etapa, onEtapa, despachar, onConcluir }: 
           <div className="grid gap-2">
             <Opcao
               ativo={config.extras.deck}
-              titulo={tabela.opcionais.deck.nome}
-              direita={<Preco valor={tabela.opcionais.deck.venda} />}
+              titulo={deckComPreco(config).nome}
+              detalhe="Na frente da porta principal (acompanha a face da esquadria)"
+              direita={<Preco valor={deckComPreco(config).venda} />}
               onClick={alternar("deck")}
             />
             {config.extras.deck && (

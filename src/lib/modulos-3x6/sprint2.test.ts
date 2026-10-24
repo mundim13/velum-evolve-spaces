@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buscarCidade, entregaPara } from "./entrega";
 import { CONFIG_INICIAL, aplicarAtalho, buscarAtalho, reduzir } from "./estado";
 import { CHAVE, carregarConfig, salvarConfig, validarConfig } from "./persistencia";
-import { calcularPreco, kitAirbnbDisponivel, kitMobiliaDe } from "./preco";
+import { calcularPreco, deckComPreco, fretePorKm, kitAirbnbDisponivel, kitMobiliaDe } from "./preco";
 import { usoDaConfig } from "./regras";
 import { mensagemWhatsApp, montarProposta, nomeValido, resumoConfig, telefoneValido } from "./saida";
 import type { Config } from "./tipos";
@@ -47,7 +47,18 @@ describe("opcionais externos (passo 8)", () => {
       { tipo: "opcional", chave: "pergolado", valor: true },
       { tipo: "opcional", chave: "fundacao", valor: true },
     );
-    expect(total(c)).toBe(80000 + 7200 + 6000 + 4500);
+    expect(total(c)).toBe(80000 + 3600 + 6000 + 4500);
+  });
+
+  it("o deck acompanha a face da esquadria: 3 x 2 m na testada, 6 x 2 m na lateral, a R$ 600/m²", () => {
+    const deck = { tipo: "opcional", chave: "deck", valor: true } as const;
+    const testada = com(CONFIG_INICIAL, deck);
+    expect(deckComPreco(testada)).toMatchObject({ largura: 3, profundidade: 2, venda: 3600, nome: "Deck WPC 3 x 2 m" });
+    const lateral = com(testada, { tipo: "esquadria", face: "ladoB", tamanho: "parcial" });
+    expect(deckComPreco(lateral)).toMatchObject({ largura: 6, venda: 7200, nome: "Deck WPC 6 x 2 m" });
+    expect(total(lateral) - total(com(lateral, { tipo: "opcional", chave: "deck", valor: false }))).toBe(7200);
+    const foraAFora = com(testada, { tipo: "esquadria", face: "ladoA", tamanho: "fora" });
+    expect(deckComPreco(foraAFora).venda).toBe(7200);
   });
 
   it("pergolado só existe com deck", () => {
@@ -79,16 +90,20 @@ describe("entrega (passo 9)", () => {
     expect(buscarCidade("anapolis/go")?.nome).toBe("Anápolis");
   });
 
-  it("na região o frete está incluso", () => {
+  it("até 50 km da fábrica o frete está incluso", () => {
     const c = com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Aparecida de Goiânia") });
     expect(c.entrega.modo).toBe("regiao");
     expect(total(c)).toBe(80000);
+    expect(fretePorKm(50)).toEqual({ excedente: 0, venda: 0 });
+    expect(total(com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Inhumas") }))).toBe(80000);
   });
 
-  it("fora da região cobra R$ 12 por km", () => {
-    const c = com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Rio Verde") });
-    expect(total(c)).toBe(80000 + 230 * 12);
-    expect(calcularPreco(c).itens.find((i) => i.id === "frete")?.nota).toBe("230 km × R$ 12/km");
+  it("acima de 50 km cobra R$ 12 por km excedente", () => {
+    const rioVerde = com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Rio Verde") });
+    expect(total(rioVerde)).toBe(80000 + (230 - 50) * 12);
+    expect(calcularPreco(rioVerde).itens.find((i) => i.id === "frete")?.nota).toBe("230 km, 50 km inclusos: 180 km × R$ 12/km");
+    const anapolis = com(CONFIG_INICIAL, { tipo: "entrega", valor: entregaPara("Anápolis") });
+    expect(total(anapolis)).toBe(80000 + 5 * 12);
   });
 
   it("cidade fora da tabela fica sob consulta, fora do total", () => {

@@ -1,9 +1,9 @@
-import { cidades, type Cidade, type Entrega } from "./tipos";
+import { cidades, tabela, type Cidade, type Entrega } from "./tipos";
 
 const normalizar = (s: string) =>
   s
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/\s+/g, " ")
     .trim();
@@ -18,15 +18,15 @@ export function buscarCidade(nome: string): Cidade | undefined {
 
 /**
  * Entrega para uma cidade informada pela pessoa (ou encontrada pelo CEP).
- * Na região o frete está incluso; fora dela vale a distância da tabela; sem distância, sob consulta.
+ * Até o limite da tabela (50 km da fábrica) o frete está incluso; acima, cobra o km excedente;
+ * cidade fora da lista fica com frete sob consulta.
  */
 export function entregaPara(nome: string, cep = ""): Entrega {
   const cidade = buscarCidade(nome);
   if (!cidade) return { modo: "fora", cidade: nome.trim(), cep, km: null };
   const rotulo = `${cidade.nome} - ${cidade.uf}`;
-  return cidade.regiao
-    ? { modo: "regiao", cidade: rotulo, cep, km: null }
-    : { modo: "fora", cidade: rotulo, cep, km: cidade.km };
+  const modo = cidade.km <= tabela.opcionais.freteKm.kmIncluso ? "regiao" : "fora";
+  return { modo, cidade: rotulo, cep, km: cidade.km };
 }
 
 export const ENTREGA_REGIAO: Entrega = { modo: "regiao", cidade: "", cep: "", km: null };
