@@ -8,6 +8,7 @@ import {
   aberturas as calcularAberturas,
   type Abertura,
 } from "@/lib/modulos-3x6/regras";
+import type { Ambiente } from "@/lib/modulos-3x6/layout";
 import { tabela, type Config, type Face, type FaceEsquadria } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "./Caixa";
 import { Arandela, Esquadria } from "./Esquadria";
@@ -133,10 +134,12 @@ interface Props {
   config: Config;
   escolhendoFace: boolean;
   onEscolherFace: (face: FaceEsquadria) => void;
+  /** Força o ambiente da vivência (a página da franquia usa a loja Teslink). */
+  ambiente?: Ambiente;
 }
 
 /** Casca 3x6 paramétrica: o comprimento é variável e tudo (paredes, vãos, ripado, zonas) se recalcula a partir dele. */
-export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
+export function Casca({ config, escolhendoFace, onEscolherFace, ambiente }: Props) {
   const { comprimento: L, altura: H } = config;
   const meio = L / 2;
 
@@ -256,7 +259,7 @@ export function Casca({ config, escolhendoFace, onEscolherFace }: Props) {
       <Divisorias config={config} />
       <Banheiro config={config} />
       <Cozinha config={config} />
-      <Vivencia config={config} />
+      <Vivencia config={config} ambiente={ambiente} />
       <Externos config={config} />
 
       {escolhendoFace && <SeletorFaces config={config} onEscolher={onEscolherFace} />}

@@ -4,6 +4,7 @@ import { ContactShadows, Environment, Lightformer, OrbitControls } from "@react-
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { CHASSI } from "@/lib/modulos-3x6/regras";
+import type { Ambiente } from "@/lib/modulos-3x6/layout";
 import type { Config, FaceEsquadria } from "@/lib/modulos-3x6/tipos";
 import { Casca } from "./Casca";
 import { Desempenho } from "./Desempenho";
@@ -330,9 +331,13 @@ interface Props {
   foco: FaceEsquadria;
   escolhendoFace: boolean;
   onEscolherFace: (face: FaceEsquadria) => void;
+  /** Força o ambiente da vivência (a página da franquia usa a loja Teslink). */
+  ambiente?: Ambiente;
+  /** Elementos extras na cena (a identidade da franquia na fachada, por exemplo). */
+  children?: ReactNode;
 }
 
-export default function Showroom({ config, modo, foco, escolhendoFace, onEscolherFace }: Props) {
+export default function Showroom({ config, modo, foco, escolhendoFace, onEscolherFace, ambiente, children }: Props) {
   const [suportado] = useState(temWebGL);
   const [girar, setGirar] = useState(true);
   const primeiraConfig = useRef(config);
@@ -369,7 +374,8 @@ export default function Showroom({ config, modo, foco, escolhendoFace, onEscolhe
         <Chao chave={`${JSON.stringify(config)}|${modo}`} />
         <Corte modo={modo} chave={JSON.stringify(config)} />
         <SombraCasca.Provider value={modo === "fora"}>
-          <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} />
+          <Casca config={config} escolhendoFace={escolhendoFace} onEscolherFace={onEscolherFace} ambiente={ambiente} />
+          {children}
         </SombraCasca.Provider>
         <Camera modo={modo} foco={foco} afastar={config.extras.deck && modo === "fora" ? (config.esquadria.face === "testada" ? 1.15 : 1.3) : 1} girar={girar && modo === "fora"} onInteragir={() => setGirar(false)} />
         <Suspense fallback={null}>
