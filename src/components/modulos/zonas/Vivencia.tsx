@@ -1,9 +1,10 @@
 import { useMemo, type ReactNode } from "react";
 import * as THREE from "three";
-import { layoutVivencia, type Colocada, type Parede, type TipoPeca } from "@/lib/modulos-3x6/layout";
+import { layoutVivencia, type Ambiente, type Colocada, type Parede, type TipoPeca } from "@/lib/modulos-3x6/layout";
 import { CHASSI, ESPESSURA_PAREDE as T, trechoVivencia } from "@/lib/modulos-3x6/regras";
 import type { Config } from "@/lib/modulos-3x6/tipos";
 import { Caixa } from "../Caixa";
+import { texturaCaixaKit, texturaPainelStarlink, texturaTeslink } from "../franquia/marcas";
 import { Entrada } from "../Entrada";
 import { COR, MAT } from "../materiais";
 import { SombraContato, useSombraCasca } from "../sombra";
@@ -1052,6 +1053,120 @@ function BarParede({ largura }: PropsPeca) {
   );
 }
 
+
+/* ------------------------------------------- franquia Teslink ------------------------------------------- */
+
+const matImagem = new Map<string, THREE.MeshBasicMaterial>();
+/** Material de imagem acesa (painel, logo): não recebe sombra nem tom de luz, como um backlight. */
+function imagem(chave: string, map: THREE.Texture, transparente = false) {
+  let m = matImagem.get(chave);
+  if (!m) {
+    m = new THREE.MeshBasicMaterial({ map, transparent: transparente, toneMapped: false });
+    matImagem.set(chave, m);
+  }
+  return m;
+}
+
+/** Painel STARLINK retroiluminado na parede, com moldura de alumínio preto e fita de LED em volta. */
+function PainelStarlink({ largura }: PropsPeca) {
+  const h = largura * 0.6;
+  const y = P + 0.95 + h / 2;
+  return (
+    <>
+      <Caixa p={[0, y, 0.025]} s={[largura + 0.06, h + 0.06, 0.04]} mat={MAT.perfil()} />
+      <mesh position={[0, y, 0.047]} material={imagem("painel-starlink", texturaPainelStarlink())}>
+        <planeGeometry args={[largura, h]} />
+      </mesh>
+      <Caixa p={[0, P + 0.93, 0.05]} s={[largura, 0.01, 0.01]} mat={MAT.led("#BFD8FF", 2)} sombra={false} />
+    </>
+  );
+}
+
+/** Balcão de atendimento TESLINK: corpo preto, tampo branco, logo na frente, monitor, roteador e maquininha. */
+function BalcaoTeslink({ largura }: PropsPeca) {
+  return (
+    <>
+      <Caixa p={[0, P + 0.52, 0.31]} s={[largura, 1.04, 0.6]} mat={MAT.laca("#151516")} raio={0.008} />
+      <Caixa p={[0, P + 1.06, 0.31]} s={[largura + 0.04, 0.04, 0.66]} mat={MAT.laca("#EDEDEA")} raio={0.005} />
+      <mesh position={[0, P + 0.62, 0.612]} material={imagem("teslink-branco", texturaTeslink(), true)}>
+        <planeGeometry args={[largura * 0.72, largura * 0.18]} />
+      </mesh>
+      <Caixa p={[0, P + 0.08, 0.615]} s={[largura - 0.04, 0.008, 0.008]} mat={MAT.led("#BFD8FF", 2)} sombra={false} />
+      {/* Monitor virado para o atendente, roteador Starlink (branco, fino) e maquininha. */}
+      <Caixa p={[-0.32, P + 1.14, 0.2]} s={[0.12, 0.12, 0.1]} mat={MAT.perfil()} />
+      <mesh position={[-0.32, P + 1.33, 0.22]} rotation={[-0.25, 0, 0]} material={MAT.laca("#0B0B0C")} castShadow>
+        <boxGeometry args={[0.4, 0.26, 0.025]} />
+      </mesh>
+      <Caixa p={[0.3, P + 1.2, 0.3]} s={[0.1, 0.26, 0.07]} mat={MAT.laca("#F2F2F0")} raio={0.01} />
+      <Caixa p={[0.08, P + 1.095, 0.48]} s={[0.08, 0.03, 0.14]} mat={MAT.laca("#2B2D31")} raio={0.008} />
+      <Pendente x={-largura / 4} z={0.35} queda={0.8} />
+      <Pendente x={largura / 4} z={0.35} queda={0.8} />
+    </>
+  );
+}
+
+/** Caixa de kit Starlink com a frente impressa. */
+function CaixaKit({ x, y, z, escala = 1 }: { x: number; y: number; z: number; escala?: number }) {
+  const w = 0.24 * escala;
+  const h = 0.3 * escala;
+  return (
+    <group position={[x, y + h / 2, z]}>
+      <Caixa p={[0, 0, 0]} s={[w, h, 0.12]} mat={MAT.laca("#F4F4F2")} raio={0.004} contato={false} />
+      <mesh position={[0, 0, 0.0605]} material={imagem("caixa-kit", texturaCaixaKit())}>
+        <planeGeometry args={[w - 0.004, h - 0.004]} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Antena Starlink (placa branca retangular) inclinada sobre um mastro curto. */
+function Antena({ x, y, z, escala = 1, inclinacao = 0.45 }: { x: number; y: number; z: number; escala?: number; inclinacao?: number }) {
+  return (
+    <group position={[x, y, z]} scale={escala}>
+      <Caixa p={[0, 0.02, 0]} s={[0.22, 0.04, 0.16]} mat={MAT.laca("#E9E9E6")} raio={0.01} contato={false} />
+      <Caixa p={[0, 0.17, 0]} s={[0.03, 0.28, 0.03]} mat={MAT.laca("#E9E9E6")} cilindro contato={false} />
+      <mesh position={[0, 0.36, 0.02]} rotation={[-inclinacao, 0, 0]} material={MAT.laca("#F5F5F3")} castShadow>
+        <boxGeometry args={[0.58, 0.4, 0.035]} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Expositor de parede: painel preto, prateleiras brancas com LED, caixas dos kits e antenas em miniatura. */
+function ExpositorStarlink({ largura }: PropsPeca) {
+  const niveis = [0.55, 1.05, 1.55];
+  return (
+    <>
+      <Caixa p={[0, P + 1.05, 0.012]} s={[largura, 2.0, 0.024]} mat={MAT.laca("#141416")} />
+      <mesh position={[0, P + 1.93, 0.026]} material={imagem("teslink-branco", texturaTeslink(), true)}>
+        <planeGeometry args={[largura * 0.55, largura * 0.14]} />
+      </mesh>
+      {niveis.map((y, i) => (
+        <group key={y}>
+          <Caixa p={[0, P + y, 0.2]} s={[largura - 0.04, 0.025, 0.38]} mat={MAT.laca("#F2F2F0")} />
+          <Caixa p={[0, P + y - 0.02, 0.38]} s={[largura - 0.08, 0.006, 0.006]} mat={MAT.led()} sombra={false} />
+          {i < 2
+            ? [-0.45, -0.15, 0.15, 0.45].map((x) => <CaixaKit key={x} x={x * (largura / 1.4)} y={P + y + 0.013} z={0.2} />)
+            : [-0.35, 0.35].map((x) => <Antena key={x} x={x * (largura / 1.4)} y={P + y + 0.013} z={0.18} escala={0.45} />)}
+        </group>
+      ))}
+      <Caixa p={[0, P + 0.2, 0.2]} s={[largura, 0.4, 0.4]} mat={MAT.laca("#141416")} raio={0.006} />
+    </>
+  );
+}
+
+/** Antena em exposição no meio da loja: pedestal branco, antena inclinada e luz de piso. */
+function AntenaPedestal() {
+  return (
+    <>
+      <Caixa p={[0, P + 0.012, 0]} s={[0.7, 0.024, 0.7]} mat={MAT.laca("#1A1A1C")} cilindro sombra={false} />
+      <Caixa p={[0, P + 0.45, 0]} s={[0.42, 0.86, 0.42]} mat={MAT.laca("#F2F2F0")} raio={0.01} />
+      <Caixa p={[0, P + 0.885, 0]} s={[0.44, 0.012, 0.44]} mat={MAT.led("#BFD8FF", 1.5)} sombra={false} />
+      <Antena x={0} y={P + 0.89} z={0} />
+    </>
+  );
+}
+
 /* ------------------------------------------- montagem ------------------------------------------- */
 
 const PECAS: Record<TipoPeca, (p: PropsPeca) => JSX.Element> = {
@@ -1095,6 +1210,10 @@ const PECAS: Record<TipoPeca, (p: PropsPeca) => JSX.Element> = {
   "leitura-compacta": LeituraCompacta,
   "kit-alongamento": KitAlongamento,
   "bar-parede": BarParede,
+  "painel-starlink": PainelStarlink,
+  "balcao-teslink": BalcaoTeslink,
+  "expositor-starlink": ExpositorStarlink,
+  "antena-pedestal": AntenaPedestal,
   planta: () => <Planta />,
 };
 
@@ -1111,10 +1230,10 @@ function Peca({ peca }: { peca: Colocada }) {
  * Vivência: parede-cabeceira em painel amadeirado, sanca com LED junto à fachada, plafon quadrado e split.
  * Os móveis vêm do motor de layout, que respeita portas, vidros e janelas; "começar do zero" fica vazio.
  */
-export function Vivencia({ config }: { config: Config }) {
+export function Vivencia({ config, ambiente }: { config: Config; ambiente?: Ambiente }) {
   const sombra = useSombraCasca();
   const [x0] = trechoVivencia(config);
-  const layout = useMemo(() => layoutVivencia(config), [config]);
+  const layout = useMemo(() => layoutVivencia(config, ambiente), [config, ambiente]);
   const { a, b } = layout.sala;
   const face = config.esquadria.face;
   const ladoSplit = face === "ladoB" ? Z_A + 0.11 : Z_B - 0.11;

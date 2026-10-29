@@ -8,6 +8,8 @@ interface SeoHeadProps {
   path: string;
   schema?: object | object[];
   ogImage?: string;
+  /** Páginas de apresentação para clientes: fora dos buscadores. */
+  noindex?: boolean;
 }
 
 export default function SeoHead({
@@ -16,6 +18,7 @@ export default function SeoHead({
   path,
   schema,
   ogImage = `${BASE_URL}/og-velum.jpg`,
+  noindex = false,
 }: SeoHeadProps) {
   const canonical = `${BASE_URL}${path}`;
   const fullTitle = `${title} | VELUM`;
@@ -27,6 +30,7 @@ export default function SeoHead({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonical} />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />

@@ -120,6 +120,7 @@ const NOME_AMBIENTE: Record<Ambiente, string> = {
   academia: "academia",
   brinquedoteca: "brinquedoteca",
   loja: "loja/consultório",
+  franquia: "loja da franquia",
 };
 
 /** Passo do simulador onde se altera cada linha do resumo. */

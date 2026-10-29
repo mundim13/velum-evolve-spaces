@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 
 // O showroom 3D carrega sob demanda para não pesar nas outras páginas.
 const Modulos = lazy(() => import("./pages/Modulos"));
+const FranquiaTeslink = lazy(() => import("./pages/FranquiaTeslink"));
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,14 @@ const App = () => (
             element={
               <Suspense fallback={<div className="min-h-screen" style={{ background: "#0D0D0D" }} />}>
                 <Modulos />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/modulos/franquia-teslink"
+            element={
+              <Suspense fallback={<div className="min-h-screen" style={{ background: "#0D0D0D" }} />}>
+                <FranquiaTeslink />
               </Suspense>
             }
           />

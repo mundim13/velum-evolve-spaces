@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { circulacao } from "./circulacao";
+import { AMBIENTE_FRANQUIA, CONFIG_FRANQUIA } from "./franquia";
 import { CONFIG_INICIAL, aplicarAtalho, buscarAtalho, reduzir } from "./estado";
 import { ARRANJOS, LIVRE_PORTA, LIVRE_VIDRO, ambienteDaConfig, cruzam, layoutVivencia, type Layout } from "./layout";
 import { opcoesEsquadria } from "./regras";
@@ -142,5 +143,24 @@ describe("atalhos", () => {
       expect(l.pecas.map((p) => p.id)).toEqual(expect.arrayContaining(["sofa", "tv"]));
       expect(violacoes(l)).toEqual([]);
     }
+  });
+});
+
+describe("franquia Teslink", () => {
+  const variantes = opcoesEsquadria(CONFIG_FRANQUIA).map(({ face, tamanho }) => ({ ...CONFIG_FRANQUIA, esquadria: { face, tamanho } }));
+
+  it.each(variantes.map((c) => [nome(c), c] as const))("%s: loja sem bloqueios, com circulação e com todas as peças essenciais", (_, c) => {
+    const l = layoutVivencia(c, AMBIENTE_FRANQUIA);
+    expect(violacoes(l)).toEqual([]);
+    const r = circulacao(l);
+    expect({ portasIsoladas: r.portasIsoladas, semAcesso: r.semAcesso }).toEqual({ portasIsoladas: 0, semAcesso: [] });
+    const essenciais = ARRANJOS.franquia[0].filter((p) => p.essencial).map((p) => p.id);
+    expect(essenciais.filter((id) => !l.pecas.some((p) => p.id === id))).toEqual([]);
+  });
+
+  it("na página: painel Starlink de frente para a vitrine e balcão na frente da loja", () => {
+    const l = layoutVivencia(CONFIG_FRANQUIA, AMBIENTE_FRANQUIA);
+    expect(l.pecas.find((p) => p.id === "painel")?.parede).toBe("cabeceira");
+    expect(l.pecas.find((p) => p.id === "balcao")?.parede).toBe("testada");
   });
 });

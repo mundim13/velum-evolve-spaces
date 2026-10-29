@@ -234,6 +234,10 @@ export type TipoPeca =
   | "kit-alongamento"
   | "bar-parede"
   | "espelho-corpo"
+  | "painel-starlink"
+  | "balcao-teslink"
+  | "expositor-starlink"
+  | "antena-pedestal"
   | "planta";
 
 interface PecaBase {
@@ -304,7 +308,9 @@ export type Ambiente =
   | "escritorio"
   | "academia"
   | "brinquedoteca"
-  | "loja";
+  | "loja"
+  /** Loja da franquia Teslink (página de apresentação; não aparece no simulador). */
+  | "franquia";
 
 /**
  * Ambiente mobiliado a partir das escolhas. Estar com cozinha e sem banheiro é gourmet; estar sem banheiro
@@ -436,6 +442,18 @@ export const ARRANJOS: Record<Ambiente, Peca[][]> = {
       { id: "mesinha", tipo: "mesinha-infantil", largura: 1.25, profundidade: 1.25, alto: false, frente: "estante", distancia: 0.55 },
       // Cantinho de leitura: livros de capa para a frente, pufes e almofadões no chão.
       { id: "leitura", tipo: "cantinho-leitura", largura: 1.2, profundidade: 0.9, alto: true, paredes: ["fundo", "lateral", "cabeceira", "testada"], ancora: 0.5, compacta: { tipo: "leitura-compacta", largura: 0.8, profundidade: 0.75 } },
+    ],
+  ],
+  // Franquia Teslink: painel Starlink de frente para a vitrine, balcão com a marca, expositor de kits,
+  // antena em pedestal no meio da loja e espera perto da entrada.
+  franquia: [
+    [
+      { id: "expositor", tipo: "expositor-starlink", largura: 1.4, profundidade: 0.42, alto: true, essencial: true, paredes: ["oposta-porta", "cabeceira", "lateral", "fundo", "testada"], ancora: 0 },
+      { id: "painel", tipo: "painel-starlink", largura: 1.6, profundidade: 0.06, alto: true, essencial: true, paredes: ["oposta-porta", "cabeceira", "lateral", "testada", "fundo"], ancora: 0.6 },
+      { id: "balcao", tipo: "balcao-teslink", largura: 1.4, profundidade: 0.62, alto: false, essencial: true, paredes: ["testada", "fundo", "oposta-porta", "cabeceira", "lateral"], ancora: 0.5 },
+      { id: "antena", tipo: "antena-pedestal", largura: 0.75, profundidade: 0.75, alto: false, essencial: true, frente: "painel", distancia: 0.75 },
+      { id: "espera", tipo: "espera", largura: 1.5, profundidade: 0.75, alto: false, paredes: ["oposta-porta", "testada", "cabeceira", "lateral", "fundo"], ancora: 1, compacta: { tipo: "espera-compacta", largura: 1.0, profundidade: 0.75 } },
+      planta(1),
     ],
   ],
   loja: [
@@ -593,9 +611,12 @@ export interface Layout {
   fora: string[];
 }
 
-/** Layout da vivência para a configuração: o arranjo que coloca mais peças, com preferência para o primeiro. */
-export function layoutVivencia(c: Config): Layout {
-  const ambiente = ambienteDaConfig(c);
+/**
+ * Layout da vivência para a configuração: o arranjo que coloca mais peças, com preferência para o primeiro.
+ * `forcar` troca o ambiente (a página da franquia Teslink usa a loja da marca).
+ */
+export function layoutVivencia(c: Config, forcar?: Ambiente): Layout {
+  const ambiente = forcar ?? ambienteDaConfig(c);
   const s = sala(c);
   const vaos = vaosDaSala(c);
   const principal = vaos.find((v) => v.id === "principal");
