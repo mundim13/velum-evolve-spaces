@@ -22,6 +22,12 @@ import NotFound from "./pages/NotFound";
 const Modulos = lazy(() => import("./pages/Modulos"));
 const FranquiaTeslink = lazy(() => import("./pages/FranquiaTeslink"));
 
+// Estudo 3D da Wave: página estática em public/wave (fora dos buscadores).
+const EstudoWave = () => {
+  window.location.replace("/wave/index.html");
+  return null;
+};
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -50,6 +56,7 @@ const App = () => (
               </Suspense>
             }
           />
+          <Route path="/wave" element={<EstudoWave />} />
           <Route path="/gerenciamento" element={<Gerenciamento />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/sobre" element={<Sobre />} />
