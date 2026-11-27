@@ -54,7 +54,6 @@ button:focus-visible{outline:3px solid #E2702F;outline-offset:2px}
 <div class="row">
 <button id="noite" aria-pressed="false">Noite</button>
 <button id="pergola" aria-pressed="false">Cobertura da fila</button>
-<button id="apoio" aria-pressed="true">Módulo de apoio</button>
 <button id="giro" aria-pressed="false">Girar</button>
 </div>
 </div></div>
@@ -240,7 +239,7 @@ S.environment=n?null:ENV;R.toneMappingExposure=n?1.25:1;
 [deckL,deckL2].forEach(l=>l.intensity=n?2.6:0);inLight.intensity=n?3:0;bulbs.visible=n;
 [mat.warm].forEach(m=>m.emissiveIntensity=n?3:.35);glowable.forEach(s=>s.material.opacity=n?.85:0)}
 S.fog=new THREE.Fog(0xE3E5E2,70,190);S.background=SKY_D;
-toggle('noite',night);toggle('pergola',v=>perg.visible=v);toggle('apoio',v=>apoio.visible=v);toggle('giro',v=>{ctl.autoRotate=v;ctl.autoRotateSpeed=.7});
+toggle('noite',night);toggle('pergola',v=>perg.visible=v);apoio.visible=false;toggle('giro',v=>{ctl.autoRotate=v;ctl.autoRotateSpeed=.7});
 if(start==='noite'||location.search.includes('noite')){document.getElementById('noite').click()}
 function size(){const w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.fov=w<600?58:40;cam.updateProjectionMatrix()}
 addEventListener('resize',size);size();
